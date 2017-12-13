@@ -9,7 +9,7 @@ data class HomeListModel(var errorCode: Int,
                     var pageCount: Int,
                     var curPage: Int,
                     var over: Boolean,
-                    var datas: List<Datas>) {
+                    var datas: List<Datas>?) {
         data class Datas(var id: Int,
                          var title: String,
                          var chapterId: Int,
