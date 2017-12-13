@@ -26,20 +26,27 @@ class MainActivity : AppCompatActivity(), HomeView {
         HomeItemAdapter(this, mDatas)
     }
 
+    private var currentIndex = 0
+
     private val mOnNavigationItemSelectedListener =
             BottomNavigationView.OnNavigationItemSelectedListener { item ->
                 return@OnNavigationItemSelectedListener when (item.itemId) {
                     R.id.navigation_home -> {
-                        recyclerView.smoothScrollToPosition(0)
+                        if (currentIndex == R.id.navigation_home) {
+                            recyclerView.smoothScrollToPosition(0)
+                        }
+                        currentIndex = R.id.navigation_home
                         if (mDatas.size == 0) {
                             mHomePresenter.getHomeList()
                         }
                         true
                     }
                     R.id.navigation_dashboard -> {
+                        currentIndex = R.id.navigation_dashboard
                         true
                     }
                     R.id.navigation_notifications -> {
+                        currentIndex = R.id.navigation_notifications
                         true
                     }
                     else -> {
