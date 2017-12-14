@@ -3,15 +3,12 @@ package top.jowanxu.wanandroidclient.model
 import Constant
 import asyncRequestSuspend
 import getHomeListCall
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.cancelAndJoin
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import top.jowanxu.wanandroidclient.bean.HomeListModel
+import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomePresenter
 
 class HomeModelImpl : HomeModel {
@@ -20,7 +17,7 @@ class HomeModelImpl : HomeModel {
     /**
      * Home Call
      */
-    private var homeListCall: Call<HomeListModel>? = null
+    private var homeListCall: Call<HomeListResponse>? = null
 
     /**
      * async return coroutine result
@@ -32,6 +29,7 @@ class HomeModelImpl : HomeModel {
             this.onHomeListListener = onHomeListListener
         }
         async(UI) {
+            delay(2000)
             homeListAsync?.apply {
                 if (isActive) {
                     cancelAndJoin()
@@ -40,7 +38,7 @@ class HomeModelImpl : HomeModel {
             homeListAsync = async(CommonPool) {
                 try {
                     // Async Request, wait resume
-                    asyncRequestSuspend<HomeListModel> { cont ->
+                    asyncRequestSuspend<HomeListResponse> { cont ->
                         homeListCall?.run {
                             // If Call not empty
                             if (!isCanceled) {
@@ -48,18 +46,18 @@ class HomeModelImpl : HomeModel {
                                 cancel()
                             }
                             // Assignment
-                            getHomeListCall()
+                            getHomeListCall(page)
                         } ?: run {
                             // If Call empty
-                            getHomeListCall()
-                        }.enqueue(object : Callback<HomeListModel> {
-                            override fun onResponse(call: Call<HomeListModel>,
-                                                    response: Response<HomeListModel>) {
+                            getHomeListCall(page)
+                        }.enqueue(object : Callback<HomeListResponse> {
+                            override fun onResponse(call: Call<HomeListResponse>,
+                                                    response: Response<HomeListResponse>) {
                                 // resume
                                 cont.resume(response.body())
                             }
 
-                            override fun onFailure(call: Call<HomeListModel>, t: Throwable) {
+                            override fun onFailure(call: Call<HomeListResponse>, t: Throwable) {
                                 cont.resumeWithException(t)
                             }
                         })
@@ -73,10 +71,15 @@ class HomeModelImpl : HomeModel {
             val result = homeListAsync?.await()
             when (result) {
                 is String -> onHomeListListener.getHomeListFailed(result)
-                is HomeListModel -> onHomeListListener.getHomeListSuccess(result)
+                is HomeListResponse -> onHomeListListener.getHomeListSuccess(result)
                 else -> onHomeListListener.getHomeListFailed(Constant.RESULT_NULL)
             }
         }
 
+    }
+
+    override fun cancelRequest() {
+        homeListCall?.cancel()
+        homeListAsync?.cancel()
     }
 }

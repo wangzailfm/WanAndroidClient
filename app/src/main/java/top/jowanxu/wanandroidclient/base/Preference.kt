@@ -1,4 +1,4 @@
-package top.jowanxu.wanandroidclient
+package top.jowanxu.wanandroidclient.base
 
 import Constant
 import android.annotation.SuppressLint

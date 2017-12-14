@@ -2,7 +2,7 @@
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
-import top.jowanxu.wanandroidclient.bean.HomeListModel
+import top.jowanxu.wanandroidclient.bean.HomeListResponse
 
 /**
  * Retrofit请求api
@@ -16,6 +16,6 @@ interface RetrofitService {
     @GET("/article/list/{page}/json")
     fun getHomeList(
             @Path("page") page: Int
-    ): Call<HomeListModel>
+    ): Call<HomeListResponse>
 
 }

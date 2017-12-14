@@ -1,8 +1,8 @@
 package top.jowanxu.wanandroidclient.bean
 
-data class HomeListModel(var errorCode: Int,
-                         var errorMsg: Any,
-                         var data: Data) {
+data class HomeListResponse(var errorCode: Int,
+                            var errorMsg: Any,
+                            var data: Data) {
     data class Data(var offset: Int,
                     var size: Int,
                     var total: Int,

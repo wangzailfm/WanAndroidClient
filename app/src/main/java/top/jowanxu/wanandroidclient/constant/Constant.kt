@@ -1,3 +1,4 @@
+import android.widget.Toast
 
 /**
  * Constant
@@ -11,4 +12,6 @@ object Constant {
     const val SHARED_NAME = "_preferences"
 
     const val RESULT_NULL = "result null!"
+
+    @JvmField var showToast: Toast? = null
 }

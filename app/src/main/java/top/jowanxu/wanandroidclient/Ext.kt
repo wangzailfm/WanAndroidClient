@@ -1,4 +1,5 @@
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -10,8 +11,13 @@ fun loge(tag: String, content: String?) {
     Log.e(tag, content ?: tag)
 }
 
+@SuppressLint("ShowToast")
 fun Context.toast(content: String) {
-    Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
+    Constant.showToast?.apply {
+        setText(content)
+    } ?: run {
+        Toast.makeText(this, content, Toast.LENGTH_SHORT)
+    }.show()
 }
 
 /**

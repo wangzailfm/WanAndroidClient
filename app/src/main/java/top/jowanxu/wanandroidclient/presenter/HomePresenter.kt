@@ -1,6 +1,6 @@
 package top.jowanxu.wanandroidclient.presenter
 
-import top.jowanxu.wanandroidclient.bean.HomeListModel
+import top.jowanxu.wanandroidclient.bean.HomeListResponse
 
 /**
  * 首页Presenter接口
@@ -20,7 +20,7 @@ interface HomePresenter {
         /**
          * 获取首页列表成功
          */
-        fun getHomeListSuccess(result: HomeListModel)
+        fun getHomeListSuccess(result: HomeListResponse)
 
         /**
          * 获取首页列表失败

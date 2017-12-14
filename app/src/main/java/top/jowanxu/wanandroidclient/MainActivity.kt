@@ -2,43 +2,124 @@ package top.jowanxu.wanandroidclient
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.chad.library.adapter.base.BaseQuickAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import top.jowanxu.wanandroidclient.adapter.HomeItemAdapter
-import top.jowanxu.wanandroidclient.bean.HomeListModel
-import top.jowanxu.wanandroidclient.bean.HomeListModel.Data.Datas
+import toast
+import top.jowanxu.wanandroidclient.adapter.HomeAdapter
+import top.jowanxu.wanandroidclient.bean.HomeListResponse
+import top.jowanxu.wanandroidclient.bean.HomeListResponse.Data.Datas
 import top.jowanxu.wanandroidclient.presenter.HomePresenterImpl
 import top.jowanxu.wanandroidclient.view.HomeView
 
-
-
+/**
+ * 主界面
+ */
 class MainActivity : AppCompatActivity(), HomeView {
 
-    private val mHomePresenter: HomePresenterImpl by lazy {
+    /**
+     * 列表总数
+     */
+    private var total = 0
+    /**
+     * 当前列表总数
+     */
+    private var currentTotal = 0
+    /**
+     * 当前下标
+     */
+    private var currentIndex = R.id.navigation_home
+    /**
+     * 数据列表
+     */
+    private var datas = mutableListOf<Datas>()
+    /**
+     * presenter
+     */
+    private val homePresenter: HomePresenterImpl by lazy {
         HomePresenterImpl(this)
     }
-
-    private var mDatas = mutableListOf<Datas>()
-
-    private val mHomeAdapter: HomeItemAdapter by lazy {
-        HomeItemAdapter(this, mDatas)
+    /**
+     * adapter
+     */
+    private val homeAdapter: HomeAdapter by lazy {
+        HomeAdapter(this, datas)
     }
 
-    private var currentIndex = 0
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        swipeRefreshLayout.run {
+            isRefreshing = true
+            setOnRefreshListener(onRefreshListener)
+        }
+        recyclerView.run {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = homeAdapter
+        }
+        homeAdapter.run {
+            setOnLoadMoreListener({
+                val page = homeAdapter.data.size / 20 + 1
+                homePresenter.getHomeList(page)
+            }, recyclerView)
+            onItemClickListener = this@MainActivity.onItemClickListener
+        }
+        navigation.run {
+            setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+            selectedItemId = R.id.navigation_home
+        }
+    }
 
-    private val mOnNavigationItemSelectedListener =
+    override fun onPause() {
+        super.onPause()
+        homePresenter.cancelRequest()
+    }
+
+    override fun getHomeListSuccess(result: HomeListResponse) {
+        total = result.data.total
+        result.data.datas?.let {
+            currentTotal = homeAdapter.data.size
+            if (currentTotal >= total) {
+                homeAdapter.loadMoreEnd()
+                return@let
+            }
+            if (swipeRefreshLayout.isRefreshing) {
+                homeAdapter.replaceData(it)
+            } else {
+                homeAdapter.addData(it)
+            }
+            currentTotal = homeAdapter.data.size
+            homeAdapter.loadMoreComplete()
+        }
+        homeAdapter.setEnableLoadMore(true)
+        swipeRefreshLayout.isRefreshing = false
+    }
+
+    override fun getHomeListFailed(errorMessage: String?) {
+        homeAdapter.setEnableLoadMore(true)
+        swipeRefreshLayout.isRefreshing = false
+        homeAdapter.loadMoreFail()
+    }
+
+    /**
+     * NavigationItemSelect监听
+     */
+    private val onNavigationItemSelectedListener =
             BottomNavigationView.OnNavigationItemSelectedListener { item ->
                 return@OnNavigationItemSelectedListener when (item.itemId) {
                     R.id.navigation_home -> {
                         if (currentIndex == R.id.navigation_home) {
-                            recyclerView.smoothScrollToPosition(0)
+                            if (!recyclerView.canScrollVertically(-1)) {
+                                swipeRefreshLayout.isRefreshing = true
+                                homeAdapter.setEnableLoadMore(false)
+                                homePresenter.getHomeList()
+                            } else {
+                                recyclerView.smoothScrollToPosition(0)
+                            }
                         }
                         currentIndex = R.id.navigation_home
-                        if (mDatas.size == 0) {
-                            mHomePresenter.getHomeList()
-                        }
                         true
                     }
                     R.id.navigation_dashboard -> {
@@ -55,31 +136,21 @@ class MainActivity : AppCompatActivity(), HomeView {
                 }
             }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        recyclerView.run {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = mHomeAdapter
-        }
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        navigation.selectedItemId = R.id.navigation_home
+    /**
+     * 刷新监听
+     */
+    private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
+        swipeRefreshLayout.isRefreshing = true
+        datas.clear()
+        homeAdapter.setEnableLoadMore(false)
+        homePresenter.getHomeList()
     }
 
-    override fun getHomeListSuccess(result: HomeListModel) {
-        result.data.datas?.let {
-            mDatas.clear()
-            mDatas.addAll(it)
-            mHomeAdapter.notifyDataSetChanged()
-        }
-    }
-
-    override fun getHomeListFailed(errorMessage: String?) {
-
-    }
-
-    fun isSlideToBottom(recyclerView: RecyclerView?): Boolean {
-        if (recyclerView == null) return false
-        return recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange()
+    /**
+     * 点击item监听
+     */
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
+        _, _, position ->
+        toast("ItemClick: $position")
     }
 }
