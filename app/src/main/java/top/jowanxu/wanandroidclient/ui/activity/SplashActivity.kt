@@ -1,4 +1,4 @@
-package top.jowanxu.wanandroidclient
+package top.jowanxu.wanandroidclient.ui.activity
 
 import android.app.Activity
 import android.content.Intent

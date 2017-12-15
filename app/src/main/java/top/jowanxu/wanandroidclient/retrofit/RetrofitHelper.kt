@@ -3,7 +3,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import top.jowanxu.wanandroidclient.BuildConfig
 import java.util.concurrent.TimeUnit
 
 object RetrofitHelper {
@@ -22,7 +21,7 @@ object RetrofitHelper {
         val okHttpClientBuilder = OkHttpClient().newBuilder().apply {
             connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
             readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-            if (BuildConfig.DEBUG) {
+            if (Constant.INTERCEPTOR_ENABLE) {
                 //OkHttp进行添加拦截器loggingInterceptor
                 addInterceptor(HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
                     loge(TAG,  CONTENT_PRE + it)

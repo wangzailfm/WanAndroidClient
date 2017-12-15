@@ -1,23 +1,24 @@
-package top.jowanxu.wanandroidclient
+package top.jowanxu.wanandroidclient.ui.fragment
 
+import Constant
+import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.chad.library.adapter.base.BaseQuickAdapter
-import kotlinx.android.synthetic.main.activity_main.*
-import toast
+import kotlinx.android.synthetic.main.fragment_home.*
+import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.HomeAdapter
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
-import top.jowanxu.wanandroidclient.bean.HomeListResponse.Data.Datas
 import top.jowanxu.wanandroidclient.presenter.HomePresenterImpl
+import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
 import top.jowanxu.wanandroidclient.view.HomeView
 
-/**
- * 主界面
- */
-class MainActivity : AppCompatActivity(), HomeView {
+class HomeFragment : Fragment(), HomeView {
 
     /**
      * 列表总数
@@ -27,14 +28,13 @@ class MainActivity : AppCompatActivity(), HomeView {
      * 当前列表总数
      */
     private var currentTotal = 0
-    /**
-     * 当前下标
-     */
-    private var currentIndex = R.id.navigation_home
+
+    private var mainView: View? = null
+
     /**
      * 数据列表
      */
-    private var datas = mutableListOf<Datas>()
+    private var datas = mutableListOf<HomeListResponse.Data.Datas>()
     /**
      * presenter
      */
@@ -45,18 +45,29 @@ class MainActivity : AppCompatActivity(), HomeView {
      * adapter
      */
     private val homeAdapter: HomeAdapter by lazy {
-        HomeAdapter(this, datas)
+        HomeAdapter(activity, datas)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+    }
+
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        mainView ?: let {
+            mainView =inflater?.inflate(R.layout.fragment_home, null)
+        }
+        return mainView
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         swipeRefreshLayout.run {
             isRefreshing = true
             setOnRefreshListener(onRefreshListener)
         }
         recyclerView.run {
-            layoutManager = LinearLayoutManager(this@MainActivity)
+            layoutManager = LinearLayoutManager(activity)
             adapter = homeAdapter
         }
         homeAdapter.run {
@@ -64,13 +75,18 @@ class MainActivity : AppCompatActivity(), HomeView {
                 val page = homeAdapter.data.size / 20 + 1
                 homePresenter.getHomeList(page)
             }, recyclerView)
-            onItemClickListener = this@MainActivity.onItemClickListener
+            onItemClickListener = this@HomeFragment.onItemClickListener
         }
-        navigation.run {
-            setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-            selectedItemId = R.id.navigation_home
-        }
+        homePresenter.getHomeList()
     }
+
+    fun getRequest() = if (!recyclerView.canScrollVertically(-1)) {
+            swipeRefreshLayout.isRefreshing = true
+            homeAdapter.setEnableLoadMore(false)
+            homePresenter.getHomeList()
+        } else {
+            recyclerView.smoothScrollToPosition(0)
+        }
 
     override fun onPause() {
         super.onPause()
@@ -104,39 +120,6 @@ class MainActivity : AppCompatActivity(), HomeView {
     }
 
     /**
-     * NavigationItemSelect监听
-     */
-    private val onNavigationItemSelectedListener =
-            BottomNavigationView.OnNavigationItemSelectedListener { item ->
-                return@OnNavigationItemSelectedListener when (item.itemId) {
-                    R.id.navigation_home -> {
-                        if (currentIndex == R.id.navigation_home) {
-                            if (!recyclerView.canScrollVertically(-1)) {
-                                swipeRefreshLayout.isRefreshing = true
-                                homeAdapter.setEnableLoadMore(false)
-                                homePresenter.getHomeList()
-                            } else {
-                                recyclerView.smoothScrollToPosition(0)
-                            }
-                        }
-                        currentIndex = R.id.navigation_home
-                        true
-                    }
-                    R.id.navigation_dashboard -> {
-                        currentIndex = R.id.navigation_dashboard
-                        true
-                    }
-                    R.id.navigation_notifications -> {
-                        currentIndex = R.id.navigation_notifications
-                        true
-                    }
-                    else -> {
-                        false
-                    }
-                }
-            }
-
-    /**
      * 刷新监听
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
@@ -151,6 +134,11 @@ class MainActivity : AppCompatActivity(), HomeView {
      */
     private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
         _, _, position ->
-        toast("ItemClick: $position")
+        if (datas.size <= position) {
+            Intent(activity, ContentActivity::class.java).run {
+                putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
+                startActivity(this)
+            }
+        }
     }
 }
