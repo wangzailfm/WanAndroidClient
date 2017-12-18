@@ -5,6 +5,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.base.BaseActivity
@@ -44,6 +45,10 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        toolbar.run {
+            title = getString(R.string.app_name)
+            setSupportActionBar(this)
+        }
         navigation.run {
             setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
             selectedItemId = R.id.navigation_home

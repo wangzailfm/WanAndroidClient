@@ -9,6 +9,8 @@
     android:orientation="vertical"
     tools:context="top.jowanxu.wanandroidclient.ui.activity.MainActivity">
 
+    <include layout="@layout/app_bar_main" android:id="@+id/appBarMain"/>
+
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"

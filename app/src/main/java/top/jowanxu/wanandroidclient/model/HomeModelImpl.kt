@@ -2,9 +2,13 @@ package top.jowanxu.wanandroidclient.model
 
 import Constant
 import asyncRequestSuspend
+import cancelAndJoinByActive
+import cancelCall
 import getHomeListCall
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,7 +16,6 @@ import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomePresenter
 
 class HomeModelImpl : HomeModel {
-    private var onHomeListListener: HomePresenter.OnHomeListListener? = null
 
     /**
      * Home Call
@@ -25,31 +28,15 @@ class HomeModelImpl : HomeModel {
     private var homeListAsync: Deferred<Any>? = null
 
     override fun getHomeList(onHomeListListener: HomePresenter.OnHomeListListener, page: Int) {
-        this.onHomeListListener ?: let {
-            this.onHomeListListener = onHomeListListener
-        }
         async(UI) {
-            delay(2000)
-            homeListAsync?.apply {
-                if (isActive) {
-                    cancelAndJoin()
-                }
-            }
+            homeListAsync?.cancelAndJoinByActive()
             homeListAsync = async(CommonPool) {
                 try {
                     // Async Request, wait resume
                     asyncRequestSuspend<HomeListResponse> { cont ->
-                        homeListCall?.run {
-                            // If Call not empty
-                            if (!isCanceled) {
-                                // cancel request
-                                cancel()
-                            }
-                            // Assignment
-                            getHomeListCall(page)
-                        } ?: run {
-                            // If Call empty
-                            getHomeListCall(page)
+                        homeListCall?.cancelCall()
+                        getHomeListCall(page).apply {
+                            homeListCall = this@apply
                         }.enqueue(object : Callback<HomeListResponse> {
                             override fun onResponse(call: Call<HomeListResponse>,
                                                     response: Response<HomeListResponse>) {

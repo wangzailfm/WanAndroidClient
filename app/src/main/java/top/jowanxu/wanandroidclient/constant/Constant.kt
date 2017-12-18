@@ -18,4 +18,5 @@ object Constant {
     const val INTERCEPTOR_ENABLE = false
 
     const val CONTENT_URL_KEY = "url"
+    const val CONTENT_TITLE_KEY = "title"
 }

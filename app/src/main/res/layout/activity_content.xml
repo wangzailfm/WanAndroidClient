@@ -7,6 +7,8 @@
     android:orientation="vertical"
     tools:context="top.jowanxu.wanandroidclient.ui.activity.ContentActivity">
 
+    <include layout="@layout/app_bar_main" android:id="@+id/appBarMain"/>
+
     <FrameLayout
         android:id="@+id/webContent"
         android:layout_width="match_parent"

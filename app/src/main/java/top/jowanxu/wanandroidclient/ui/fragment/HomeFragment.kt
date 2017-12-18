@@ -134,9 +134,10 @@ class HomeFragment : Fragment(), HomeView {
      */
     private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
         _, _, position ->
-        if (datas.size <= position) {
+        if (datas.size != 0) {
             Intent(activity, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
+                putExtra(Constant.CONTENT_TITLE_KEY, datas[position].title)
                 startActivity(this)
             }
         }
