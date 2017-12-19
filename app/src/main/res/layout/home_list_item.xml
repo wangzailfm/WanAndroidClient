@@ -26,6 +26,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:textSize="18sp"
+            android:textColor="@android:color/primary_text_light"
             tools:text="标题"/>
 
         <TextView

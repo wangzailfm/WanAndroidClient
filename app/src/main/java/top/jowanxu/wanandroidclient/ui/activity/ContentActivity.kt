@@ -1,27 +1,37 @@
 package top.jowanxu.wanandroidclient.ui.activity
 
 import Constant
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
+import android.view.View
 import android.widget.LinearLayout
-import com.just.library.AgentWeb
-import com.just.library.ChromeClientCallbackManager
-import getStringFormat
+import com.just.agentweb.AgentWeb
+import com.just.agentweb.ChromeClientCallbackManager
 import kotlinx.android.synthetic.main.activity_content.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import top.jowanxu.wanandroidclient.R
 
 class ContentActivity : AppCompatActivity() {
     private lateinit var agentWeb: AgentWeb
+    private lateinit var shareTitle: String
+    private lateinit var shareUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_content)
+        toolbarBack.run {
+            visibility = View.VISIBLE
+            setOnClickListener(onClickListener)
+        }
+        toolbarShare.run {
+            visibility = View.VISIBLE
+            setOnClickListener(onClickListener)
+        }
         intent.extras?.let {
-            it.getString(Constant.CONTENT_TITLE_KEY)?.let {
-                toolbarTitle.text = if (it.length > 10) getStringFormat(R.string.web_title, it.substring(0, 10)) else it
-            }
+            shareUrl = it.getString(Constant.CONTENT_URL_KEY)
+            shareTitle = it.getString(Constant.CONTENT_TITLE_KEY)
             agentWeb = AgentWeb.with(this)//传入Activity or Fragment
                     .setAgentWebParent(webContent, LinearLayout.LayoutParams(-1, -1))//传入AgentWeb 的父控件
                     .useDefaultIndicator()// 使用默认进度条
@@ -29,7 +39,7 @@ class ContentActivity : AppCompatActivity() {
                     .setReceivedTitleCallback(receivedTitleCallback) //设置 Web 页面的 title 回调
                     .createAgentWeb()//
                     .ready()
-                    .go(it.getString(Constant.CONTENT_URL_KEY))
+                    .go(shareUrl)
         }
     }
 
@@ -52,13 +62,30 @@ class ContentActivity : AppCompatActivity() {
             if (agentWeb.handleKeyEvent(keyCode, event)) {
                 true
             } else {
+                finish()
                 super.onKeyDown(keyCode, event)
             }
 
     private val receivedTitleCallback = ChromeClientCallbackManager.ReceivedTitleCallback {
         _, title ->
         title?.let {
-            toolbarTitle.text = if (it.length > 10) getStringFormat(R.string.web_title, it.substring(0, 10)) else it
+            toolbarTitle.text = it
+        }
+    }
+
+    private val onClickListener = View.OnClickListener {
+        when (it.id) {
+            R.id.toolbarBack -> {
+                finish()
+            }
+            R.id.toolbarShare -> {
+                Intent().run {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, "${getString(R.string.app_name)}分享：$shareUrl")
+                    type = Constant.CONTENT_SHARE_TYPE
+                    startActivity(Intent.createChooser(this, "分享"))
+                }
+            }
         }
     }
 }

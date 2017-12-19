@@ -3,16 +3,11 @@ package top.jowanxu.wanandroidclient.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 
 class SplashActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        launch {
-            delay(2000)
-            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            finish()
-        }
+        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+        finish()
     }
 }
