@@ -1,11 +1,6 @@
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
-import top.jowanxu.wanandroidclient.bean.ArticleListResponse
-import top.jowanxu.wanandroidclient.bean.FriendListResponse
-import top.jowanxu.wanandroidclient.bean.HomeListResponse
-import top.jowanxu.wanandroidclient.bean.TreeListResponse
+import retrofit2.http.*
+import top.jowanxu.wanandroidclient.bean.*
 
 /**
  * Retrofit请求api
@@ -50,5 +45,18 @@ interface RetrofitService {
      */
     @GET("/friend/json")
     fun getFriendList(): Call<FriendListResponse>
+
+    /**
+     * 搜索
+     * <p>
+     *     Post
+     * <p>
+     *     http://www.wanandroid.com/article/query/0/json
+     */
+    @POST("article/query/{page}/json")
+    @FormUrlEncoded
+    fun getSearchList(@Path("page") page: Int,
+                      @Field("k") k: String
+    ): Call<SearchListResponse>
 
 }

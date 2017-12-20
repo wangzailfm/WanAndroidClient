@@ -29,9 +29,9 @@ class HomeModelImpl : HomeModel {
 
     override fun getHomeList(onHomeListListener: HomePresenter.OnHomeListListener, page: Int) {
         async(UI) {
-            homeListAsync?.cancelAndJoinByActive()
-            homeListAsync = async(CommonPool) {
-                try {
+            try {
+                homeListAsync?.cancelAndJoinByActive()
+                homeListAsync = async(CommonPool) {
                     // Async Request, wait resume
                     asyncRequestSuspend<HomeListResponse> { cont ->
                         homeListCall?.cancelCall()
@@ -49,17 +49,19 @@ class HomeModelImpl : HomeModel {
                             }
                         })
                     }
-                } catch (e: Throwable) {
-                    // Return Throwable toString
-                    e.toString()
                 }
-            }
-            // Get async result
-            val result = homeListAsync?.await()
-            when (result) {
-                is String -> onHomeListListener.getHomeListFailed(result)
-                is HomeListResponse -> onHomeListListener.getHomeListSuccess(result)
-                else -> onHomeListListener.getHomeListFailed(Constant.RESULT_NULL)
+                // Get async result
+                val result = homeListAsync?.await()
+                when (result) {
+                    is String -> onHomeListListener.getHomeListFailed(result)
+                    is HomeListResponse -> onHomeListListener.getHomeListSuccess(result)
+                    else -> onHomeListListener.getHomeListFailed(Constant.RESULT_NULL)
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                // Return Throwable toString
+                onHomeListListener.getHomeListFailed(t.toString())
+                return@async
             }
         }
 

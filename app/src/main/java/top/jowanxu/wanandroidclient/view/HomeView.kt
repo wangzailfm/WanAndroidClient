@@ -16,4 +16,5 @@ interface HomeView {
      * 获取首页列表失败
      */
     fun getHomeListFailed(errorMessage: String?)
+
 }

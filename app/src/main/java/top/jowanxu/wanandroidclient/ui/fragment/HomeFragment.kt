@@ -11,8 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.chad.library.adapter.base.BaseQuickAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
+import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.HomeAdapter
+import top.jowanxu.wanandroidclient.bean.Datas
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomePresenterImpl
 import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
@@ -34,7 +36,7 @@ class HomeFragment : Fragment(), HomeView {
     /**
      * 数据列表
      */
-    private var datas = mutableListOf<HomeListResponse.Data.Datas>()
+    private var datas = mutableListOf<Datas>()
     /**
      * presenter
      */
@@ -46,11 +48,6 @@ class HomeFragment : Fragment(), HomeView {
      */
     private val homeAdapter: HomeAdapter by lazy {
         HomeAdapter(activity, datas)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -76,25 +73,26 @@ class HomeFragment : Fragment(), HomeView {
                 homePresenter.getHomeList(page)
             }, recyclerView)
             onItemClickListener = this@HomeFragment.onItemClickListener
+            setEmptyView(R.layout.fragment_home_empty)
         }
         homePresenter.getHomeList()
     }
-
-    fun getRequest() = if (!recyclerView.canScrollVertically(-1)) {
-            swipeRefreshLayout.isRefreshing = true
-            homeAdapter.setEnableLoadMore(false)
-            homePresenter.getHomeList()
-        } else {
-            recyclerView.smoothScrollToPosition(0)
-        }
 
     override fun onPause() {
         super.onPause()
         homePresenter.cancelRequest()
     }
 
+    /**
+     * 滚动到顶部
+     */
+    fun smoothScrollToPosition() = recyclerView.smoothScrollToPosition(0)
+
     override fun getHomeListSuccess(result: HomeListResponse) {
         total = result.data.total
+        if (total == 0) {
+            activity.toast("未搜索到关键词相关文章")
+        }
         result.data.datas?.let {
             currentTotal = homeAdapter.data.size
             if (currentTotal >= total) {

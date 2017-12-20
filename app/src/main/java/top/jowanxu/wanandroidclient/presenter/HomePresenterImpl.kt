@@ -5,7 +5,7 @@ import top.jowanxu.wanandroidclient.model.HomeModel
 import top.jowanxu.wanandroidclient.model.HomeModelImpl
 import top.jowanxu.wanandroidclient.view.HomeView
 
-class HomePresenterImpl(val homeView: HomeView) : HomePresenter, HomePresenter.OnHomeListListener {
+class HomePresenterImpl(private val homeView: HomeView) : HomePresenter, HomePresenter.OnHomeListListener {
 
     private val homeModel: HomeModel = HomeModelImpl()
 

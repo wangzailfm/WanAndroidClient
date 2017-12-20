@@ -4,7 +4,7 @@ import android.content.Context
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import top.jowanxu.wanandroidclient.R
-import top.jowanxu.wanandroidclient.bean.HomeListResponse.Data.Datas
+import top.jowanxu.wanandroidclient.bean.Datas
 
 class HomeAdapter(val context: Context, datas: MutableList<Datas>)
     : BaseQuickAdapter<Datas, BaseViewHolder>(R.layout.home_list_item, datas) {

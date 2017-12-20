@@ -5,7 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
-import android.view.View
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.LinearLayout
 import com.just.agentweb.AgentWeb
 import com.just.agentweb.ChromeClientCallbackManager
@@ -13,6 +14,9 @@ import kotlinx.android.synthetic.main.activity_content.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import top.jowanxu.wanandroidclient.R
 
+/**
+ * 文章详细内容
+ */
 class ContentActivity : AppCompatActivity() {
     private lateinit var agentWeb: AgentWeb
     private lateinit var shareTitle: String
@@ -21,13 +25,9 @@ class ContentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_content)
-        toolbarBack.run {
-            visibility = View.VISIBLE
-            setOnClickListener(onClickListener)
-        }
-        toolbarShare.run {
-            visibility = View.VISIBLE
-            setOnClickListener(onClickListener)
+        toolbar.run {
+            setSupportActionBar(this)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
         intent.extras?.let {
             shareUrl = it.getString(Constant.CONTENT_URL_KEY)
@@ -41,6 +41,29 @@ class ContentActivity : AppCompatActivity() {
                     .ready()
                     .go(shareUrl)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_content, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+            R.id.menuShare -> {
+                Intent().run {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, "${getString(R.string.app_name)}分享：$shareUrl")
+                    type = Constant.CONTENT_SHARE_TYPE
+                    startActivity(Intent.createChooser(this, "分享"))
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onPause() {
@@ -69,23 +92,7 @@ class ContentActivity : AppCompatActivity() {
     private val receivedTitleCallback = ChromeClientCallbackManager.ReceivedTitleCallback {
         _, title ->
         title?.let {
-            toolbarTitle.text = it
-        }
-    }
-
-    private val onClickListener = View.OnClickListener {
-        when (it.id) {
-            R.id.toolbarBack -> {
-                finish()
-            }
-            R.id.toolbarShare -> {
-                Intent().run {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, "${getString(R.string.app_name)}分享：$shareUrl")
-                    type = Constant.CONTENT_SHARE_TYPE
-                    startActivity(Intent.createChooser(this, "分享"))
-                }
-            }
+            toolbar.title = it
         }
     }
 }

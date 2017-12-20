@@ -15,7 +15,7 @@ object Constant {
 
     @JvmField var showToast: Toast? = null
 
-    const val INTERCEPTOR_ENABLE = false
+    const val INTERCEPTOR_ENABLE = true
 
     const val CONTENT_URL_KEY = "url"
     const val CONTENT_TITLE_KEY = "title"

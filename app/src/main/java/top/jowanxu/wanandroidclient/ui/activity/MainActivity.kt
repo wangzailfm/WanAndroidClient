@@ -1,9 +1,12 @@
 package top.jowanxu.wanandroidclient.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
+import android.view.Menu
+import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import toast
@@ -45,11 +48,32 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        toolbarTitle.text = getString(R.string.app_name)
+        toolbar.run {
+            title = getString(R.string.app_name)
+            setSupportActionBar(this)
+        }
         navigation.run {
             setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
             selectedItemId = R.id.navigation_home
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menuSearch -> {
+                Intent(this, SearchActivity::class.java).run {
+                    startActivity(this)
+                }
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /**
@@ -58,9 +82,23 @@ class MainActivity : BaseActivity() {
     override fun onAttachFragment(fragment: Fragment) {
         super.onAttachFragment(fragment)
         when (fragment) {
-            is HomeFragment -> homeFragment ?: run { fragment }
-            is TypeFragment -> typeFragment ?: run { fragment }
-            is MineFragment -> mineFragment ?: run { fragment }
+            is HomeFragment -> homeFragment ?: let { homeFragment = fragment }
+            is TypeFragment -> typeFragment ?: let { typeFragment = fragment }
+            is MineFragment -> mineFragment ?: let { mineFragment = fragment }
+        }
+    }
+
+    /**
+     * 退出
+     */
+    override fun onBackPressed() {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastTime < 2 * 1000) {
+            super.onBackPressed()
+            finish()
+        } else {
+            toast("再按一次退出")
+            lastTime = currentTime
         }
     }
 
@@ -132,7 +170,7 @@ class MainActivity : BaseActivity() {
                 return@OnNavigationItemSelectedListener when (item.itemId) {
                     R.id.navigation_home -> {
                         if (currentIndex == R.id.navigation_home) {
-                            homeFragment?.getRequest()
+                            homeFragment?.smoothScrollToPosition()
                         }
                         currentIndex = R.id.navigation_home
                         true
@@ -150,15 +188,4 @@ class MainActivity : BaseActivity() {
                     }
                 }
             }
-
-    override fun onBackPressed() {
-        val currentTime = System.currentTimeMillis()
-        if (currentTime - lastTime < 2 * 1000) {
-            super.onBackPressed()
-            finish()
-        } else {
-            toast("再按一次退出")
-            lastTime = currentTime
-        }
-    }
 }

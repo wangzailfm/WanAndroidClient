@@ -3,6 +3,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.support.annotation.StringRes
 import android.util.Log
+import android.widget.SearchView
 import android.widget.Toast
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.cancelAndJoin
@@ -42,9 +43,13 @@ suspend fun Deferred<Any>?.cancelAndJoinByActive() = this?.run {
     }
 }
 
+/**
+ * 请求取消
+ */
 fun <T> Call<T>?.cancelCall() = this?.run {
     if (!isCanceled) {
         // cancel request
         cancel()
     }
 }
+

@@ -53,3 +53,5 @@ class RetrofitBuild(url: String, client: OkHttpClient, gsonFactory: GsonConverte
 }
 
 fun getHomeListCall(page: Int = 0) = RetrofitHelper.retrofitService.getHomeList(page)
+
+fun getSearchListCall(page: Int = 0, k: String) = RetrofitHelper.retrofitService.getSearchList(page, k)
