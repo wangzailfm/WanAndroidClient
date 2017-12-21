@@ -9,9 +9,8 @@ interface RetrofitService {
 
     /**
      * 首页数据
-     * <p>
-     *     http://www.wanandroid.com/article/list/0/json
-     * @param page 页数
+     * http://www.wanandroid.com/article/list/0/json
+     * @param page page
      */
     @GET("/article/list/{page}/json")
     fun getHomeList(
@@ -20,18 +19,16 @@ interface RetrofitService {
 
     /**
      * 知识体系
-     * <p>
-     *     http://www.wanandroid.com/tree/json
+     * http://www.wanandroid.com/tree/json
      */
     @GET("/tree/json")
-    fun getTreeList(): Call<TreeListResponse>
+    fun getTypeTreeList(): Call<TreeListResponse>
 
     /**
      * 知识体系下的文章
-     * <p>
-     *     http://www.wanandroid.com/article/list/0/json?cid=168
-     * @param page
-     * @param cid
+     * http://www.wanandroid.com/article/list/0/json?cid=168
+     * @param page page
+     * @param cid cid
      */
     @GET("/article/list/{page}/json")
     fun getArticleList(@Path("page") page: Int,
@@ -40,20 +37,25 @@ interface RetrofitService {
 
     /**
      * 常用网站
-     * <p>
-     *     http://www.wanandroid.com/friend/json
+     * http://www.wanandroid.com/friend/json
      */
     @GET("/friend/json")
     fun getFriendList(): Call<FriendListResponse>
 
     /**
-     * 搜索
-     * <p>
-     *     Post
-     * <p>
-     *     http://www.wanandroid.com/article/query/0/json
+     * 大家都在搜
+     * http://www.wanandroid.com/hotkey/json
      */
-    @POST("article/query/{page}/json")
+    @GET("/hotkey/json")
+    fun getHotKeyList(): Call<HotKeyResponse>
+
+    /**
+     * 搜索
+     * http://www.wanandroid.com/article/query/0/json
+     * @param page page
+     * @param k POST search key
+     */
+    @POST("/article/query/{page}/json")
     @FormUrlEncoded
     fun getSearchList(@Path("page") page: Int,
                       @Field("k") k: String

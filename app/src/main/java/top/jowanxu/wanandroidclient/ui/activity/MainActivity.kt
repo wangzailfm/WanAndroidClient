@@ -35,13 +35,13 @@ class MainActivity : BaseActivity() {
      */
     private var mineFragment: MineFragment? = null
     /**
-     * Fragment管理器
+     * FragmentManager
      */
     private val fragmentManager by lazy {
         supportFragmentManager
     }
     /**
-     * 当前下标
+     * current Index
      */
     private var currentIndex = 0
 
@@ -65,13 +65,12 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menuSearch -> {
-                Intent(this, SearchActivity::class.java).run {
-                    startActivity(this)
-                }
-                return true
+        // open search
+        if (item.itemId == R.id.menuSearch) {
+            Intent(this, SearchActivity::class.java).run {
+                startActivity(this)
             }
+            return true
         }
         return super.onOptionsItemSelected(item)
     }

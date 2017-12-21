@@ -14,7 +14,7 @@ object RetrofitHelper {
     val retrofitService: RetrofitService = RetrofitHelper.getService(Constant.REQUEST_BASE_URL, RetrofitService::class.java)
 
     /**
-     * 创建Retrofit
+     * create Retrofit
      */
     private fun create(url: String):Retrofit {
         // okHttpClientBuilder
@@ -38,12 +38,15 @@ object RetrofitHelper {
     }
 
     /**
-     * 获取ServiceApi
+     * get ServiceApi
      */
     private fun <T> getService(url: String, service: Class<T>): T = create(url).create(service)
 
 }
 
+/**
+ * create retrofit build
+ */
 class RetrofitBuild(url: String, client: OkHttpClient, gsonFactory: GsonConverterFactory) {
     val retrofit: Retrofit = Retrofit.Builder().apply {
         baseUrl(url)
@@ -52,6 +55,17 @@ class RetrofitBuild(url: String, client: OkHttpClient, gsonFactory: GsonConverte
     }.build()
 }
 
+/**
+ * Home list call
+ */
 fun getHomeListCall(page: Int = 0) = RetrofitHelper.retrofitService.getHomeList(page)
 
+/**
+ * Search list call
+ */
 fun getSearchListCall(page: Int = 0, k: String) = RetrofitHelper.retrofitService.getSearchList(page, k)
+
+/**
+ * Type tree list call
+ */
+fun getTypeTreeList() = RetrofitHelper.retrofitService.getTypeTreeList()

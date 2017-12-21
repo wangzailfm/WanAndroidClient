@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import top.jowanxu.wanandroidclient.R
 
 /**
- * 文章详细内容
+ * WebViewActivity
  */
 class ContentActivity : AppCompatActivity() {
     private lateinit var agentWeb: AgentWeb
@@ -26,6 +26,7 @@ class ContentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_content)
         toolbar.run {
+            title = "正在加载中..."
             setSupportActionBar(this)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
@@ -44,7 +45,6 @@ class ContentActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_content, menu)
         return super.onCreateOptionsMenu(menu)
     }

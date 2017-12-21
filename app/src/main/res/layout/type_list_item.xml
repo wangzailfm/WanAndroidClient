@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,7 +10,7 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/homeItemTitle"
+        android:id="@+id/typeItemFirst"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -17,36 +18,24 @@
         android:layout_alignParentTop="true"
         android:textColor="@android:color/primary_text_light"
         android:textSize="18sp"
-        tools:text="标题"/>
+        tools:text="一级目录"/>
 
     <TextView
-        android:id="@+id/homeItemAuthor"
+        android:id="@+id/typeItemSecond"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/homeItemTitle"
+        android:layout_below="@+id/typeItemFirst"
         android:layout_marginTop="20dp"
         android:textColor="@android:color/secondary_text_light"
-        tools:text="作者"/>
+        tools:text="二级目录"/>
 
-    <TextView
-        android:id="@+id/homeItemType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/homeItemAuthor"
-        android:layout_alignBottom="@+id/homeItemAuthor"
-        android:layout_marginStart="@dimen/dp_10"
-        android:layout_toEndOf="@+id/homeItemAuthor"
-        android:textColor="@android:color/secondary_text_light"
-        tools:text="类型"/>
-
-    <TextView
-        android:id="@+id/homeItemDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/homeItemAuthor"
-        android:layout_alignBottom="@+id/homeItemAuthor"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentEnd="true"
-        android:textColor="@android:color/secondary_text_light"
-        tools:text="日期"/>
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/ic_arrow_down"
+        tools:ignore="ContentDescription"/>
 </RelativeLayout>

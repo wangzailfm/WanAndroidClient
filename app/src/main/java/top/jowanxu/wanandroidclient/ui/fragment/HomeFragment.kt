@@ -10,38 +10,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.chad.library.adapter.base.BaseQuickAdapter
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.activity_search.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.HomeAdapter
 import top.jowanxu.wanandroidclient.bean.Datas
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
-import top.jowanxu.wanandroidclient.presenter.HomePresenterImpl
+import top.jowanxu.wanandroidclient.presenter.HomeFragmentPresenterImpl
 import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
-import top.jowanxu.wanandroidclient.view.HomeView
+import top.jowanxu.wanandroidclient.view.HomeFragmentView
 
-class HomeFragment : Fragment(), HomeView {
-
+class HomeFragment : Fragment(), HomeFragmentView {
     /**
-     * 列表总数
+     * mainView
      */
-    private var total = 0
-    /**
-     * 当前列表总数
-     */
-    private var currentTotal = 0
-
     private var mainView: View? = null
-
     /**
-     * 数据列表
+     * Data List
      */
     private var datas = mutableListOf<Datas>()
     /**
      * presenter
      */
-    private val homePresenter: HomePresenterImpl by lazy {
-        HomePresenterImpl(this)
+    private val homeFragmentPresenter: HomeFragmentPresenterImpl by lazy {
+        HomeFragmentPresenterImpl(this)
     }
     /**
      * adapter
@@ -68,67 +60,76 @@ class HomeFragment : Fragment(), HomeView {
             adapter = homeAdapter
         }
         homeAdapter.run {
-            setOnLoadMoreListener({
-                val page = homeAdapter.data.size / 20 + 1
-                homePresenter.getHomeList(page)
-            }, recyclerView)
+            bindToRecyclerView(recyclerView)
+            setOnLoadMoreListener(onRequestLoadMoreListener, recyclerView)
             onItemClickListener = this@HomeFragment.onItemClickListener
             setEmptyView(R.layout.fragment_home_empty)
         }
-        homePresenter.getHomeList()
+        homeFragmentPresenter.getHomeList()
     }
 
     override fun onPause() {
         super.onPause()
-        homePresenter.cancelRequest()
+        homeFragmentPresenter.cancelRequest()
     }
 
     /**
-     * 滚动到顶部
+     * scroll to top
      */
     fun smoothScrollToPosition() = recyclerView.smoothScrollToPosition(0)
 
-    override fun getHomeListSuccess(result: HomeListResponse) {
-        total = result.data.total
-        if (total == 0) {
-            activity.toast("未搜索到关键词相关文章")
-        }
+    override fun getHomeListAfter() { swipeRefreshLayout.isRefreshing = false }
+
+    override fun getHomeListZero() { activity.toast("未搜索到关键词相关文章") }
+
+    override fun getHomeListSmall(result: HomeListResponse) {
         result.data.datas?.let {
-            currentTotal = homeAdapter.data.size
-            if (currentTotal >= total) {
-                homeAdapter.loadMoreEnd()
-                return@let
+            homeAdapter.run {
+                replaceData(it)
+                loadMoreComplete()
+                loadMoreEnd()
+                setEnableLoadMore(false)
             }
-            if (swipeRefreshLayout.isRefreshing) {
-                homeAdapter.replaceData(it)
-            } else {
-                homeAdapter.addData(it)
-            }
-            currentTotal = homeAdapter.data.size
-            homeAdapter.loadMoreComplete()
         }
-        homeAdapter.setEnableLoadMore(true)
-        swipeRefreshLayout.isRefreshing = false
+    }
+
+    override fun getHomeListSuccess(result: HomeListResponse) {
+        result.data.datas?.let {
+            homeAdapter.run {
+                // 列表总数
+                val total = result.data.total
+                // 当前总数
+                if (data.size >= total) {
+                    loadMoreEnd()
+                    return@let
+                }
+                if (swipeRefreshLayout.isRefreshing) {
+                    replaceData(it)
+                } else {
+                    addData(it)
+                }
+                loadMoreComplete()
+                setEnableLoadMore(true)
+            }
+        }
     }
 
     override fun getHomeListFailed(errorMessage: String?) {
-        homeAdapter.setEnableLoadMore(true)
-        swipeRefreshLayout.isRefreshing = false
+        homeAdapter.setEnableLoadMore(false)
         homeAdapter.loadMoreFail()
+        activity.toast("获取数据失败")
     }
-
     /**
-     * 刷新监听
+     * RefreshListener
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
         swipeRefreshLayout.isRefreshing = true
         datas.clear()
         homeAdapter.setEnableLoadMore(false)
-        homePresenter.getHomeList()
+        homeFragmentPresenter.getHomeList()
     }
-
     /**
-     * 点击item监听
+     * ItemClickListener
      */
     private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
         _, _, position ->
@@ -139,5 +140,12 @@ class HomeFragment : Fragment(), HomeView {
                 startActivity(this)
             }
         }
+    }
+    /**
+     * LoadMoreListener
+     */
+    private val onRequestLoadMoreListener = BaseQuickAdapter.RequestLoadMoreListener {
+        val page = homeAdapter.data.size / 20 + 1
+        homeFragmentPresenter.getHomeList(page)
     }
 }

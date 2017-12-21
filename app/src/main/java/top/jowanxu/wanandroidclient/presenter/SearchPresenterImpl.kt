@@ -14,6 +14,18 @@ class SearchPresenterImpl(private val searchView: SearchListView) : SearchPresen
     }
 
     override fun getSearchListSuccess(result: SearchListResponse) {
+        searchView.getSearchListAfter()
+        // 列表总数
+        val total = result.data.total
+        if (total == 0) {
+            searchView.getSearchListZero()
+            return
+        }
+        // 当第一页小于一页总数时
+        if (total < result.data.size) {
+            searchView.getSearchListSmall(result)
+            return
+        }
         searchView.getSearchListSuccess(result)
     }
 

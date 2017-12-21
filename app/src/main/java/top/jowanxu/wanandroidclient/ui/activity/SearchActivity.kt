@@ -3,7 +3,6 @@ package top.jowanxu.wanandroidclient.ui.activity
 import Constant
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.view.MenuItemCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -14,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import toast
 import top.jowanxu.wanandroidclient.R
-import top.jowanxu.wanandroidclient.adapter.HomeAdapter
+import top.jowanxu.wanandroidclient.adapter.SearchAdapter
 import top.jowanxu.wanandroidclient.base.BaseActivity
 import top.jowanxu.wanandroidclient.bean.Datas
 import top.jowanxu.wanandroidclient.bean.SearchListResponse
@@ -22,20 +21,12 @@ import top.jowanxu.wanandroidclient.presenter.SearchPresenterImpl
 import top.jowanxu.wanandroidclient.view.SearchListView
 
 /**
- * 搜索界面
+ * SearchActivity
  */
 class SearchActivity : BaseActivity(), SearchListView {
 
     /**
-     * 列表总数
-     */
-    private var total = 0
-    /**
-     * 当前列表总数
-     */
-    private var currentTotal = 0
-    /**
-     * 数据列表
+     * Data List
      */
     private var datas = mutableListOf<Datas>()
     /**
@@ -47,11 +38,11 @@ class SearchActivity : BaseActivity(), SearchListView {
     /**
      * adapter
      */
-    private val searchAdapter: HomeAdapter by lazy {
-        HomeAdapter(this, datas)
+    private val searchAdapter: SearchAdapter by lazy {
+        SearchAdapter(this, datas)
     }
     /**
-     * 搜索
+     * Search key
      */
     private var searchKey: String? = null
     /**
@@ -75,6 +66,7 @@ class SearchActivity : BaseActivity(), SearchListView {
             adapter = searchAdapter
         }
         searchAdapter.run {
+            bindToRecyclerView(recyclerView)
             setOnLoadMoreListener({
                 searchKey?.let {
                     val page = searchAdapter.data.size / 20 + 1
@@ -86,30 +78,56 @@ class SearchActivity : BaseActivity(), SearchListView {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        searchPresenter.cancelRequest()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
-        searchView = MenuItemCompat.getActionView(menu.findItem(R.id.menuSearch)) as SearchView
+        // get SearchView
+        searchView = menu.findItem(R.id.menuSearch).actionView as SearchView
+        // init SearchView
         searchView.init(1920, false, onQueryTextListener = onQueryTextListener)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // back clickListener
         if (item.itemId == android.R.id.home) {
+            // remove focus
             searchView.clearFocus()
             finish()
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun getSearchListSuccess(result: SearchListResponse) {
-        total = result.data.total
-        if (total == 0) {
-            toast("未搜索到关键词相关文章")
-        }
+    override fun getSearchListAfter() {
+        swipeRefreshLayout.isRefreshing = false
+    }
+
+    override fun getSearchListZero() {
+        toast("未搜索到关键词相关文章")
+    }
+
+    override fun getSearchListSmall(result: SearchListResponse) {
         result.data.datas?.let {
             searchAdapter.run {
-                currentTotal = data.size
-                if (currentTotal >= total) {
+                replaceData(it)
+                loadMoreEnd()
+                loadMoreComplete()
+                setEnableLoadMore(false)
+            }
+        }
+    }
+
+    override fun getSearchListSuccess(result: SearchListResponse) {
+        result.data.datas?.let {
+            searchAdapter.run {
+                // 列表总数
+                val total = result.data.total
+                // 当前总数
+                if (data.size >= total) {
                     loadMoreEnd()
                     return@let
                 }
@@ -118,22 +136,20 @@ class SearchActivity : BaseActivity(), SearchListView {
                 } else {
                     addData(it)
                 }
-                currentTotal = data.size
                 loadMoreComplete()
+                setEnableLoadMore(true)
             }
         }
-        searchAdapter.setEnableLoadMore(true)
-        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun getSearchListFailed(errorMessage: String?) {
-        searchAdapter.setEnableLoadMore(true)
+        searchAdapter.setEnableLoadMore(false)
         swipeRefreshLayout.isRefreshing = false
         searchAdapter.loadMoreFail()
+        toast("获取数据失败")
     }
-
     /**
-     * 搜索监听
+     * QueryListener
      */
     private val onQueryTextListener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
@@ -153,9 +169,8 @@ class SearchActivity : BaseActivity(), SearchListView {
 
         override fun onQueryTextChange(newText: String?): Boolean = false
     }
-
     /**
-     * 刷新监听
+     * RefreshListener
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
         searchKey?.let {
@@ -169,7 +184,7 @@ class SearchActivity : BaseActivity(), SearchListView {
         }
     }
     /**
-     * 点击item监听
+     * ItemClickListener
      */
     private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
         _, _, position ->
@@ -182,7 +197,7 @@ class SearchActivity : BaseActivity(), SearchListView {
         }
     }
     /**
-     * 初始化SearchView
+     * init SearchView
      */
     private fun SearchView.init(sMaxWidth: Int = 0, sIconified: Boolean = false, isClose: Boolean = false, onQueryTextListener: SearchView.OnQueryTextListener) = this.run {
         if (sMaxWidth != 0) {
@@ -192,8 +207,10 @@ class SearchActivity : BaseActivity(), SearchListView {
         isIconified = sIconified
         // 不关闭
         if (!isClose) {
+            // 展开
             onActionViewExpanded()
         }
+        // 搜索监听
         setOnQueryTextListener(onQueryTextListener)
     }
 }

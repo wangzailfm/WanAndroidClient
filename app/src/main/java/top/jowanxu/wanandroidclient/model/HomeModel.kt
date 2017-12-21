@@ -7,14 +7,24 @@ import top.jowanxu.wanandroidclient.presenter.HomePresenter
  */
 interface HomeModel {
     /**
-     * 获取首页列表
+     * get Home List
      * @param onHomeListListener HomePresenter.OnHomeListListener
-     * @param page 页数
+     * @param page page
      */
     fun getHomeList(onHomeListListener: HomePresenter.OnHomeListListener, page: Int = 0)
 
     /**
-     * 取消请求
+     * get TypeTree List
+     * @param onTypeTreeListListener HomePresenter.OnTypeTreeListListener
      */
-    fun cancelRequest()
+    fun getTypeTreeList(onTypeTreeListListener: HomePresenter.OnTypeTreeListListener)
+
+    /**
+     * cancel HomeList Request
+     */
+    fun cancelHomeListRequest()
+    /**
+     * cancel TypeTree Request
+     */
+    fun cancelTypeTreeRequest()
 }
