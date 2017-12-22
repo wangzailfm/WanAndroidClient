@@ -11,9 +11,9 @@ class MineFragment : Fragment() {
 
     private var mainView: View? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mainView ?: let {
-            mainView =inflater?.inflate(R.layout.fragment_mine, null)
+            mainView = inflater.inflate(R.layout.fragment_mine, container, false)
         }
         return mainView
     }

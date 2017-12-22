@@ -27,6 +27,7 @@
         android:layout_below="@+id/homeItemTitle"
         android:layout_marginTop="20dp"
         android:textColor="@android:color/secondary_text_light"
+        android:textSize="@dimen/sp_16"
         tools:text="作者"/>
 
     <TextView
@@ -38,6 +39,7 @@
         android:layout_marginStart="@dimen/dp_10"
         android:layout_toEndOf="@+id/homeItemAuthor"
         android:textColor="@android:color/secondary_text_light"
+        android:textSize="@dimen/sp_16"
         tools:text="类型"/>
 
     <TextView

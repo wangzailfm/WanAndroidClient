@@ -68,4 +68,9 @@ fun getSearchListCall(page: Int = 0, k: String) = RetrofitHelper.retrofitService
 /**
  * Type tree list call
  */
-fun getTypeTreeList() = RetrofitHelper.retrofitService.getTypeTreeList()
+fun getTypeTreeListCall() = RetrofitHelper.retrofitService.getTypeTreeList()
+
+/**
+ * Type second list call
+ */
+fun getArticleListCall(page: Int = 0, cid: Int) = RetrofitHelper.retrofitService.getArticleList(page, cid)

@@ -53,14 +53,16 @@ class ContentActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
+                return true
             }
             R.id.menuShare -> {
                 Intent().run {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, "${getString(R.string.app_name)}分享：$shareUrl")
+                    putExtra(Intent.EXTRA_TEXT, getString(R.string.share_article_url, getString(R.string.app_name), shareUrl))
                     type = Constant.CONTENT_SHARE_TYPE
-                    startActivity(Intent.createChooser(this, "分享"))
+                    startActivity(Intent.createChooser(this, getString(R.string.share_title)))
                 }
+                return true
             }
         }
         return super.onOptionsItemSelected(item)

@@ -5,7 +5,7 @@ import asyncRequestSuspend
 import cancelAndJoinByActive
 import cancelCall
 import getHomeListCall
-import getTypeTreeList
+import getTypeTreeListCall
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
@@ -90,7 +90,7 @@ class HomeModelImpl : HomeModel {
                 typeTreeListAsync = async(CommonPool) {
                     asyncRequestSuspend<TreeListResponse> { cont ->
                         typeTreeListCall?.cancelCall()
-                        getTypeTreeList().apply {
+                        getTypeTreeListCall().apply {
                             typeTreeListCall = this@apply
                         }.enqueue(object : Callback<TreeListResponse> {
                             override fun onResponse(call: Call<TreeListResponse>?, response: Response<TreeListResponse>) {

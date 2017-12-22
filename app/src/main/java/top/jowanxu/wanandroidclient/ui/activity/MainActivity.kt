@@ -175,6 +175,9 @@ class MainActivity : BaseActivity() {
                         true
                     }
                     R.id.navigation_type -> {
+                        if (currentIndex == R.id.navigation_type) {
+                            typeFragment?.smoothScrollToPosition()
+                        }
                         currentIndex = R.id.navigation_type
                         true
                     }

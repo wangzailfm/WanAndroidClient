@@ -5,6 +5,6 @@
     <item
         android:id="@+id/menuShare"
         android:orderInCategory="100"
-        android:title="分享"
+        android:title="@string/share_title"
         app:showAsAction="never" />
 </menu>

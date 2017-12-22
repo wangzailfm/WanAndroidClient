@@ -18,6 +18,7 @@ import top.jowanxu.wanandroidclient.bean.Datas
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomeFragmentPresenterImpl
 import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
+import top.jowanxu.wanandroidclient.ui.activity.TypeContentActivity
 import top.jowanxu.wanandroidclient.view.HomeFragmentView
 
 class HomeFragment : Fragment(), HomeFragmentView {
@@ -42,9 +43,9 @@ class HomeFragment : Fragment(), HomeFragmentView {
         HomeAdapter(activity, datas)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mainView ?: let {
-            mainView =inflater?.inflate(R.layout.fragment_home, null)
+            mainView = inflater.inflate(R.layout.fragment_home, container, false)
         }
         return mainView
     }
@@ -63,6 +64,7 @@ class HomeFragment : Fragment(), HomeFragmentView {
             bindToRecyclerView(recyclerView)
             setOnLoadMoreListener(onRequestLoadMoreListener, recyclerView)
             onItemClickListener = this@HomeFragment.onItemClickListener
+            onItemChildClickListener = this@HomeFragment.onItemChildClickListener
             setEmptyView(R.layout.fragment_home_empty)
         }
         homeFragmentPresenter.getHomeList()
@@ -71,6 +73,8 @@ class HomeFragment : Fragment(), HomeFragmentView {
     override fun onPause() {
         super.onPause()
         homeFragmentPresenter.cancelRequest()
+        homeAdapter.loadMoreComplete()
+        swipeRefreshLayout.isRefreshing = false
     }
 
     /**
@@ -138,6 +142,18 @@ class HomeFragment : Fragment(), HomeFragmentView {
                 putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
                 putExtra(Constant.CONTENT_TITLE_KEY, datas[position].title)
                 startActivity(this)
+            }
+        }
+    }
+    private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { _, _, position ->
+        if (datas.size != 0) {
+            if (datas.size != 0) {
+                Intent(activity, TypeContentActivity::class.java).run {
+                    putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
+                    putExtra(Constant.CONTENT_TITLE_KEY, datas[position].title)
+                    putExtra(Constant.CONTENT_CID_KEY, datas[position].chapterId)
+                    startActivity(this)
+                }
             }
         }
     }

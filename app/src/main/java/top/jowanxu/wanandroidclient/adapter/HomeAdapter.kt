@@ -8,14 +8,16 @@ import top.jowanxu.wanandroidclient.bean.Datas
 
 class HomeAdapter(val context: Context, datas: MutableList<Datas>)
     : BaseQuickAdapter<Datas, BaseViewHolder>(R.layout.home_list_item, datas) {
-    override fun convert(helper: BaseViewHolder?, item: Datas?) {
-        helper?.let { holder ->
-            item?.let {
-                holder.setText(R.id.homeItemTitle, it.title)
-                holder.setText(R.id.homeItemAuthor, "作者：${it.author}")
-                holder.setText(R.id.homeItemType, "类别：${it.chapterName}")
-                holder.setText(R.id.homeItemDate, it.niceDate)
-            }
+    override fun convert(helper: BaseViewHolder, item: Datas?) {
+        item?.let {
+            @Suppress("DEPRECATION")
+            helper.setText(R.id.homeItemTitle, it.title)
+                    .setText(R.id.homeItemAuthor, "作者：${it.author}")
+                    .setText(R.id.homeItemType, "类别：${it.chapterName}")
+                    .setText(R.id.homeItemDate, it.niceDate)
+                    .addOnClickListener(R.id.homeItemType)
+                    .setTextColor(R.id.homeItemType, context.resources.getColor(R.color.colorPrimary))
+                    .linkify(R.id.homeItemType)
         }
     }
 }

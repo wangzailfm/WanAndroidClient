@@ -81,6 +81,8 @@ class SearchActivity : BaseActivity(), SearchListView {
     override fun onPause() {
         super.onPause()
         searchPresenter.cancelRequest()
+        searchAdapter.setEnableLoadMore(false)
+        searchAdapter.loadMoreComplete()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
