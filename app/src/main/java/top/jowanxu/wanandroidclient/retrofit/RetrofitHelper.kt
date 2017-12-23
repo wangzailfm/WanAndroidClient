@@ -74,3 +74,13 @@ fun getTypeTreeListCall() = RetrofitHelper.retrofitService.getTypeTreeList()
  * Type second list call
  */
 fun getArticleListCall(page: Int = 0, cid: Int) = RetrofitHelper.retrofitService.getArticleList(page, cid)
+
+/**
+ * login
+ */
+fun loginWanAndroid(username: String, password: String) = RetrofitHelper.retrofitService.loginWanAndroid(username, password)
+
+/**
+ * register
+ */
+fun registerWanAndroid(username: String, password: String, repassword: String) = RetrofitHelper.retrofitService.registerWanAndroid(username, password, repassword)

@@ -1,6 +1,7 @@
 package top.jowanxu.wanandroidclient.presenter
 
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
+import top.jowanxu.wanandroidclient.bean.LoginResponse
 import top.jowanxu.wanandroidclient.bean.TreeListResponse
 
 /**
@@ -53,5 +54,54 @@ interface HomePresenter {
          * @param errorMessage error message
          */
         fun getTypeTreeListFailed(errorMessage: String?)
+    }
+
+    /**
+     * login Listener
+     */
+    interface OnLoginListener {
+        /**
+         * login
+         * @param username username
+         * @param password password
+         */
+        fun loginWanAndroid(username: String, password: String)
+
+        /**
+         * login success
+         * @param result LoginResponse
+         */
+        fun loginSuccess(result: LoginResponse)
+
+        /**
+         * login failed
+         * @param errorMessage error message
+         */
+        fun loginFailed(errorMessage: String?)
+    }
+
+    /**
+     * register Listener
+     */
+    interface OnRegisterListener {
+        /**
+         * register
+         * @param username username
+         * @param password password
+         * @param repassword repassword
+         */
+        fun registerWanAndroid(username: String, password: String, repassword: String)
+
+        /**
+         * register success
+         * @param result LoginResponse
+         */
+        fun registerSuccess(result: LoginResponse)
+
+        /**
+         * register failed
+         * @param errorMessage error message
+         */
+        fun registerFailed(errorMessage: String?)
     }
 }

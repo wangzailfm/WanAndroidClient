@@ -10,10 +10,13 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
+import loginWanAndroid
+import registerWanAndroid
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
+import top.jowanxu.wanandroidclient.bean.LoginResponse
 import top.jowanxu.wanandroidclient.bean.TreeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomePresenter
 
@@ -35,6 +38,23 @@ class HomeModelImpl : HomeModel {
      * TypeTree async
      */
     private var typeTreeListAsync: Deferred<Any>? = null
+    /**
+     * Login Call
+     */
+    private var loginCall: Call<LoginResponse>? = null
+    /**
+     * Login async
+     */
+    private var loginAsync: Deferred<Any>? = null
+    /**
+     * Register Call
+     */
+    private var registerCall: Call<LoginResponse>? = null
+    /**
+     * Register async
+     */
+    private var registerAsync: Deferred<Any>? = null
+
     /**
      * get Home List
      * @param onHomeListListener HomePresenter.OnHomeListListener
@@ -115,6 +135,96 @@ class HomeModelImpl : HomeModel {
             }
         }
     }
+
+    /**
+     * login
+     * @param onLoginListener HomePresenter.OnLoginListener
+     * @param username username
+     * @param password password
+     */
+    override fun loginWanAndroid(onLoginListener: HomePresenter.OnLoginListener, username: String, password: String) {
+        async(UI) {
+            try {
+                loginAsync?.cancelAndJoinByActive()
+                loginAsync = async(CommonPool) {
+                    // Async Request, wait resume
+                    asyncRequestSuspend<LoginResponse> { cont ->
+                        loginCall?.cancelCall()
+                        loginWanAndroid(username, password).apply {
+                            loginCall = this@apply
+                        }.enqueue(object : Callback<LoginResponse> {
+                            override fun onResponse(call: Call<LoginResponse>,
+                                                    response: Response<LoginResponse>) {
+                                // resume
+                                cont.resume(response.body())
+                            }
+
+                            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                                cont.resumeWithException(t)
+                            }
+                        })
+                    }
+                }
+                // Get async result
+                val result = loginAsync?.await()
+                when (result) {
+                    is String -> onLoginListener.loginFailed(result)
+                    is LoginResponse -> onLoginListener.loginSuccess(result)
+                    else -> onLoginListener.loginFailed(Constant.RESULT_NULL)
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                onLoginListener.loginFailed(t.toString())
+                return@async
+            }
+        }
+    }
+
+    /**
+     * register
+     * @param onRegisterListener HomePresenter.OnRegisterListener
+     * @param username username
+     * @param password password
+     * @param repassword repassword
+     */
+    override fun registerWanAndroid(onRegisterListener: HomePresenter.OnRegisterListener, username: String, password: String, repassword: String) {
+        async(UI) {
+            try {
+                registerAsync?.cancelAndJoinByActive()
+                registerAsync = async(CommonPool) {
+                    // Async Request, wait resume
+                    asyncRequestSuspend<LoginResponse> { cont ->
+                        registerCall?.cancelCall()
+                        registerWanAndroid(username, password, repassword).apply {
+                            registerCall = this@apply
+                        }.enqueue(object : Callback<LoginResponse> {
+                            override fun onResponse(call: Call<LoginResponse>,
+                                                    response: Response<LoginResponse>) {
+                                // resume
+                                cont.resume(response.body())
+                            }
+
+                            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                                cont.resumeWithException(t)
+                            }
+                        })
+                    }
+                }
+                // Get async result
+                val result = loginAsync?.await()
+                when (result) {
+                    is String -> onRegisterListener.registerFailed(result)
+                    is LoginResponse -> onRegisterListener.registerSuccess(result)
+                    else -> onRegisterListener.registerFailed(Constant.RESULT_NULL)
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                onRegisterListener.registerFailed(t.toString())
+                return@async
+            }
+        }
+    }
+
     /**
      * cancel HomeList Request
      */
@@ -126,6 +236,22 @@ class HomeModelImpl : HomeModel {
      * cancel TypeTree Request
      */
     override fun cancelTypeTreeRequest() {
+        loginCall?.cancel()
+        loginAsync?.cancel()
+    }
+
+    /**
+     * cancel login Request
+     */
+    override fun cancelLoginRequest() {
+        registerCall?.cancel()
+        registerAsync?.cancel()
+    }
+
+    /**
+     * cancel register Request
+     */
+    override fun cancelRegisterRequest() {
         typeTreeListCall?.cancel()
         typeTreeListAsync?.cancel()
     }

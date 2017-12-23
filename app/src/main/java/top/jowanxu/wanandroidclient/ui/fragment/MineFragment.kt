@@ -7,11 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_mine.*
+import toast
 import top.jowanxu.wanandroidclient.R
+import top.jowanxu.wanandroidclient.bean.LoginResponse
+import top.jowanxu.wanandroidclient.presenter.MineFragmentPresenterImpl
+import top.jowanxu.wanandroidclient.view.MineFragmentView
 
-class MineFragment : Fragment() {
+class MineFragment : Fragment(), MineFragmentView {
 
     private var mainView: View? = null
+
+    private val mineFragmentPresenter: MineFragmentPresenterImpl by lazy {
+        MineFragmentPresenterImpl(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mainView ?: let {
@@ -27,6 +35,46 @@ class MineFragment : Fragment() {
     }
 
     /**
+     * login success
+     * @param result LoginResponse
+     */
+    override fun loginSuccess(result: LoginResponse) {
+        loginProgress.visibility = View.GONE
+        activity.toast("登录成功")
+    }
+
+    /**
+     * login failed
+     * @param errorMessage error message
+     */
+    override fun loginFailed(errorMessage: String?) {
+        loginProgress.visibility = View.GONE
+        errorMessage?.let {
+            activity.toast(it)
+        }
+    }
+
+    /**
+     * register success
+     * @param result LoginResponse
+     */
+    override fun registerSuccess(result: LoginResponse) {
+        loginProgress.visibility = View.GONE
+        activity.toast("注册成功")
+    }
+
+    /**
+     * register failed
+     * @param errorMessage error message
+     */
+    override fun registerFailed(errorMessage: String?) {
+        loginProgress.visibility = View.GONE
+        errorMessage?.let {
+            activity.toast(it)
+        }
+    }
+
+    /**
      * OnClickListener
      */
     private val onClickListener = View.OnClickListener {
@@ -34,12 +82,15 @@ class MineFragment : Fragment() {
         when (view.id) {
             R.id.login -> {
                 if (checkContent(true)) {
-
+                    loginProgress.visibility = View.VISIBLE
+                    mineFragmentPresenter.loginWanAndroid(username.text.toString(), password.text.toString())
                 }
             }
             R.id.register -> {
                 if (checkContent(false)) {
-
+                    loginProgress.visibility = View.VISIBLE
+                    mineFragmentPresenter.registerWanAndroid(username.text.toString(),
+                            password.text.toString(), passwordConfirm.text.toString())
                 }
             }
         }

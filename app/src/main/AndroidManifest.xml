@@ -64,12 +64,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
-            android:name=".ui.activity.LoginActivity"
-            android:configChanges="keyboard|screenSize|orientation|layoutDirection"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

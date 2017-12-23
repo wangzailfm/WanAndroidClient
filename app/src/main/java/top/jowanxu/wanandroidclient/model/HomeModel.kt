@@ -20,6 +20,23 @@ interface HomeModel {
     fun getTypeTreeList(onTypeTreeListListener: HomePresenter.OnTypeTreeListListener)
 
     /**
+     * login
+     * @param onLoginListener HomePresenter.OnLoginListener
+     * @param username username
+     * @param password password
+     */
+    fun loginWanAndroid(onLoginListener: HomePresenter.OnLoginListener, username: String, password: String)
+
+    /**
+     * register
+     * @param onRegisterListener HomePresenter.OnRegisterListener
+     * @param username username
+     * @param password password
+     * @param repassword repassword
+     */
+    fun registerWanAndroid(onRegisterListener: HomePresenter.OnRegisterListener, username: String, password: String, repassword: String)
+
+    /**
      * cancel HomeList Request
      */
     fun cancelHomeListRequest()
@@ -27,4 +44,14 @@ interface HomeModel {
      * cancel TypeTree Request
      */
     fun cancelTypeTreeRequest()
+
+    /**
+     * cancel login Request
+     */
+    fun cancelLoginRequest()
+
+    /**
+     * cancel register Request
+     */
+    fun cancelRegisterRequest()
 }
