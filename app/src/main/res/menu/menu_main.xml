@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menuHot"
+        android:title="@string/menuHot"
+        android:icon="@drawable/ic_action_hot"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/menuSearch"
         android:title="@string/search_title"
         android:icon="@drawable/ic_action_search"

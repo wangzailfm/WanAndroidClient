@@ -145,12 +145,15 @@ class HomeFragment : Fragment(), HomeFragmentView {
             }
         }
     }
+    /**
+     * ItemChildClickListener
+     */
     private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { _, _, position ->
         if (datas.size != 0) {
             if (datas.size != 0) {
                 Intent(activity, TypeContentActivity::class.java).run {
-                    putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
-                    putExtra(Constant.CONTENT_TITLE_KEY, datas[position].title)
+                    putExtra(Constant.CONTENT_TARGET_KEY, true)
+                    putExtra(Constant.CONTENT_TITLE_KEY, datas[position].chapterName)
                     putExtra(Constant.CONTENT_CID_KEY, datas[position].chapterId)
                     startActivity(this)
                 }

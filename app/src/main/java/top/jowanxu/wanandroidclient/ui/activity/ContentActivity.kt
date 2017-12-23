@@ -58,7 +58,7 @@ class ContentActivity : AppCompatActivity() {
             R.id.menuShare -> {
                 Intent().run {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, getString(R.string.share_article_url, getString(R.string.app_name), shareUrl))
+                    putExtra(Intent.EXTRA_TEXT, getString(R.string.share_article_url, getString(R.string.app_name), shareTitle, shareUrl))
                     type = Constant.CONTENT_SHARE_TYPE
                     startActivity(Intent.createChooser(this, getString(R.string.share_title)))
                 }

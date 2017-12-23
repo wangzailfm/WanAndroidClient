@@ -61,4 +61,23 @@ interface RetrofitService {
                       @Field("k") k: String
     ): Call<SearchListResponse>
 
+    /**
+     * 登录
+     */
+    @POST("/user/login")
+    @FormUrlEncoded
+    fun loginWanAndroid(@Field("username") username: String,
+                        @Field("password") password: String
+    ): Call<LoginResponse>
+
+    /**
+     * 注册
+     */
+    @POST("/user/register")
+    @FormUrlEncoded
+    fun registerWanAndroid(@Field("username") username: String,
+                           @Field("password") password: String,
+                           @Field("repassword") repassowrd: String
+    ): Call<LoginResponse>
+
 }

@@ -13,7 +13,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import kotlinx.android.synthetic.main.fragment_type_content.*
 import toast
 import top.jowanxu.wanandroidclient.R
-import top.jowanxu.wanandroidclient.adapter.HomeAdapter
+import top.jowanxu.wanandroidclient.adapter.TypeArticleAdapter
 import top.jowanxu.wanandroidclient.bean.ArticleListResponse
 import top.jowanxu.wanandroidclient.bean.Datas
 import top.jowanxu.wanandroidclient.presenter.TypeArticlePresenterImpl
@@ -38,8 +38,8 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
     /**
      * adapter
      */
-    private val homeAdapter: HomeAdapter by lazy {
-        HomeAdapter(activity, datas)
+    private val typeArticleAdapter: TypeArticleAdapter by lazy {
+        TypeArticleAdapter(activity, datas)
     }
     /**
      * type id
@@ -63,9 +63,9 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
         }
         tabRecyclerView.run {
             layoutManager = LinearLayoutManager(activity)
-            adapter = homeAdapter
+            adapter = typeArticleAdapter
         }
-        homeAdapter.run {
+        typeArticleAdapter.run {
             setOnLoadMoreListener(onRequestLoadMoreListener, tabRecyclerView)
             onItemClickListener = this@TypeArticleFragment.onItemClickListener
             setEmptyView(R.layout.fragment_home_empty)
@@ -75,7 +75,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        homeAdapter.loadMoreComplete()
+        typeArticleAdapter.loadMoreComplete()
         tabSwipeRefreshLayout.isRefreshing = false
     }
 
@@ -92,7 +92,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
      */
     override fun getTypeArticleListSuccess(result: ArticleListResponse) {
         result.data.datas?.let {
-            homeAdapter.run {
+            typeArticleAdapter.run {
                 // 列表总数
                 val total = result.data.total
                 // 当前总数
@@ -116,8 +116,8 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
      * @param errorMessage error message
      */
     override fun getTypeArticleListFailed(errorMessage: String?) {
-        homeAdapter.setEnableLoadMore(false)
-        homeAdapter.loadMoreFail()
+        typeArticleAdapter.setEnableLoadMore(false)
+        typeArticleAdapter.loadMoreFail()
         activity.toast("获取数据失败")
     }
 
@@ -134,7 +134,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
      */
     override fun getTypeArticleListSmall(result: ArticleListResponse) {
         result.data.datas?.let {
-            homeAdapter.run {
+            typeArticleAdapter.run {
                 replaceData(it)
                 loadMoreComplete()
                 loadMoreEnd()
@@ -149,7 +149,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
         tabSwipeRefreshLayout.isRefreshing = true
         datas.clear()
-        homeAdapter.setEnableLoadMore(false)
+        typeArticleAdapter.setEnableLoadMore(false)
         typeArticlePresenter.getTypeArticleList(cid = cid)
     }
     /**
@@ -168,7 +168,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
      * LoadMoreListener
      */
     private val onRequestLoadMoreListener = BaseQuickAdapter.RequestLoadMoreListener {
-        val page = homeAdapter.data.size / 20 + 1
+        val page = typeArticleAdapter.data.size / 20 + 1
         typeArticlePresenter.getTypeArticleList(page, cid)
     }
 

@@ -11,5 +11,6 @@
         android:id="@+id/menuShare"
         android:orderInCategory="100"
         android:title="@string/share_type_title"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_action_share"
+        app:showAsAction="ifRoom" />
 </menu>

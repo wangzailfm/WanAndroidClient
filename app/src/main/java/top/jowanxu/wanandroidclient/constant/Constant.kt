@@ -21,6 +21,7 @@ object Constant {
     const val CONTENT_TITLE_KEY = "title"
     const val CONTENT_CID_KEY = "cid"
     const val CONTENT_CHILDREN_DATA_KEY = "childrenData"
+    const val CONTENT_TARGET_KEY = "target"
 
     const val CONTENT_SHARE_TYPE = "text/plain"
 }

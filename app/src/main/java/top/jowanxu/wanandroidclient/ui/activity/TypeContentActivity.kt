@@ -14,9 +14,21 @@ import top.jowanxu.wanandroidclient.bean.TreeListResponse
 import top.jowanxu.wanandroidclient.bean.TreeListResponse.Data.Children
 
 class TypeContentActivity : AppCompatActivity() {
+    /**
+     * toolbar title
+     */
     private lateinit var firstTitle: String
+    /**
+     * Children list
+     */
     private val list = mutableListOf<Children>()
-
+    /**
+     * check click for home or search
+     */
+    private var target: Boolean = false
+    /**
+     * Adapter
+     */
     private val typeArticlePagerAdapter: TypeArticlePagerAdapter by lazy {
         TypeArticlePagerAdapter(list, supportFragmentManager)
     }
@@ -30,14 +42,20 @@ class TypeContentActivity : AppCompatActivity() {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
         intent.extras?.let { extras ->
+            target = extras.getBoolean(Constant.CONTENT_TARGET_KEY, false)
             extras.getString(Constant.CONTENT_TITLE_KEY)?.let {
                 firstTitle = it
                 typeSecondToolbar.title = it
             }
-            extras.getSerializable(Constant.CONTENT_CHILDREN_DATA_KEY)?.let {
-                val data = it as TreeListResponse.Data
-                data.children?.let { children ->
-                    list.addAll(children)
+            if (target) {
+                list.add(Children(extras.getInt(Constant.CONTENT_CID_KEY, 0),
+                        firstTitle, 0, 0, 0, 0, null))
+            } else {
+                extras.getSerializable(Constant.CONTENT_CHILDREN_DATA_KEY)?.let {
+                    val data = it as TreeListResponse.Data
+                    data.children?.let { children ->
+                        list.addAll(children)
+                    }
                 }
             }
         }
@@ -49,14 +67,7 @@ class TypeContentActivity : AppCompatActivity() {
         }
         typeSecondViewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(typeSecondTabs))
         typeSecondTabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(typeSecondViewPager))
-        intent.extras?.let {
-            val homeTargetCid = it.getInt(Constant.CONTENT_CID_KEY, 0)
-            if (homeTargetCid != 0) {
-                typeSecondViewPager.currentItem = list.indices.first { homeTargetCid == list[it].id }
-            }
-        }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_type_content, menu)
