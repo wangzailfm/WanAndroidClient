@@ -84,7 +84,7 @@ class HomeFragment : Fragment(), HomeFragmentView {
 
     override fun getHomeListAfter() { swipeRefreshLayout.isRefreshing = false }
 
-    override fun getHomeListZero() { activity.toast("未搜索到关键词相关文章") }
+    override fun getHomeListZero() { activity.toast("获取数据失败") }
 
     override fun getHomeListSmall(result: HomeListResponse) {
         result.data.datas?.let {

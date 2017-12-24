@@ -63,6 +63,9 @@ interface RetrofitService {
 
     /**
      * 登录
+     * @param username username
+     * @param password password
+     * @return Call<LoginResponse>
      */
     @POST("/user/login")
     @FormUrlEncoded
@@ -72,6 +75,10 @@ interface RetrofitService {
 
     /**
      * 注册
+     * @param username username
+     * @param password password
+     * @param repassword repassword
+     * @return Call<LoginResponse>
      */
     @POST("/user/register")
     @FormUrlEncoded

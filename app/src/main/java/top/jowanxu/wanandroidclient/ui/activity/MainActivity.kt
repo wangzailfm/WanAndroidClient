@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.base.BaseActivity
+import top.jowanxu.wanandroidclient.ui.fragment.CommonUseFragment
 import top.jowanxu.wanandroidclient.ui.fragment.HomeFragment
 import top.jowanxu.wanandroidclient.ui.fragment.MineFragment
 import top.jowanxu.wanandroidclient.ui.fragment.TypeFragment
@@ -34,6 +35,10 @@ class MainActivity : BaseActivity() {
      * MineFragment
      */
     private var mineFragment: MineFragment? = null
+    /**
+     * CommonUseFragment
+     */
+    private var commonUseFragment: CommonUseFragment? = null
     /**
      * FragmentManager
      */
@@ -72,6 +77,22 @@ class MainActivity : BaseActivity() {
             }
             return true
         }
+        when (item.itemId) {
+            R.id.menuSearch -> {
+                Intent(this, SearchActivity::class.java).run {
+                    startActivity(this)
+                }
+                return true
+            }
+            R.id.menuHot -> {
+                if (currentIndex == R.id.menuHot) {
+                    commonUseFragment?.smoothScrollToPosition()
+                }
+                setFragment(R.id.menuHot)
+                currentIndex = R.id.menuHot
+                return true
+            }
+        }
         return super.onOptionsItemSelected(item)
     }
 
@@ -84,6 +105,7 @@ class MainActivity : BaseActivity() {
             is HomeFragment -> homeFragment ?: let { homeFragment = fragment }
             is TypeFragment -> typeFragment ?: let { typeFragment = fragment }
             is MineFragment -> mineFragment ?: let { mineFragment = fragment }
+            is CommonUseFragment -> commonUseFragment ?: let { commonUseFragment = fragment }
         }
     }
 
@@ -124,20 +146,35 @@ class MainActivity : BaseActivity() {
                     add(R.id.content, it)
                 }
             }
+            commonUseFragment ?: let {
+                CommonUseFragment().let {
+                    commonUseFragment = it
+                    add(R.id.content, it)
+                }
+            }
             hideFragment(this)
             when (index) {
                 R.id.navigation_home -> {
+                    toolbar.title = "玩Android"
                     homeFragment?.let {
                         this.show(it)
                     }
                 }
                 R.id.navigation_type -> {
+                    toolbar.title = "玩Android"
                     typeFragment?.let {
                         this.show(it)
                     }
                 }
                 R.id.navigation_mine -> {
+                    toolbar.title = "玩Android"
                     mineFragment?.let {
+                        this.show(it)
+                    }
+                }
+                R.id.menuHot -> {
+                    toolbar.title = "常用网址"
+                    commonUseFragment?.let {
                         this.show(it)
                     }
                 }
@@ -156,6 +193,9 @@ class MainActivity : BaseActivity() {
             transaction.hide(it)
         }
         mineFragment?.let {
+            transaction.hide(it)
+        }
+        commonUseFragment?.let {
             transaction.hide(it)
         }
     }

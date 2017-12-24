@@ -4,6 +4,7 @@ import Constant
 import asyncRequestSuspend
 import cancelAndJoinByActive
 import cancelCall
+import getFriendListCall
 import getHomeListCall
 import getTypeTreeListCall
 import kotlinx.coroutines.experimental.CommonPool
@@ -15,6 +16,7 @@ import registerWanAndroid
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import top.jowanxu.wanandroidclient.bean.FriendListResponse
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.bean.LoginResponse
 import top.jowanxu.wanandroidclient.bean.TreeListResponse
@@ -54,6 +56,14 @@ class HomeModelImpl : HomeModel {
      * Register async
      */
     private var registerAsync: Deferred<Any>? = null
+    /**
+     * Friend list Call
+     */
+    private var friendListCall: Call<FriendListResponse>? = null
+    /**
+     * Friend list async
+     */
+    private var friendListAsync: Deferred<Any>? = null
 
     /**
      * get Home List
@@ -97,8 +107,15 @@ class HomeModelImpl : HomeModel {
                 return@async
             }
         }
-
     }
+    /**
+     * cancel HomeList Request
+     */
+    override fun cancelHomeListRequest() {
+        homeListCall?.cancel()
+        homeListAsync?.cancel()
+    }
+
     /**
      * get TypeTree List
      * @param onTypeTreeListListener HomePresenter.OnTypeTreeListListener
@@ -134,6 +151,13 @@ class HomeModelImpl : HomeModel {
                 return@async
             }
         }
+    }
+    /**
+     * cancel TypeTree Request
+     */
+    override fun cancelTypeTreeRequest() {
+        loginCall?.cancel()
+        loginAsync?.cancel()
     }
 
     /**
@@ -178,6 +202,13 @@ class HomeModelImpl : HomeModel {
                 return@async
             }
         }
+    }
+    /**
+     * cancel login Request
+     */
+    override fun cancelLoginRequest() {
+        registerCall?.cancel()
+        registerAsync?.cancel()
     }
 
     /**
@@ -224,35 +255,57 @@ class HomeModelImpl : HomeModel {
             }
         }
     }
-
-    /**
-     * cancel HomeList Request
-     */
-    override fun cancelHomeListRequest() {
-        homeListCall?.cancel()
-        homeListAsync?.cancel()
-    }
-    /**
-     * cancel TypeTree Request
-     */
-    override fun cancelTypeTreeRequest() {
-        loginCall?.cancel()
-        loginAsync?.cancel()
-    }
-
-    /**
-     * cancel login Request
-     */
-    override fun cancelLoginRequest() {
-        registerCall?.cancel()
-        registerAsync?.cancel()
-    }
-
     /**
      * cancel register Request
      */
     override fun cancelRegisterRequest() {
         typeTreeListCall?.cancel()
         typeTreeListAsync?.cancel()
+    }
+
+    /**
+     * get friend list
+     */
+    override fun getFriendList(onFriendListListener: HomePresenter.OnFriendListListener) {
+        async(UI) {
+            try {
+                friendListAsync?.cancelAndJoinByActive()
+                friendListAsync = async(CommonPool) {
+                    asyncRequestSuspend<FriendListResponse> { cont ->
+                        friendListCall?.cancelCall()
+                        getFriendListCall().apply {
+                            friendListCall = this@apply
+                        }.enqueue(object : Callback<FriendListResponse> {
+                            override fun onResponse(call: Call<FriendListResponse>,
+                                                    response: Response<FriendListResponse>) {
+                                cont.resume(response.body())
+                            }
+
+                            override fun onFailure(call: Call<FriendListResponse>, t: Throwable) {
+                                cont.resumeWithException(t)
+                            }
+                        })
+                    }
+                }
+                val result = friendListAsync?.await()
+                when (result) {
+                    is String -> onFriendListListener.getFriendListFailed(result)
+                    is FriendListResponse -> onFriendListListener.getFriendListSuccess(result)
+                    else -> onFriendListListener.getFriendListFailed(Constant.RESULT_NULL)
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                onFriendListListener.getFriendListFailed(t.toString())
+                return@async
+            }
+        }
+    }
+
+    /**
+     * cancel friend list Request
+     */
+    override fun cancelFriendRequest() {
+        friendListCall?.cancel()
+        friendListAsync?.cancel()
     }
 }

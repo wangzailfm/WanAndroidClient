@@ -4,7 +4,7 @@
     <string name="title_home">首页</string>
     <string name="title_dashboard">知识体系</string>
     <string name="title_notifications">我的</string>
-    <string name="no_data">没有数据</string>
+    <string name="no_data">这里空空的…</string>
     <string name="search_title">搜索</string>
     <string name="share_title">分享</string>
     <string name="share_type_title">分享专题</string>
@@ -15,6 +15,7 @@
     <string name="prompt_password">密码</string>
     <string name="prompt_password_confirm">确认密码(注册需填写)</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="menuHot">常用</string>
     <string name="login_register">注册</string>
     <string name="login_login">登录</string>
     <string name="password_confirm_not_empty">确认密码不能为空</string>

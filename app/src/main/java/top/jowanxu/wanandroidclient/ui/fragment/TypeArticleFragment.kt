@@ -125,7 +125,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
      * get Type Article list data size equal zero
      */
     override fun getTypeArticleListZero() {
-        activity.toast("未搜索到关键词相关文章")
+        activity.toast("获取数据失败")
     }
 
     /**

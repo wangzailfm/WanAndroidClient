@@ -84,3 +84,8 @@ fun loginWanAndroid(username: String, password: String) = RetrofitHelper.retrofi
  * register
  */
 fun registerWanAndroid(username: String, password: String, repassword: String) = RetrofitHelper.retrofitService.registerWanAndroid(username, password, repassword)
+
+/**
+ * Friend list call
+ */
+fun getFriendListCall() = RetrofitHelper.retrofitService.getFriendList()

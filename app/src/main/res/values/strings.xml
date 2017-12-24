@@ -4,7 +4,7 @@
     <string name="title_dashboard">Knowledge</string>
     <string name="title_notifications">Mine</string>
     <string name="web_title">%1$s…</string>
-    <string name="no_data">No Data</string>
+    <string name="no_data">Here the empty…</string>
     <string name="search_title">Search</string>
     <string name="share_title">Share</string>
     <string name="share_type_title">Share Project</string>
@@ -24,4 +24,7 @@
     <string name="password_not_empty">Password cannot be empty.</string>
     <string name="password_length_short">Password length can not less than six.</string>
     <string name="username_not_empty">Username cannot be empty.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

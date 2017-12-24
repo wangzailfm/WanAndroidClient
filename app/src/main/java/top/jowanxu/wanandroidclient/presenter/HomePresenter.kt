@@ -1,5 +1,6 @@
 package top.jowanxu.wanandroidclient.presenter
 
+import top.jowanxu.wanandroidclient.bean.FriendListResponse
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.bean.LoginResponse
 import top.jowanxu.wanandroidclient.bean.TreeListResponse
@@ -103,5 +104,27 @@ interface HomePresenter {
          * @param errorMessage error message
          */
         fun registerFailed(errorMessage: String?)
+    }
+    /**
+     * get friend list interface
+     */
+    interface OnFriendListListener {
+
+        /**
+         * get friend tree list
+         */
+        fun getFriendList()
+
+        /**
+         * get friend list success
+         * @param result result
+         */
+        fun getFriendListSuccess(result: FriendListResponse)
+
+        /**
+         * get friend list failed
+         * @param errorMessage error message
+         */
+        fun getFriendListFailed(errorMessage: String?)
     }
 }

@@ -96,7 +96,7 @@ class TypeFragment : Fragment(), TypeFragmentView {
      * get Type list data size equal zero
      */
     override fun getTypeListZero() {
-        activity.toast("未搜索到关键词相关文章")
+        activity.toast("获取数据失败")
     }
     /**
      * RefreshListener

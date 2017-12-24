@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dp_10"
+    android:background="@drawable/list_item_selector"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/commonItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/typeItemArrow"
+        android:textColor="@android:color/primary_text_light"
+        android:textSize="18sp"
+        tools:text="一级目录"/>
+
+    <TextView
+        android:id="@+id/typeItemSecond"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/commonItemTitle"
+        android:layout_marginTop="20dp"
+        android:layout_toStartOf="@+id/typeItemArrow"
+        android:textColor="@android:color/secondary_text_light"
+        tools:text="二级目录"/>
+
+    <ImageView
+        android:id="@+id/typeItemArrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/ic_arrow_down"
+        tools:ignore="ContentDescription"/>
+</RelativeLayout>

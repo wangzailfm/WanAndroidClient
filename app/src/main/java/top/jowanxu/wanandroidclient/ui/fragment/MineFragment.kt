@@ -6,7 +6,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_mine.*
+import kotlinx.android.synthetic.main.fragment_login.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.bean.LoginResponse
@@ -14,6 +14,7 @@ import top.jowanxu.wanandroidclient.presenter.MineFragmentPresenterImpl
 import top.jowanxu.wanandroidclient.view.MineFragmentView
 
 class MineFragment : Fragment(), MineFragmentView {
+    private var isLogin: Boolean = false
 
     private var mainView: View? = null
 
@@ -21,17 +22,26 @@ class MineFragment : Fragment(), MineFragmentView {
         MineFragmentPresenterImpl(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         mainView ?: let {
-            mainView = inflater.inflate(R.layout.fragment_mine, container, false)
+            mainView = if (!isLogin) {
+                inflater.inflate(R.layout.fragment_login, container, false)
+            } else {
+                inflater.inflate(R.layout.fragment_mine, container, false)
+            }
         }
         return mainView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        login.setOnClickListener(onClickListener)
-        register.setOnClickListener(onClickListener)
+        if (!isLogin) {
+            login.setOnClickListener(onClickListener)
+            register.setOnClickListener(onClickListener)
+        } else {
+
+        }
     }
 
     /**
@@ -90,7 +100,7 @@ class MineFragment : Fragment(), MineFragmentView {
                 if (checkContent(false)) {
                     loginProgress.visibility = View.VISIBLE
                     mineFragmentPresenter.registerWanAndroid(username.text.toString(),
-                            password.text.toString(), passwordConfirm.text.toString())
+                            password.text.toString(), password.text.toString())
                 }
             }
         }
@@ -105,27 +115,14 @@ class MineFragment : Fragment(), MineFragmentView {
         // error hint
         username.error = null
         password.error = null
-        passwordConfirm.error = null
         // cancel
         var cancel = false
         // attempt to view
         var focusView: View? = null
         // if register, check password confirm
-        val pwdConfirmText = passwordConfirm.text.toString()
         val pwdText = password.text.toString()
         val usernameText = username.text.toString()
 
-        if (!isLogin) {
-            if (TextUtils.isEmpty(pwdConfirmText)) {
-                passwordConfirm.error = getString(R.string.password_confirm_not_empty)
-                focusView = passwordConfirm
-                cancel = true
-            } else if (pwdConfirmText != pwdText) {
-                passwordConfirm.error = getString(R.string.password_confirm_diff)
-                focusView = passwordConfirm
-                cancel = true
-            }
-        }
         // check password
         if (TextUtils.isEmpty(pwdText)) {
             password.error = getString(R.string.password_not_empty)
