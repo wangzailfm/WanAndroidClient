@@ -94,10 +94,10 @@ class MainActivity : BaseActivity() {
             }
         }
         navigationViewLogout.run {
-            if (isLogin) {
+            if (!isLogin) {
                 text = "点击登录"
             } else {
-                text = getString(R.string.login_login)
+                text = getString(R.string.logout)
             }
             setOnClickListener {
                 toast("setOnClickListener")
