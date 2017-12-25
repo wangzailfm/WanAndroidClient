@@ -31,7 +31,7 @@ fun Context.toast(content: String) {
         setText(content)
         show()
     } ?: run {
-        Toast.makeText(this, content, Toast.LENGTH_SHORT).apply {
+        Toast.makeText(this.applicationContext, content, Toast.LENGTH_SHORT).apply {
             Constant.showToast = this
         }.show()
     }
