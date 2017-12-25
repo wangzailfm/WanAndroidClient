@@ -148,9 +148,9 @@ class HomeFragment : Fragment(), HomeFragmentView {
     /**
      * ItemChildClickListener
      */
-    private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { _, _, position ->
-        if (datas.size != 0) {
-            if (datas.size != 0) {
+    private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { _, view, position ->
+        if (datas.size != 0) {when (view.id) {
+            R.id.homeItemType -> {
                 Intent(activity, TypeContentActivity::class.java).run {
                     putExtra(Constant.CONTENT_TARGET_KEY, true)
                     putExtra(Constant.CONTENT_TITLE_KEY, datas[position].chapterName)
@@ -158,6 +158,10 @@ class HomeFragment : Fragment(), HomeFragmentView {
                     startActivity(this)
                 }
             }
+            R.id.homeItemLike -> {
+                activity.toast("收藏")
+            }
+        }
         }
     }
     /**

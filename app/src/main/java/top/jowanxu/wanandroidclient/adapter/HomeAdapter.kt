@@ -16,6 +16,7 @@ class HomeAdapter(val context: Context, datas: MutableList<Datas>)
                     .setText(R.id.homeItemType, "类别：${it.chapterName}")
                     .setText(R.id.homeItemDate, it.niceDate)
                     .addOnClickListener(R.id.homeItemType)
+                    .addOnClickListener(R.id.homeItemLike)
                     .setTextColor(R.id.homeItemType, context.resources.getColor(R.color.colorPrimary))
                     .linkify(R.id.homeItemType)
         }

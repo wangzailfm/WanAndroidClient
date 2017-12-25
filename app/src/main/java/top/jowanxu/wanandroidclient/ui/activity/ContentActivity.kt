@@ -13,6 +13,7 @@ import com.just.agentweb.ChromeClientCallbackManager
 import getAgentWeb
 import kotlinx.android.synthetic.main.activity_content.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import toast
 import top.jowanxu.wanandroidclient.R
 
 /**
@@ -59,7 +60,7 @@ class ContentActivity : AppCompatActivity() {
                 return true
             }
             R.id.menuLike -> {
-                // add to like
+                toast("收藏")
                 return true
             }
         }

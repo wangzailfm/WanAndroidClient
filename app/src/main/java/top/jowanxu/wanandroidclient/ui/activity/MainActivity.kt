@@ -94,13 +94,12 @@ class MainActivity : BaseActivity() {
             }
         }
         navigationViewLogout.run {
-            if (!isLogin) {
-                text = "点击登录"
+            text = if (!isLogin) {
+                "点击登录"
             } else {
-                text = getString(R.string.logout)
+                getString(R.string.logout)
             }
             setOnClickListener {
-                toast("setOnClickListener")
                 if (!isLogin) {
                     Intent(this@MainActivity, LoginActivity::class.java).run {
                         startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
@@ -110,6 +109,7 @@ class MainActivity : BaseActivity() {
                     username = ""
                     password = ""
                     navigationViewUsername.text = getString(R.string.not_login)
+                    text = "点击登录"
                 }
             }
         }
@@ -154,7 +154,7 @@ class MainActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constant.MAIN_REQUEST_CODE && resultCode == RESULT_OK) {
             navigationViewUsername.text = data?.getStringExtra(Constant.CONTENT_TITLE_KEY)
-            navigationViewLogout.text = getString(R.string.not_login)
+            navigationViewLogout.text = getString(R.string.logout)
         }
     }
 

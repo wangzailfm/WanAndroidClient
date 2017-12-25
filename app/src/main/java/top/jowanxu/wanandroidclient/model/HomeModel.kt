@@ -62,4 +62,5 @@ interface HomeModel {
      * cancel friend list Request
      */
     fun cancelFriendRequest()
+
 }

@@ -166,7 +166,8 @@ class HomeModelImpl : HomeModel {
      * @param username username
      * @param password password
      */
-    override fun loginWanAndroid(onLoginListener: HomePresenter.OnLoginListener, username: String, password: String) {
+    override fun loginWanAndroid(onLoginListener: HomePresenter.OnLoginListener,
+                                 username: String, password: String) {
         async(UI) {
             try {
                 loginAsync?.cancelAndJoinByActive()
@@ -218,7 +219,8 @@ class HomeModelImpl : HomeModel {
      * @param password password
      * @param repassword repassword
      */
-    override fun registerWanAndroid(onRegisterListener: HomePresenter.OnRegisterListener, username: String, password: String, repassword: String) {
+    override fun registerWanAndroid(onRegisterListener: HomePresenter.OnRegisterListener,
+                                    username: String, password: String, repassword: String) {
         async(UI) {
             try {
                 registerAsync?.cancelAndJoinByActive()
