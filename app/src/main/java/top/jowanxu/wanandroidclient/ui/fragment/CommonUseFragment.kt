@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +57,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
             setOnRefreshListener(onRefreshListener)
         }
         commonRecyclerView.run {
-            layoutManager = LinearLayoutManager(activity)
+            layoutManager = GridLayoutManager(activity, 2)
             adapter = commonUseAdapter
         }
         commonUseAdapter.run {

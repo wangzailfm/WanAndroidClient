@@ -22,6 +22,10 @@ class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView) 
      */
     override fun getHomeListSuccess(result: HomeListResponse) {
         homeFragmentView.getHomeListAfter()
+        if (result.errorCode != 0) {
+            homeFragmentView.getHomeListFailed(result.errorMsg)
+            return
+        }
         // 列表总数
         val total = result.data.total
         if (total == 0) {

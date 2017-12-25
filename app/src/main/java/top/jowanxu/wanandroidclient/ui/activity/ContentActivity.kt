@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.LinearLayout
 import com.just.agentweb.AgentWeb
 import com.just.agentweb.ChromeClientCallbackManager
+import getAgentWeb
 import kotlinx.android.synthetic.main.activity_content.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import top.jowanxu.wanandroidclient.R
@@ -33,14 +34,7 @@ class ContentActivity : AppCompatActivity() {
         intent.extras?.let {
             shareUrl = it.getString(Constant.CONTENT_URL_KEY)
             shareTitle = it.getString(Constant.CONTENT_TITLE_KEY)
-            agentWeb = AgentWeb.with(this)//传入Activity or Fragment
-                    .setAgentWebParent(webContent, LinearLayout.LayoutParams(-1, -1))//传入AgentWeb 的父控件
-                    .useDefaultIndicator()// 使用默认进度条
-                    .defaultProgressBarColor() // 使用默认进度条颜色
-                    .setReceivedTitleCallback(receivedTitleCallback) //设置 Web 页面的 title 回调
-                    .createAgentWeb()//
-                    .ready()
-                    .go(shareUrl)
+            agentWeb = shareUrl.getAgentWeb(this, webContent, LinearLayout.LayoutParams(-1, -1), receivedTitleCallback)
         }
     }
 
@@ -62,6 +56,10 @@ class ContentActivity : AppCompatActivity() {
                     type = Constant.CONTENT_SHARE_TYPE
                     startActivity(Intent.createChooser(this, getString(R.string.share_title)))
                 }
+                return true
+            }
+            R.id.menuLike -> {
+                // add to like
                 return true
             }
         }

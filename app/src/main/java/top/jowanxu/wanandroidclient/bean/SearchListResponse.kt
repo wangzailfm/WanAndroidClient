@@ -1,5 +1,5 @@
 package top.jowanxu.wanandroidclient.bean
 
 data class SearchListResponse(var errorCode: Int,
-                              var errorMsg: Any,
+                              var errorMsg: String?,
                               var data: Data)

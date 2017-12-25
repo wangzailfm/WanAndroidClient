@@ -15,6 +15,10 @@ class SearchPresenterImpl(private val searchView: SearchListView) : SearchPresen
 
     override fun getSearchListSuccess(result: SearchListResponse) {
         searchView.getSearchListAfter()
+        if (result.errorCode != 0) {
+            searchView.getSearchListFailed(result.errorMsg)
+            return
+        }
         // 列表总数
         val total = result.data.total
         if (total == 0) {

@@ -7,5 +7,6 @@ class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         LeakCanary.install(this)
+        Preference.setContext(applicationContext)
     }
 }

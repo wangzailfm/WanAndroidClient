@@ -11,7 +11,7 @@ class CommonUseAdapter(val context: Context, datas: MutableList<FriendListRespon
     override fun convert(helper: BaseViewHolder, item: FriendListResponse.Data?) {
         item?.let {
             @Suppress("DEPRECATION")
-            helper.setText(R.id.commonItemTitle, it.name)
+            helper.setText(R.id.commonItemTitle, it.name.trim())
         }
     }
 }

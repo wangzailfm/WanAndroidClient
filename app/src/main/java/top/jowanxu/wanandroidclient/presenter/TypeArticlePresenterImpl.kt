@@ -24,6 +24,10 @@ class TypeArticlePresenterImpl(private val typeArticleFragmentView: TypeArticleF
      */
     override fun getTypeArticleListSuccess(result: ArticleListResponse) {
         typeArticleFragmentView.getTypeArticleListAfter()
+        if (result.errorCode != 0) {
+            typeArticleFragmentView.getTypeArticleListFailed(result.errorMsg)
+            return
+        }
         val total = result.data.total
         if (total == 0) {
             typeArticleFragmentView.getTypeArticleListZero()

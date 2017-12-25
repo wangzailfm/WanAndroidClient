@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:context="top.jowanxu.wanandroidclient.ui.activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,6 +21,7 @@
             android:background="?attr/colorPrimary"
             android:fitsSystemWindows="true"
             app:contentInsetStartWithNavigation="0dp"
+            tools:text="@string/app_name"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:titleTextColor="@android:color/white">
         </android.support.v7.widget.Toolbar>

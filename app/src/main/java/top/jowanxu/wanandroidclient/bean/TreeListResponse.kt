@@ -3,7 +3,7 @@ package top.jowanxu.wanandroidclient.bean
 import java.io.Serializable
 
 data class TreeListResponse(var errorCode: Int,
-                            var errorMsg: Any,
+                            var errorMsg: String?,
                             var data: List<Data>) {
     data class Data(var id: Int,
                     var name: String,

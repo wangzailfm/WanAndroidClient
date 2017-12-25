@@ -3,7 +3,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menuHot"
-        android:title="@string/menuHot"
+        android:title="@string/hot_title"
         android:icon="@drawable/ic_action_hot"
         app:showAsAction="ifRoom"/>
     <item

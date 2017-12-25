@@ -2,7 +2,7 @@ package top.jowanxu.wanandroidclient.view
 
 import top.jowanxu.wanandroidclient.bean.LoginResponse
 
-interface MineFragmentView {
+interface LoginView {
 
     /**
      * login success
@@ -26,4 +26,10 @@ interface MineFragmentView {
      * @param errorMessage error message
      */
     fun registerFailed(errorMessage: String?)
+
+    /**
+     * login or register success after operation
+     * @param result LoginResponse
+     */
+    fun loginRegisterAfter(result: LoginResponse)
 }

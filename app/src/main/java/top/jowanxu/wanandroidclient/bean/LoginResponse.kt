@@ -1,7 +1,7 @@
 package top.jowanxu.wanandroidclient.bean
 
 data class LoginResponse(var errorCode: Int,
-                         var errorMsg: Any,
+                         var errorMsg: String?,
                          var data: Data) {
     data class Data(var id: Int,
                     var username: String,

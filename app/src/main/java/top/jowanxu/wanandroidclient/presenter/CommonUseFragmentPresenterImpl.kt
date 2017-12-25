@@ -21,6 +21,10 @@ class CommonUseFragmentPresenterImpl(private val commonUseFragmentView: CommonUs
      */
     override fun getFriendListSuccess(result: FriendListResponse) {
         commonUseFragmentView.getFriendListAfter()
+        if (result.errorCode != 0) {
+            commonUseFragmentView.getFriendListFailed(result.errorMsg)
+            return
+        }
         if (result.data.isEmpty()) {
             commonUseFragmentView.getFriendListZero()
             return

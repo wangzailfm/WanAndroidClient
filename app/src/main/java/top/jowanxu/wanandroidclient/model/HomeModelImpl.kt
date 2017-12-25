@@ -242,7 +242,7 @@ class HomeModelImpl : HomeModel {
                     }
                 }
                 // Get async result
-                val result = loginAsync?.await()
+                val result = registerAsync?.await()
                 when (result) {
                     is String -> onRegisterListener.registerFailed(result)
                     is LoginResponse -> onRegisterListener.registerSuccess(result)

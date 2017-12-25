@@ -3,9 +3,9 @@ package top.jowanxu.wanandroidclient.presenter
 import top.jowanxu.wanandroidclient.bean.LoginResponse
 import top.jowanxu.wanandroidclient.model.HomeModel
 import top.jowanxu.wanandroidclient.model.HomeModelImpl
-import top.jowanxu.wanandroidclient.view.MineFragmentView
+import top.jowanxu.wanandroidclient.view.LoginView
 
-class MineFragmentPresenterImpl(private val mineFragmentView: MineFragmentView) : HomePresenter.OnLoginListener, HomePresenter.OnRegisterListener {
+class LoginPresenterImpl(private val loginView: LoginView) : HomePresenter.OnLoginListener, HomePresenter.OnRegisterListener {
 
     private val homeModel: HomeModel = HomeModelImpl()
     /**
@@ -22,7 +22,12 @@ class MineFragmentPresenterImpl(private val mineFragmentView: MineFragmentView) 
      * @param result LoginResponse
      */
     override fun loginSuccess(result: LoginResponse) {
-        mineFragmentView.loginSuccess(result)
+        if (result.errorCode != 0) {
+            loginView.loginFailed(result.errorMsg)
+        } else {
+            loginView.loginSuccess(result)
+            loginView.loginRegisterAfter(result)
+        }
     }
 
     /**
@@ -30,7 +35,7 @@ class MineFragmentPresenterImpl(private val mineFragmentView: MineFragmentView) 
      * @param errorMessage error message
      */
     override fun loginFailed(errorMessage: String?) {
-        mineFragmentView.loginFailed(errorMessage)
+        loginView.loginFailed(errorMessage)
     }
 
     /**
@@ -48,7 +53,12 @@ class MineFragmentPresenterImpl(private val mineFragmentView: MineFragmentView) 
      * @param result LoginResponse
      */
     override fun registerSuccess(result: LoginResponse) {
-        mineFragmentView.registerSuccess(result)
+        if (result.errorCode != 0) {
+            loginView.registerFailed(result.errorMsg)
+        } else {
+            loginView.registerSuccess(result)
+            loginView.loginRegisterAfter(result)
+        }
     }
 
     /**
@@ -56,6 +66,6 @@ class MineFragmentPresenterImpl(private val mineFragmentView: MineFragmentView) 
      * @param errorMessage error message
      */
     override fun registerFailed(errorMessage: String?) {
-        mineFragmentView.registerFailed(errorMessage)
+        loginView.registerFailed(errorMessage)
     }
 }

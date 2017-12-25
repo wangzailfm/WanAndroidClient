@@ -13,6 +13,8 @@ object Constant {
      */
     const val SHARED_NAME = "_preferences"
     const val LOGIN_KEY = "login"
+    const val USERNAME_KEY = "username"
+    const val PASSWORD_KEY = "password"
     /**
      * result null
      */
@@ -49,4 +51,6 @@ object Constant {
      * share key
      */
     const val CONTENT_SHARE_TYPE = "text/plain"
+
+    const val MAIN_REQUEST_CODE = 100
 }

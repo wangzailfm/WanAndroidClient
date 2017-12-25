@@ -1,7 +1,7 @@
 package top.jowanxu.wanandroidclient.bean
 
 data class FriendListResponse(var errorCode: Int,
-                              var errorMsg: Any,
+                              var errorMsg: String?,
                               var data: List<Data>) {
     data class Data(var id: Int,
                     var name: String,

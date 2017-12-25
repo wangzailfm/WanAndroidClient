@@ -1,20 +1,25 @@
 package top.jowanxu.wanandroidclient.ui.activity
 
+import Constant
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
+import android.support.v4.view.GravityCompat
+import android.support.v7.app.ActionBarDrawerToggle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.base.BaseActivity
+import top.jowanxu.wanandroidclient.base.Preference
 import top.jowanxu.wanandroidclient.ui.fragment.CommonUseFragment
 import top.jowanxu.wanandroidclient.ui.fragment.HomeFragment
-import top.jowanxu.wanandroidclient.ui.fragment.MineFragment
 import top.jowanxu.wanandroidclient.ui.fragment.TypeFragment
 
 /**
@@ -22,33 +27,35 @@ import top.jowanxu.wanandroidclient.ui.fragment.TypeFragment
  */
 class MainActivity : BaseActivity() {
     private var lastTime: Long = 0
-
-    /**
-     * HomeFragment
-     */
+    private var currentIndex = 0
     private var homeFragment: HomeFragment? = null
-    /**
-     * TypeFragment
-     */
     private var typeFragment: TypeFragment? = null
-    /**
-     * MineFragment
-     */
-    private var mineFragment: MineFragment? = null
-    /**
-     * CommonUseFragment
-     */
     private var commonUseFragment: CommonUseFragment? = null
-    /**
-     * FragmentManager
-     */
     private val fragmentManager by lazy {
         supportFragmentManager
     }
     /**
-     * current Index
+     * check login for SharedPreferences
      */
-    private var currentIndex = 0
+    private var isLogin: Boolean by Preference(Constant.LOGIN_KEY, false)
+    /**
+     * local username
+     */
+    private var username: String by Preference(Constant.USERNAME_KEY, "")
+    /**
+     * local password
+     */
+    private var password: String by Preference(Constant.PASSWORD_KEY, "")
+
+    /**
+     *
+     */
+    private lateinit var navigationViewUsername: TextView
+
+    /**
+     *
+     */
+    private lateinit var navigationViewLogout: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,15 +63,59 @@ class MainActivity : BaseActivity() {
         toolbar.run {
             title = getString(R.string.app_name)
             setSupportActionBar(this)
+            setNavigationOnClickListener {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawers()
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START)
+                }
+            }
         }
-        navigation.run {
+        bottomNavigation.run {
             setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
             selectedItemId = R.id.navigation_home
+        }
+        drawerLayout.run {
+            val toggle = ActionBarDrawerToggle(
+                    this@MainActivity, this, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+            addDrawerListener(toggle)
+            toggle.syncState()
+        }
+        navigationView.run {
+            setNavigationItemSelectedListener(onDrawerNavigationItemSelectedListener)
+        }
+        navigationViewUsername = navigationView.getHeaderView(0).findViewById<TextView>(R.id.navigationViewUsername)
+        navigationViewLogout = navigationView.getHeaderView(0).findViewById<TextView>(R.id.navigationViewLogout)
+        navigationViewUsername.run {
+            if (!isLogin) {
+                text = getString(R.string.not_login)
+            } else {
+                text = username
+            }
+        }
+        navigationViewLogout.run {
+            if (isLogin) {
+                text = "点击登录"
+            } else {
+                text = getString(R.string.login_login)
+            }
+            setOnClickListener {
+                toast("setOnClickListener")
+                if (!isLogin) {
+                    Intent(this@MainActivity, LoginActivity::class.java).run {
+                        startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                    }
+                } else {
+                    isLogin = false
+                    username = ""
+                    password = ""
+                    navigationViewUsername.text = getString(R.string.not_login)
+                }
+            }
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
@@ -97,6 +148,17 @@ class MainActivity : BaseActivity() {
     }
 
     /**
+     * Dispatch incoming result to the correct fragment.
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constant.MAIN_REQUEST_CODE && resultCode == RESULT_OK) {
+            navigationViewUsername.text = data?.getStringExtra(Constant.CONTENT_TITLE_KEY)
+            navigationViewLogout.text = getString(R.string.not_login)
+        }
+    }
+
+    /**
      * 防止重叠
      */
     override fun onAttachFragment(fragment: Fragment) {
@@ -104,7 +166,6 @@ class MainActivity : BaseActivity() {
         when (fragment) {
             is HomeFragment -> homeFragment ?: let { homeFragment = fragment }
             is TypeFragment -> typeFragment ?: let { typeFragment = fragment }
-            is MineFragment -> mineFragment ?: let { mineFragment = fragment }
             is CommonUseFragment -> commonUseFragment ?: let { commonUseFragment = fragment }
         }
     }
@@ -113,12 +174,16 @@ class MainActivity : BaseActivity() {
      * 退出
      */
     override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            return
+        }
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastTime < 2 * 1000) {
             super.onBackPressed()
             finish()
         } else {
-            toast("再按一次退出")
+            toast(getString(R.string.double_click_exit))
             lastTime = currentTime
         }
     }
@@ -140,12 +205,6 @@ class MainActivity : BaseActivity() {
                     add(R.id.content, it)
                 }
             }
-            mineFragment ?: let {
-                MineFragment().let {
-                    mineFragment = it
-                    add(R.id.content, it)
-                }
-            }
             commonUseFragment ?: let {
                 CommonUseFragment().let {
                     commonUseFragment = it
@@ -155,25 +214,19 @@ class MainActivity : BaseActivity() {
             hideFragment(this)
             when (index) {
                 R.id.navigation_home -> {
-                    toolbar.title = "玩Android"
+                    toolbar.title = getString(R.string.app_name)
                     homeFragment?.let {
                         this.show(it)
                     }
                 }
                 R.id.navigation_type -> {
-                    toolbar.title = "玩Android"
+                    toolbar.title = getString(R.string.app_name)
                     typeFragment?.let {
                         this.show(it)
                     }
                 }
-                R.id.navigation_mine -> {
-                    toolbar.title = "玩Android"
-                    mineFragment?.let {
-                        this.show(it)
-                    }
-                }
                 R.id.menuHot -> {
-                    toolbar.title = "常用网址"
+                    toolbar.title = getString(R.string.hot_title)
                     commonUseFragment?.let {
                         this.show(it)
                     }
@@ -190,9 +243,6 @@ class MainActivity : BaseActivity() {
             transaction.hide(it)
         }
         typeFragment?.let {
-            transaction.hide(it)
-        }
-        mineFragment?.let {
             transaction.hide(it)
         }
         commonUseFragment?.let {
@@ -221,13 +271,34 @@ class MainActivity : BaseActivity() {
                         currentIndex = R.id.navigation_type
                         true
                     }
-                    R.id.navigation_mine -> {
-                        currentIndex = R.id.navigation_mine
-                        true
-                    }
                     else -> {
                         false
                     }
                 }
             }
+
+    private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.nav_like -> {
+                if (!isLogin) {
+                    Intent().run {
+                        startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                    }
+                    return@OnNavigationItemSelectedListener true
+                    //
+                }
+            }
+            R.id.nav_bookmark -> {
+                if (!isLogin) {
+                    Intent().run {
+                        startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                    }
+                    return@OnNavigationItemSelectedListener true
+                    //
+                }
+            }
+        }
+        drawerLayout.closeDrawer(GravityCompat.START)
+        true
+    }
 }

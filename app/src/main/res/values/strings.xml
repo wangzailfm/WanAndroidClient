@@ -7,6 +7,8 @@
     <string name="no_data">Here the empty…</string>
     <string name="search_title">Search</string>
     <string name="share_title">Share</string>
+    <string name="like_title">Like</string>
+    <string name="hot_title">CommonUse</string>
     <string name="share_type_title">Share Project</string>
     <string name="share_article_url">%1$s Share【%2$s】：%3$s</string>
     <string name="share_type_url">%1$s Share【%2$s】Project：http://www.wanandroid.com/article/list/0?cid=%3$d</string>
@@ -16,7 +18,6 @@
     <string name="prompt_password">Password</string>
     <string name="prompt_password_confirm">Password Confirm(Register)</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="menuHot">CommonUse</string>
     <string name="login_register">Register</string>
     <string name="login_login">Login</string>
     <string name="password_confirm_not_empty">Confirm password cannot be empty.</string>
@@ -25,6 +26,17 @@
     <string name="password_length_short">Password length can not less than six.</string>
     <string name="username_not_empty">Username cannot be empty.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="double_click_exit">Again according to the exit</string>
+    <string name="logout">退出登录</string>
+    <string name="login_success">登录成功</string>
+    <string name="register_success">注册成功</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="my_bookmark">我收藏的</string>
+    <string name="my_like">我喜欢的</string>
+    <string name="not_login">未登录</string>
 </resources>

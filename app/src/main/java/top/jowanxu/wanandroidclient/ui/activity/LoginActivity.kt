@@ -1,47 +1,56 @@
-package top.jowanxu.wanandroidclient.ui.fragment
+package top.jowanxu.wanandroidclient.ui.activity
 
+import Constant
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.android.synthetic.main.activity_login.*
 import toast
 import top.jowanxu.wanandroidclient.R
+import top.jowanxu.wanandroidclient.base.BaseActivity
+import top.jowanxu.wanandroidclient.base.Preference
 import top.jowanxu.wanandroidclient.bean.LoginResponse
-import top.jowanxu.wanandroidclient.presenter.MineFragmentPresenterImpl
-import top.jowanxu.wanandroidclient.view.MineFragmentView
+import top.jowanxu.wanandroidclient.presenter.LoginPresenterImpl
+import top.jowanxu.wanandroidclient.view.LoginView
 
-class MineFragment : Fragment(), MineFragmentView {
-    private var isLogin: Boolean = false
+class LoginActivity : BaseActivity(), LoginView {
+    /**
+     * check login for SharedPreferences
+     */
+    private var isLogin: Boolean by Preference(Constant.LOGIN_KEY, false)
+    /**
+     * local username
+     */
+    private var user: String by Preference(Constant.USERNAME_KEY, "")
+    /**
+     * local password
+     */
+    private var pwd: String by Preference(Constant.PASSWORD_KEY, "")
 
-    private var mainView: View? = null
-
-    private val mineFragmentPresenter: MineFragmentPresenterImpl by lazy {
-        MineFragmentPresenterImpl(this)
+    private val loginPresenter: LoginPresenterImpl by lazy {
+        LoginPresenterImpl(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        mainView ?: let {
-            mainView = if (!isLogin) {
-                inflater.inflate(R.layout.fragment_login, container, false)
-            } else {
-                inflater.inflate(R.layout.fragment_mine, container, false)
-            }
-        }
-        return mainView
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_login)
+        login.setOnClickListener(onClickListener)
+        register.setOnClickListener(onClickListener)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (!isLogin) {
-            login.setOnClickListener(onClickListener)
-            register.setOnClickListener(onClickListener)
-        } else {
-
-        }
+    /**
+     * login or register success after operation
+     * @param result LoginResponse
+     */
+    override fun loginRegisterAfter(result: LoginResponse) {
+        isLogin = true
+        user = result.data.username
+        pwd = result.data.password
+        loginProgress.visibility = View.GONE
+        setResult(Activity.RESULT_OK, Intent().apply { putExtra(Constant.CONTENT_TITLE_KEY, result.data.username) })
+        finish()
     }
 
     /**
@@ -49,8 +58,7 @@ class MineFragment : Fragment(), MineFragmentView {
      * @param result LoginResponse
      */
     override fun loginSuccess(result: LoginResponse) {
-        loginProgress.visibility = View.GONE
-        activity.toast("登录成功")
+        toast(getString(R.string.login_success))
     }
 
     /**
@@ -58,9 +66,10 @@ class MineFragment : Fragment(), MineFragmentView {
      * @param errorMessage error message
      */
     override fun loginFailed(errorMessage: String?) {
+        isLogin = false
         loginProgress.visibility = View.GONE
         errorMessage?.let {
-            activity.toast(it)
+            toast(it)
         }
     }
 
@@ -69,8 +78,7 @@ class MineFragment : Fragment(), MineFragmentView {
      * @param result LoginResponse
      */
     override fun registerSuccess(result: LoginResponse) {
-        loginProgress.visibility = View.GONE
-        activity.toast("注册成功")
+        toast(getString(R.string.register_success))
     }
 
     /**
@@ -78,9 +86,10 @@ class MineFragment : Fragment(), MineFragmentView {
      * @param errorMessage error message
      */
     override fun registerFailed(errorMessage: String?) {
+        isLogin = false
         loginProgress.visibility = View.GONE
         errorMessage?.let {
-            activity.toast(it)
+            toast(it)
         }
     }
 
@@ -93,13 +102,13 @@ class MineFragment : Fragment(), MineFragmentView {
             R.id.login -> {
                 if (checkContent(true)) {
                     loginProgress.visibility = View.VISIBLE
-                    mineFragmentPresenter.loginWanAndroid(username.text.toString(), password.text.toString())
+                    loginPresenter.loginWanAndroid(username.text.toString(), password.text.toString())
                 }
             }
             R.id.register -> {
                 if (checkContent(false)) {
                     loginProgress.visibility = View.VISIBLE
-                    mineFragmentPresenter.registerWanAndroid(username.text.toString(),
+                    loginPresenter.registerWanAndroid(username.text.toString(),
                             password.text.toString(), password.text.toString())
                 }
             }
@@ -146,9 +155,9 @@ class MineFragment : Fragment(), MineFragmentView {
             if (focusView != null) {
                 focusView.requestFocus()
             }
+            return false
         } else {
             return true
         }
-        return false
     }
 }
