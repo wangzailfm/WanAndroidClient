@@ -96,14 +96,18 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
      * get Friend list Failed
      */
     override fun getFriendListFailed(errorMessage: String?) {
-        activity.toast("获取数据失败")
+        errorMessage?.let {
+            activity.toast(it)
+        } ?: let {
+            activity.toast(getString(R.string.get_data_error))
+        }
     }
 
     /**
      * get Friend list data size equal zero
      */
     override fun getFriendListZero() {
-        activity.toast("获取数据失败")
+        activity.toast(getString(R.string.get_data_error))
     }
     /**
      * RefreshListener

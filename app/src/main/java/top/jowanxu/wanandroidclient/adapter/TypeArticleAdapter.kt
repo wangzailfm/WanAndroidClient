@@ -12,8 +12,9 @@ class TypeArticleAdapter(val context: Context, datas: MutableList<Datas>)
         item?.let {
             @Suppress("DEPRECATION")
             helper.setText(R.id.homeItemTitle, it.title)
-                    .setText(R.id.homeItemAuthor, "作者：${it.author}")
+                    .setText(R.id.homeItemType, "作者：${it.author}")
                     .setText(R.id.homeItemDate, it.niceDate)
+                    .setVisible(R.id.homeItemLike, false)
         }
     }
 }

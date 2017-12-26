@@ -5,7 +5,7 @@ import top.jowanxu.wanandroidclient.model.HomeModel
 import top.jowanxu.wanandroidclient.model.HomeModelImpl
 import top.jowanxu.wanandroidclient.view.HomeFragmentView
 
-class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView) : HomePresenter.OnHomeListListener {
+class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView) : HomePresenter.OnHomeListListener, HomePresenter.OnCollectArticleListener {
 
     private val homeModel: HomeModel = HomeModelImpl()
     /**
@@ -47,6 +47,37 @@ class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView) 
     override fun getHomeListFailed(errorMessage: String?) {
         homeFragmentView.getHomeListAfter()
         homeFragmentView.getHomeListFailed(errorMessage)
+    }
+
+    /**
+     *  add or remove collect article
+     *  @param id article id
+     *  @param isAdd true add, false remove
+     */
+    override fun collectArticle(id: Int, isAdd: Boolean) {
+        homeModel.collectArticle(this, id, isAdd)
+    }
+
+    /**
+     * add collect article success
+     * @param result HomeListResponse
+     * @param isAdd true add, false remove
+     */
+    override fun collectArticleSuccess(result: HomeListResponse, isAdd: Boolean) {
+        if (result.errorCode != 0) {
+            homeFragmentView.collectArticleFailed(result.errorMsg, isAdd)
+        } else {
+            homeFragmentView.collectArticleSuccess(result, isAdd)
+        }
+    }
+
+    /**
+     * add collect article failed
+     * @param errorMessage error message
+     * @param isAdd true add, false remove
+     */
+    override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
+        homeFragmentView.collectArticleFailed(errorMessage, isAdd)
     }
 
     /**

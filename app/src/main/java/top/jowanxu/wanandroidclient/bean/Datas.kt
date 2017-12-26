@@ -1,6 +1,7 @@
 package top.jowanxu.wanandroidclient.bean
 
 data class Datas(var id: Int,
+                 var originId: Int,
                  var title: String,
                  var chapterId: Int,
                  var chapterName: String,

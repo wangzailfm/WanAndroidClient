@@ -26,7 +26,7 @@ object Constant {
     /**
      * Debug
      */
-    const val INTERCEPTOR_ENABLE = true
+    const val INTERCEPTOR_ENABLE = false
     /**
      * url key
      */

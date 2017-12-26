@@ -2,6 +2,7 @@ package top.jowanxu.wanandroidclient.ui.activity
 
 import Constant
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
@@ -13,7 +14,6 @@ import com.just.agentweb.ChromeClientCallbackManager
 import getAgentWeb
 import kotlinx.android.synthetic.main.activity_content.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import toast
 import top.jowanxu.wanandroidclient.R
 
 /**
@@ -28,7 +28,7 @@ class ContentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_content)
         toolbar.run {
-            title = "正在加载中..."
+            title = getString(R.string.loading)
             setSupportActionBar(this)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
@@ -60,7 +60,14 @@ class ContentActivity : AppCompatActivity() {
                 return true
             }
             R.id.menuLike -> {
-                toast("收藏")
+                return true
+            }
+            R.id.menuBrowser -> {
+                Intent().run {
+                    action = "android.intent.action.VIEW"
+                    data = Uri.parse(shareUrl)
+                    startActivity(this)
+                }
                 return true
             }
         }

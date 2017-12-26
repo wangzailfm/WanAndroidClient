@@ -63,4 +63,14 @@ interface HomeModel {
      */
     fun cancelFriendRequest()
 
+    /**
+     * add or remove collect article
+     */
+    fun collectArticle(onCollectArticleListener: HomePresenter.OnCollectArticleListener, id: Int, isAdd: Boolean)
+
+    /**
+     * cancel collect article Request
+     */
+    fun cancelCollectRequest()
+
 }

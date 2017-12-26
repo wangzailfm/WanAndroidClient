@@ -16,7 +16,7 @@ import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.SearchAdapter
 import top.jowanxu.wanandroidclient.base.BaseActivity
 import top.jowanxu.wanandroidclient.bean.Datas
-import top.jowanxu.wanandroidclient.bean.SearchListResponse
+import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.SearchPresenterImpl
 import top.jowanxu.wanandroidclient.view.SearchListView
 
@@ -48,13 +48,17 @@ class SearchActivity : BaseActivity(), SearchListView {
     /**
      * SearView
      */
-    private lateinit var searchView: SearchView
+    private var searchView: SearchView? = null
+    private var isSearch: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        intent.extras?.let {
+            isSearch = it.getBoolean("search", true)
+        }
         toolbar.run {
-            title = ""
+            title = if (isSearch) "" else getString(R.string.my_like)
             setSupportActionBar(this)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
@@ -68,14 +72,21 @@ class SearchActivity : BaseActivity(), SearchListView {
         searchAdapter.run {
             bindToRecyclerView(recyclerView)
             setOnLoadMoreListener({
-                searchKey?.let {
-                    val page = searchAdapter.data.size / 20 + 1
-                    searchPresenter.getSearchList(page, it)
+                val page = searchAdapter.data.size / 20 + 1
+                if (!isSearch) {
+                    searchPresenter.getLikeList()
+                } else {
+                    searchKey?.let {
+                        searchPresenter.getSearchList(page, it)
+                    }
                 }
             }, recyclerView)
             onItemClickListener = this@SearchActivity.onItemClickListener
             onItemChildClickListener = this@SearchActivity.onItemChildClickListener
             setEmptyView(R.layout.fragment_home_empty)
+        }
+        if (!isSearch) {
+            searchPresenter.getLikeList()
         }
     }
 
@@ -87,11 +98,13 @@ class SearchActivity : BaseActivity(), SearchListView {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_search, menu)
-        // get SearchView
-        searchView = menu.findItem(R.id.menuSearch).actionView as SearchView
-        // init SearchView
-        searchView.init(1920, false, onQueryTextListener = onQueryTextListener)
+        if (isSearch) {
+            menuInflater.inflate(R.menu.menu_search, menu)
+            // get SearchView
+            searchView = menu.findItem(R.id.menuSearch).actionView as SearchView
+            // init SearchView
+            searchView?.init(1920, false, onQueryTextListener = onQueryTextListener)
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -99,7 +112,7 @@ class SearchActivity : BaseActivity(), SearchListView {
         // back clickListener
         if (item.itemId == android.R.id.home) {
             // remove focus
-            searchView.clearFocus()
+            searchView?.clearFocus()
             finish()
         }
         return super.onOptionsItemSelected(item)
@@ -113,7 +126,7 @@ class SearchActivity : BaseActivity(), SearchListView {
         toast("未搜索到关键词相关文章")
     }
 
-    override fun getSearchListSmall(result: SearchListResponse) {
+    override fun getSearchListSmall(result: HomeListResponse) {
         result.data.datas?.let {
             searchAdapter.run {
                 replaceData(it)
@@ -124,7 +137,7 @@ class SearchActivity : BaseActivity(), SearchListView {
         }
     }
 
-    override fun getSearchListSuccess(result: SearchListResponse) {
+    override fun getSearchListSuccess(result: HomeListResponse) {
         result.data.datas?.let {
             searchAdapter.run {
                 // 列表总数
@@ -149,7 +162,11 @@ class SearchActivity : BaseActivity(), SearchListView {
         searchAdapter.setEnableLoadMore(false)
         swipeRefreshLayout.isRefreshing = false
         searchAdapter.loadMoreFail()
-        toast("获取数据失败")
+        errorMessage?.let {
+            toast(it)
+        } ?: let {
+            toast(getString(R.string.get_data_error))
+        }
     }
     /**
      * QueryListener
@@ -166,7 +183,7 @@ class SearchActivity : BaseActivity(), SearchListView {
                 swipeRefreshLayout.isRefreshing = false
                 toast("搜索关键字不能为空")
             }
-            searchView.clearFocus()
+            searchView?.clearFocus()
             return false
         }
 
@@ -176,6 +193,13 @@ class SearchActivity : BaseActivity(), SearchListView {
      * RefreshListener
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
+        if (!isSearch) {
+            swipeRefreshLayout.isRefreshing = true
+            datas.clear()
+            searchAdapter.setEnableLoadMore(false)
+            searchPresenter.getLikeList()
+            return@OnRefreshListener
+        }
         searchKey?.let {
             swipeRefreshLayout.isRefreshing = true
             datas.clear()
@@ -186,6 +210,42 @@ class SearchActivity : BaseActivity(), SearchListView {
             toast("搜索关键字不能为空")
         }
     }
+
+    /**
+     * get Home list after operation
+     */
+    override fun getLikeListAfter() {
+        getSearchListAfter()
+    }
+
+    /**
+     * get Home list Success
+     */
+    override fun getLikeListSuccess(result: HomeListResponse) {
+        getSearchListSuccess(result)
+    }
+
+    /**
+     * get Home list Failed
+     */
+    override fun getLikeListFailed(errorMessage: String?) {
+        getSearchListFailed(errorMessage)
+    }
+
+    /**
+     * get Home list data size equal zero
+     */
+    override fun getLikeListZero() {
+        getSearchListZero()
+    }
+
+    /**
+     * get Home list data less than 20
+     */
+    override fun getLikeListSmall(result: HomeListResponse) {
+        getSearchListSmall(result)
+    }
+
     /**
      * ItemClickListener
      */

@@ -19,6 +19,8 @@ class SearchAdapter(val context: Context, datas: MutableList<Datas>)
                     .addOnClickListener(R.id.homeItemType)
                     .setTextColor(R.id.homeItemType, context.resources.getColor(R.color.colorPrimary))
                     .linkify(R.id.homeItemType)
+                    .setImageResource(R.id.homeItemLike, if (it.collect) R.drawable.ic_action_like else R.drawable.ic_action_no_like)
+                    .addOnClickListener(R.id.homeItemLike)
         }
     }
 }

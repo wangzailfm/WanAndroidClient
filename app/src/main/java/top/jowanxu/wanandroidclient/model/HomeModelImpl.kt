@@ -4,6 +4,7 @@ import Constant
 import asyncRequestSuspend
 import cancelAndJoinByActive
 import cancelCall
+import collectArticleCall
 import getFriendListCall
 import getHomeListCall
 import getTypeTreeListCall
@@ -64,6 +65,14 @@ class HomeModelImpl : HomeModel {
      * Friend list async
      */
     private var friendListAsync: Deferred<Any>? = null
+    /**
+     * Collect Article Call
+     */
+    private var collectArticleCall: Call<HomeListResponse>? = null
+    /**
+     * Collect Article async
+     */
+    private var collectArticleAsync: Deferred<Any>? = null
 
     /**
      * get Home List
@@ -112,7 +121,7 @@ class HomeModelImpl : HomeModel {
      * cancel HomeList Request
      */
     override fun cancelHomeListRequest() {
-        homeListCall?.cancel()
+        homeListCall?.cancelCall()
         homeListAsync?.cancel()
     }
 
@@ -156,7 +165,7 @@ class HomeModelImpl : HomeModel {
      * cancel TypeTree Request
      */
     override fun cancelTypeTreeRequest() {
-        loginCall?.cancel()
+        loginCall?.cancelCall()
         loginAsync?.cancel()
     }
 
@@ -208,7 +217,7 @@ class HomeModelImpl : HomeModel {
      * cancel login Request
      */
     override fun cancelLoginRequest() {
-        registerCall?.cancel()
+        registerCall?.cancelCall()
         registerAsync?.cancel()
     }
 
@@ -261,7 +270,7 @@ class HomeModelImpl : HomeModel {
      * cancel register Request
      */
     override fun cancelRegisterRequest() {
-        typeTreeListCall?.cancel()
+        typeTreeListCall?.cancelCall()
         typeTreeListAsync?.cancel()
     }
 
@@ -307,7 +316,53 @@ class HomeModelImpl : HomeModel {
      * cancel friend list Request
      */
     override fun cancelFriendRequest() {
-        friendListCall?.cancel()
+        friendListCall?.cancelCall()
         friendListAsync?.cancel()
+    }
+
+    /**
+     * add or remove collect article
+     */
+    override fun collectArticle(onCollectArticleListener: HomePresenter.OnCollectArticleListener, id: Int, isAdd: Boolean) {
+        async(UI) {
+            try {
+                collectArticleAsync?.cancelAndJoinByActive()
+                collectArticleAsync = async(CommonPool) {
+                    asyncRequestSuspend<HomeListResponse> { cont ->
+                        collectArticleCall?.cancelCall()
+                        collectArticleCall(id, isAdd).apply {
+                            collectArticleCall = this@apply
+                        }.enqueue(object : Callback<HomeListResponse> {
+                            override fun onResponse(call: Call<HomeListResponse>,
+                                                    response: Response<HomeListResponse>) {
+                                cont.resume(response.body())
+                            }
+
+                            override fun onFailure(call: Call<HomeListResponse>, t: Throwable) {
+                                cont.resumeWithException(t)
+                            }
+                        })
+                    }
+                }
+                val result = collectArticleAsync?.await()
+                when (result) {
+                    is String -> onCollectArticleListener.collectArticleFailed(result, isAdd)
+                    is HomeListResponse -> onCollectArticleListener.collectArticleSuccess(result, isAdd)
+                    else -> onCollectArticleListener.collectArticleFailed(Constant.RESULT_NULL, isAdd)
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                onCollectArticleListener.collectArticleFailed(t.toString(), isAdd)
+                return@async
+            }
+        }
+    }
+
+    /**
+     * cancel collect article Request
+     */
+    override fun cancelCollectRequest() {
+        collectArticleCall.cancelCall()
+        collectArticleAsync?.cancel()
     }
 }

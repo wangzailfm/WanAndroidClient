@@ -90,13 +90,17 @@ class TypeFragment : Fragment(), TypeFragmentView {
      * get Type list Failed
      */
     override fun getTypeListFailed(errorMessage: String?) {
-        activity.toast("获取数据失败")
+        errorMessage?.let {
+            activity.toast(it)
+        } ?: let {
+            activity.toast(getString(R.string.get_data_error))
+        }
     }
     /**
      * get Type list data size equal zero
      */
     override fun getTypeListZero() {
-        activity.toast("获取数据失败")
+        activity.toast(getString(R.string.get_data_error))
     }
     /**
      * RefreshListener

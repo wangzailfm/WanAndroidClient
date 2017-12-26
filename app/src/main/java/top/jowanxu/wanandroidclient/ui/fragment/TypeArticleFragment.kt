@@ -118,14 +118,18 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
     override fun getTypeArticleListFailed(errorMessage: String?) {
         typeArticleAdapter.setEnableLoadMore(false)
         typeArticleAdapter.loadMoreFail()
-        activity.toast("获取数据失败")
+        errorMessage?.let {
+            activity.toast(it)
+        } ?: let {
+            activity.toast(getString(R.string.get_data_error))
+        }
     }
 
     /**
      * get Type Article list data size equal zero
      */
     override fun getTypeArticleListZero() {
-        activity.toast("获取数据失败")
+        activity.toast(getString(R.string.get_data_error))
     }
 
     /**

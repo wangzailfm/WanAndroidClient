@@ -7,7 +7,7 @@
     <string name="no_data">这里空空的…</string>
     <string name="search_title">搜索</string>
     <string name="share_title">分享</string>
-    <string name="like_title">喜欢</string>
+    <string name="like_title">收藏</string>
     <string name="hot_title">常用网址</string>
     <string name="share_type_title">分享专题</string>
     <string name="share_article_url">%1$s分享【%2$s】：%3$s</string>
@@ -31,4 +31,7 @@
     <string name="my_bookmark">我收藏的</string>
     <string name="my_like">我喜欢的</string>
     <string name="not_login">未登录</string>
+    <string name="get_data_error">获取数据失败</string>
+    <string name="loading">正在加载中…</string>
+    <string name="browser_title">用系统浏览器打开</string>
 </resources>

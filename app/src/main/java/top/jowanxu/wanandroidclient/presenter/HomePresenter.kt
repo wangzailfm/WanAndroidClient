@@ -105,6 +105,7 @@ interface HomePresenter {
          */
         fun registerFailed(errorMessage: String?)
     }
+
     /**
      * get friend list interface
      */
@@ -126,5 +127,32 @@ interface HomePresenter {
          * @param errorMessage error message
          */
         fun getFriendListFailed(errorMessage: String?)
+    }
+
+    /**
+     * collect article listener
+     */
+    interface OnCollectArticleListener {
+        /**
+         *  add or remove collect article
+         *  @param id article id
+         *  @param isAdd true add, false remove
+         */
+        fun collectArticle(id: Int, isAdd: Boolean)
+
+
+        /**
+         * add collect article success
+         * @param result HomeListResponse
+         * @param isAdd true add, false remove
+         */
+        fun collectArticleSuccess(result: HomeListResponse, isAdd: Boolean)
+
+        /**
+         * add collect article failed
+         * @param errorMessage error message
+         * @param isAdd true add, false remove
+         */
+        fun collectArticleFailed(errorMessage: String?, isAdd: Boolean)
     }
 }

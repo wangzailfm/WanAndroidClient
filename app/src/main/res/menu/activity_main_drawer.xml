@@ -4,10 +4,6 @@
       tools:showIn="navigation_view">
 
     <item
-        android:id="@+id/nav_bookmark"
-        android:icon="@drawable/ic_action_my_bookmark"
-        android:title="@string/my_bookmark"/>
-    <item
         android:id="@+id/nav_like"
         android:icon="@drawable/ic_action_my_like"
         android:title="@string/my_like"/>

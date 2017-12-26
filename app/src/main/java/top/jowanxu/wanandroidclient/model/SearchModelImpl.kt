@@ -4,6 +4,7 @@ import Constant
 import asyncRequestSuspend
 import cancelAndJoinByActive
 import cancelCall
+import getLikeListCall
 import getSearchListCall
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Deferred
@@ -12,29 +13,38 @@ import kotlinx.coroutines.experimental.async
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import top.jowanxu.wanandroidclient.bean.SearchListResponse
+import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.SearchPresenter
 
 class SearchModelImpl : SearchModel {
 
-    private var searchListCall: Call<SearchListResponse>? = null
+    private var searchListCall: Call<HomeListResponse>? = null
     private var searchListAsync: Deferred<Any>? = null
+
+    /**
+     * Home list Call
+     */
+    private var likeListCall: Call<HomeListResponse>? = null
+    /**
+     * Home list async
+     */
+    private var likeListAsync: Deferred<Any>? = null
 
     override fun getSearchList(onSearchListListener: SearchPresenter.OnSearchListListener, page: Int, k: String) {
         async(UI) {
             try {
                 searchListAsync?.cancelAndJoinByActive()
                 searchListAsync = async(CommonPool) {
-                    asyncRequestSuspend<SearchListResponse> { cont ->
+                    asyncRequestSuspend<HomeListResponse> { cont ->
                         searchListCall?.cancelCall()
                         getSearchListCall(page, k).apply {
                             searchListCall = this@apply
-                        }.enqueue(object : Callback<SearchListResponse> {
-                            override fun onFailure(call: Call<SearchListResponse>, t: Throwable) {
+                        }.enqueue(object : Callback<HomeListResponse> {
+                            override fun onFailure(call: Call<HomeListResponse>, t: Throwable) {
                                 cont.resumeWithException(t)
                             }
 
-                            override fun onResponse(call: Call<SearchListResponse>, response: Response<SearchListResponse>) {
+                            override fun onResponse(call: Call<HomeListResponse>, response: Response<HomeListResponse>) {
                                 cont.resume(response.body())
                             }
                         })
@@ -43,7 +53,7 @@ class SearchModelImpl : SearchModel {
                 val result = searchListAsync?.await()
                 when (result) {
                     is String -> onSearchListListener.getSearchListFailed(result)
-                    is SearchListResponse -> onSearchListListener.getSearchListSuccess(result)
+                    is HomeListResponse -> onSearchListListener.getSearchListSuccess(result)
                     else -> onSearchListListener.getSearchListFailed(Constant.RESULT_NULL)
                 }
             } catch (t: Throwable) {
@@ -57,5 +67,56 @@ class SearchModelImpl : SearchModel {
     override fun cancelRequest() {
         searchListCall?.cancel()
         searchListAsync?.cancel()
+    }
+
+    /**
+     * get Home List
+     * @param onLikeListListener SearchPresenter.OnLikeListListener
+     * @param page page
+     */
+    override fun getLikeList(onLikeListListener: SearchPresenter.OnLikeListListener, page: Int) {
+        async(UI) {
+            try {
+                likeListAsync?.cancelAndJoinByActive()
+                likeListAsync = async(CommonPool) {
+                    // Async Request, wait resume
+                    asyncRequestSuspend<HomeListResponse> { cont ->
+                        likeListCall?.cancelCall()
+                        getLikeListCall(page).apply {
+                            likeListCall = this@apply
+                        }.enqueue(object : Callback<HomeListResponse> {
+                            override fun onResponse(call: Call<HomeListResponse>,
+                                                    response: Response<HomeListResponse>) {
+                                // resume
+                                cont.resume(response.body())
+                            }
+
+                            override fun onFailure(call: Call<HomeListResponse>, t: Throwable) {
+                                cont.resumeWithException(t)
+                            }
+                        })
+                    }
+                }
+                // Get async result
+                val result = likeListAsync?.await()
+                when (result) {
+                    is String -> onLikeListListener.getLikeListFailed(result)
+                    is HomeListResponse -> onLikeListListener.getLikeListSuccess(result)
+                    else -> onLikeListListener.getLikeListFailed(Constant.RESULT_NULL)
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                // Return Throwable toString
+                onLikeListListener.getLikeListFailed(t.toString())
+                return@async
+            }
+        }
+    }
+    /**
+     * cancel HomeList Request
+     */
+    override fun cancelLikeListRequest() {
+        likeListCall?.cancel()
+        likeListAsync?.cancel()
     }
 }

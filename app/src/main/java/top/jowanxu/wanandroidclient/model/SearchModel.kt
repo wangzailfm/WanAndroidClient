@@ -16,4 +16,15 @@ interface SearchModel {
      * 取消请求
      */
     fun cancelRequest()
+
+    /**
+     * get Home List
+     * @param onLikeListListener SearchPresenter.OnLikeListListener
+     * @param page page
+     */
+    fun getLikeList(onLikeListListener: SearchPresenter.OnLikeListListener, page: Int = 0)
+    /**
+     * cancel HomeList Request
+     */
+    fun cancelLikeListRequest()
 }

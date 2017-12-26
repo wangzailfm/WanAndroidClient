@@ -31,8 +31,9 @@ interface RetrofitService {
      * @param cid cid
      */
     @GET("/article/list/{page}/json")
-    fun getArticleList(@Path("page") page: Int,
-                       @Query("cid") cid: Int
+    fun getArticleList(
+            @Path("page") page: Int,
+            @Query("cid") cid: Int
     ): Call<ArticleListResponse>
 
     /**
@@ -57,9 +58,10 @@ interface RetrofitService {
      */
     @POST("/article/query/{page}/json")
     @FormUrlEncoded
-    fun getSearchList(@Path("page") page: Int,
-                      @Field("k") k: String
-    ): Call<SearchListResponse>
+    fun getSearchList(
+            @Path("page") page: Int,
+            @Field("k") k: String
+    ): Call<HomeListResponse>
 
     /**
      * 登录
@@ -69,8 +71,9 @@ interface RetrofitService {
      */
     @POST("/user/login")
     @FormUrlEncoded
-    fun loginWanAndroid(@Field("username") username: String,
-                        @Field("password") password: String
+    fun loginWanAndroid(
+            @Field("username") username: String,
+            @Field("password") password: String
     ): Call<LoginResponse>
 
     /**
@@ -82,9 +85,42 @@ interface RetrofitService {
      */
     @POST("/user/register")
     @FormUrlEncoded
-    fun registerWanAndroid(@Field("username") username: String,
-                           @Field("password") password: String,
-                           @Field("repassword") repassowrd: String
+    fun registerWanAndroid(
+            @Field("username") username: String,
+            @Field("password") password: String,
+            @Field("repassword") repassowrd: String
     ): Call<LoginResponse>
 
+    /**
+     * 获取自己收藏的文章列表
+     * @param page page
+     * @return Call<HomeListResponse>
+     */
+    @GET("/lg/collect/list/{page}/json")
+    fun getLikeList(
+            @Path("page") page: Int
+    ): Call<HomeListResponse>
+
+    /**
+     * 收藏文章
+     * @param id id
+     * @return Call<HomeListResponse>
+     */
+    @POST("/lg/collect/{id}/json")
+    fun addCollectArticle(
+            @Path("id") id: Int
+    ): Call<HomeListResponse>
+
+    /**
+     * 删除收藏文章
+     * @param id id
+     * @param originId -1
+     * @return Call<HomeListResponse>
+     */
+    @POST("/lg/uncollect/{id}/json")
+    @FormUrlEncoded
+    fun removeCollectArticle(
+            @Path("id") id: Int,
+            @Field("originId") originId: Int = -1
+    ): Call<HomeListResponse>
 }

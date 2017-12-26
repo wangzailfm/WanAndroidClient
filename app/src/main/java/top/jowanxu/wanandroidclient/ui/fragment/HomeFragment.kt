@@ -19,9 +19,10 @@ import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomeFragmentPresenterImpl
 import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
 import top.jowanxu.wanandroidclient.ui.activity.TypeContentActivity
+import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.HomeFragmentView
 
-class HomeFragment : Fragment(), HomeFragmentView {
+class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     /**
      * mainView
      */
@@ -84,7 +85,8 @@ class HomeFragment : Fragment(), HomeFragmentView {
 
     override fun getHomeListAfter() { swipeRefreshLayout.isRefreshing = false }
 
-    override fun getHomeListZero() { activity.toast("获取数据失败") }
+    override fun getHomeListZero() { activity.toast(getString(R.string.get_data_error))
+    }
 
     override fun getHomeListSmall(result: HomeListResponse) {
         result.data.datas?.let {
@@ -121,8 +123,31 @@ class HomeFragment : Fragment(), HomeFragmentView {
     override fun getHomeListFailed(errorMessage: String?) {
         homeAdapter.setEnableLoadMore(false)
         homeAdapter.loadMoreFail()
-        activity.toast("获取数据失败")
+        errorMessage?.let {
+            activity.toast(it)
+        } ?: let {
+            activity.toast(getString(R.string.get_data_error))
+        }
     }
+
+    /**
+     * add article success
+     * @param result HomeListResponse
+     * @param isAdd true add, false remove
+     */
+    override fun collectArticleSuccess(result: HomeListResponse, isAdd: Boolean) {
+        activity.toast(if (isAdd) "收藏成功" else "取消收藏成功")
+    }
+
+    /**
+     * add article false
+     * @param errorMessage error message
+     * @param isAdd true add, false remove
+     */
+    override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
+        activity.toast(if (isAdd) "收藏失败：$errorMessage" else "取消收藏成功：$errorMessage")
+    }
+
     /**
      * RefreshListener
      */
@@ -149,19 +174,24 @@ class HomeFragment : Fragment(), HomeFragmentView {
      * ItemChildClickListener
      */
     private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { _, view, position ->
-        if (datas.size != 0) {when (view.id) {
-            R.id.homeItemType -> {
-                Intent(activity, TypeContentActivity::class.java).run {
-                    putExtra(Constant.CONTENT_TARGET_KEY, true)
-                    putExtra(Constant.CONTENT_TITLE_KEY, datas[position].chapterName)
-                    putExtra(Constant.CONTENT_CID_KEY, datas[position].chapterId)
-                    startActivity(this)
+        if (datas.size != 0) {
+            val data = datas[position]
+            when (view.id) {
+                R.id.homeItemType -> {
+                    Intent(activity, TypeContentActivity::class.java).run {
+                        putExtra(Constant.CONTENT_TARGET_KEY, true)
+                        putExtra(Constant.CONTENT_TITLE_KEY, data.chapterName)
+                        putExtra(Constant.CONTENT_CID_KEY, data.chapterId)
+                        startActivity(this)
+                    }
+                }
+                R.id.homeItemLike -> {
+                    val collect = data.collect
+                    data.collect = !collect
+                    homeAdapter.setData(position, data)
+                    homeFragmentPresenter.collectArticle(data.id, !collect)
                 }
             }
-            R.id.homeItemLike -> {
-                activity.toast("收藏")
-            }
-        }
         }
     }
     /**

@@ -37,23 +37,19 @@ class MainActivity : BaseActivity() {
     /**
      * check login for SharedPreferences
      */
-    private var isLogin: Boolean by Preference(Constant.LOGIN_KEY, false)
+    private val isLogin: Boolean by Preference(Constant.LOGIN_KEY, false)
     /**
      * local username
      */
-    private var username: String by Preference(Constant.USERNAME_KEY, "")
-    /**
-     * local password
-     */
-    private var password: String by Preference(Constant.PASSWORD_KEY, "")
+    private val username: String by Preference(Constant.USERNAME_KEY, "")
 
     /**
-     *
+     * login username
      */
     private lateinit var navigationViewUsername: TextView
 
     /**
-     *
+     * login or logout
      */
     private lateinit var navigationViewLogout: TextView
 
@@ -63,13 +59,6 @@ class MainActivity : BaseActivity() {
         toolbar.run {
             title = getString(R.string.app_name)
             setSupportActionBar(this)
-            setNavigationOnClickListener {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawers()
-                } else {
-                    drawerLayout.openDrawer(GravityCompat.START)
-                }
-            }
         }
         bottomNavigation.run {
             setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
@@ -105,9 +94,7 @@ class MainActivity : BaseActivity() {
                         startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
                     }
                 } else {
-                    isLogin = false
-                    username = ""
-                    password = ""
+                    Preference.clear()
                     navigationViewUsername.text = getString(R.string.not_login)
                     text = "点击登录"
                 }
@@ -284,17 +271,12 @@ class MainActivity : BaseActivity() {
                     Intent().run {
                         startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
                     }
+                    toast("请先登录...")
                     return@OnNavigationItemSelectedListener true
-                    //
                 }
-            }
-            R.id.nav_bookmark -> {
-                if (!isLogin) {
-                    Intent().run {
-                        startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
-                    }
-                    return@OnNavigationItemSelectedListener true
-                    //
+                Intent(this, SearchActivity::class.java).run {
+                    putExtra("search", false)
+                    startActivity(this)
                 }
             }
         }
