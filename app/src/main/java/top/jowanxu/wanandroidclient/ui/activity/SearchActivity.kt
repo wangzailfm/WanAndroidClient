@@ -18,12 +18,13 @@ import top.jowanxu.wanandroidclient.base.BaseActivity
 import top.jowanxu.wanandroidclient.bean.Datas
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.SearchPresenterImpl
+import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.SearchListView
 
 /**
  * SearchActivity
  */
-class SearchActivity : BaseActivity(), SearchListView {
+class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
 
     /**
      * Data List
@@ -33,7 +34,7 @@ class SearchActivity : BaseActivity(), SearchListView {
      * presenter
      */
     private val searchPresenter: SearchPresenterImpl by lazy {
-        SearchPresenterImpl(this)
+        SearchPresenterImpl(this, this)
     }
     /**
      * adapter
@@ -168,6 +169,25 @@ class SearchActivity : BaseActivity(), SearchListView {
             toast(getString(R.string.get_data_error))
         }
     }
+
+    /**
+     * add article success
+     * @param result HomeListResponse
+     * @param isAdd true add, false remove
+     */
+    override fun collectArticleSuccess(result: HomeListResponse, isAdd: Boolean) {
+        toast(if (isAdd) "收藏成功" else "取消收藏成功")
+    }
+
+    /**
+     * add article false
+     * @param errorMessage error message
+     * @param isAdd true add, false remove
+     */
+    override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
+        toast(if (isAdd) "收藏失败：$errorMessage" else "取消收藏成功：$errorMessage")
+    }
+
     /**
      * QueryListener
      */
@@ -262,17 +282,33 @@ class SearchActivity : BaseActivity(), SearchListView {
     /**
      * ItemChildClickListener
      */
-    private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { _, _, position ->
+    private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener {
+        _, view, position ->
         if (datas.size != 0) {
-            if (datas.size != 0) {
-                Intent(this, TypeContentActivity::class.java).run {
-                    putExtra(Constant.CONTENT_TARGET_KEY, true)
-                    putExtra(Constant.CONTENT_TITLE_KEY, datas[position].chapterName)
-                    putExtra(Constant.CONTENT_CID_KEY, datas[position].chapterId)
-                    startActivity(this)
+            val data = datas[position]
+            when (view.id) {
+                R.id.homeItemType -> {
+                    Intent(this, TypeContentActivity::class.java).run {
+                        putExtra(Constant.CONTENT_TARGET_KEY, true)
+                        putExtra(Constant.CONTENT_TITLE_KEY, data.chapterName)
+                        putExtra(Constant.CONTENT_CID_KEY, data.chapterId)
+                        startActivity(this)
+                    }
+                }
+                R.id.homeItemLike -> {
+                    if (!isSearch) {
+                        // delete data
+                        searchAdapter.remove(position)
+                        searchPresenter.collectArticle(data.id, false)
+                    } else {
+                        val collect = data.collect
+                        data.collect = !collect
+                        searchAdapter.setData(position, data)
+                        searchPresenter.collectArticle(data.id, !collect)
+                    }
                 }
             }
-        }
+            }
     }
     /**
      * init SearchView

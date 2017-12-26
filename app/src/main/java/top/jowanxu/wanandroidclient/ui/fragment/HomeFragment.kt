@@ -35,7 +35,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
      * presenter
      */
     private val homeFragmentPresenter: HomeFragmentPresenterImpl by lazy {
-        HomeFragmentPresenterImpl(this)
+        HomeFragmentPresenterImpl(this, this)
     }
     /**
      * adapter
@@ -82,11 +82,19 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
      * scroll to top
      */
     fun smoothScrollToPosition() = recyclerView.smoothScrollToPosition(0)
+    /**
+     * refresh
+     */
+    fun refreshData() {
+        swipeRefreshLayout.isRefreshing = true
+        datas.clear()
+        homeAdapter.setEnableLoadMore(false)
+        homeFragmentPresenter.getHomeList()
+    }
 
     override fun getHomeListAfter() { swipeRefreshLayout.isRefreshing = false }
 
-    override fun getHomeListZero() { activity.toast(getString(R.string.get_data_error))
-    }
+    override fun getHomeListZero() { activity.toast(getString(R.string.get_data_error)) }
 
     override fun getHomeListSmall(result: HomeListResponse) {
         result.data.datas?.let {
@@ -152,10 +160,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
      * RefreshListener
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
-        swipeRefreshLayout.isRefreshing = true
-        datas.clear()
-        homeAdapter.setEnableLoadMore(false)
-        homeFragmentPresenter.getHomeList()
+        refreshData()
     }
     /**
      * ItemClickListener

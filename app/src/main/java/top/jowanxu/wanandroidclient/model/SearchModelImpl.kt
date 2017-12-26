@@ -4,6 +4,7 @@ import Constant
 import asyncRequestSuspend
 import cancelAndJoinByActive
 import cancelCall
+import collectArticleCall
 import getLikeListCall
 import getSearchListCall
 import kotlinx.coroutines.experimental.CommonPool
@@ -14,9 +15,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
+import top.jowanxu.wanandroidclient.presenter.HomePresenter
 import top.jowanxu.wanandroidclient.presenter.SearchPresenter
 
-class SearchModelImpl : SearchModel {
+class SearchModelImpl : SearchModel, CollectArticleModel {
 
     private var searchListCall: Call<HomeListResponse>? = null
     private var searchListAsync: Deferred<Any>? = null
@@ -29,6 +31,14 @@ class SearchModelImpl : SearchModel {
      * Home list async
      */
     private var likeListAsync: Deferred<Any>? = null
+    /**
+     * Collect Article Call
+     */
+    private var collectArticleCall: Call<HomeListResponse>? = null
+    /**
+     * Collect Article async
+     */
+    private var collectArticleAsync: Deferred<Any>? = null
 
     override fun getSearchList(onSearchListListener: SearchPresenter.OnSearchListListener, page: Int, k: String) {
         async(UI) {
@@ -118,5 +128,51 @@ class SearchModelImpl : SearchModel {
     override fun cancelLikeListRequest() {
         likeListCall?.cancel()
         likeListAsync?.cancel()
+    }
+
+    /**
+     * add or remove collect article
+     */
+    override fun collectArticle(onCollectArticleListener: HomePresenter.OnCollectArticleListener, id: Int, isAdd: Boolean) {
+        async(UI) {
+            try {
+                collectArticleAsync?.cancelAndJoinByActive()
+                collectArticleAsync = async(CommonPool) {
+                    asyncRequestSuspend<HomeListResponse> { cont ->
+                        collectArticleCall?.cancelCall()
+                        collectArticleCall(id, isAdd).apply {
+                            collectArticleCall = this@apply
+                        }.enqueue(object : Callback<HomeListResponse> {
+                            override fun onResponse(call: Call<HomeListResponse>,
+                                                    response: Response<HomeListResponse>) {
+                                cont.resume(response.body())
+                            }
+
+                            override fun onFailure(call: Call<HomeListResponse>, t: Throwable) {
+                                cont.resumeWithException(t)
+                            }
+                        })
+                    }
+                }
+                val result = collectArticleAsync?.await()
+                when (result) {
+                    is String -> onCollectArticleListener.collectArticleFailed(result, isAdd)
+                    is HomeListResponse -> onCollectArticleListener.collectArticleSuccess(result, isAdd)
+                    else -> onCollectArticleListener.collectArticleFailed(Constant.RESULT_NULL, isAdd)
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                onCollectArticleListener.collectArticleFailed(t.toString(), isAdd)
+                return@async
+            }
+        }
+    }
+
+    /**
+     * cancel collect article Request
+     */
+    override fun cancelCollectRequest() {
+        collectArticleCall.cancelCall()
+        collectArticleAsync?.cancel()
     }
 }

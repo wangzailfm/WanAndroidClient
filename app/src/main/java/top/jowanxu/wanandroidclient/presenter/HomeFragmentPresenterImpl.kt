@@ -1,13 +1,17 @@
 package top.jowanxu.wanandroidclient.presenter
 
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
+import top.jowanxu.wanandroidclient.model.CollectArticleModel
 import top.jowanxu.wanandroidclient.model.HomeModel
 import top.jowanxu.wanandroidclient.model.HomeModelImpl
+import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.HomeFragmentView
 
-class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView) : HomePresenter.OnHomeListListener, HomePresenter.OnCollectArticleListener {
+class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView,
+                                private val collectArticleView: CollectArticleView) : HomePresenter.OnHomeListListener, HomePresenter.OnCollectArticleListener {
 
     private val homeModel: HomeModel = HomeModelImpl()
+    private val collectArticleModel: CollectArticleModel = HomeModelImpl()
     /**
      * get home list
      * @param page page
@@ -55,7 +59,7 @@ class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView) 
      *  @param isAdd true add, false remove
      */
     override fun collectArticle(id: Int, isAdd: Boolean) {
-        homeModel.collectArticle(this, id, isAdd)
+        collectArticleModel.collectArticle(this, id, isAdd)
     }
 
     /**
@@ -65,9 +69,9 @@ class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView) 
      */
     override fun collectArticleSuccess(result: HomeListResponse, isAdd: Boolean) {
         if (result.errorCode != 0) {
-            homeFragmentView.collectArticleFailed(result.errorMsg, isAdd)
+            collectArticleView.collectArticleFailed(result.errorMsg, isAdd)
         } else {
-            homeFragmentView.collectArticleSuccess(result, isAdd)
+            collectArticleView.collectArticleSuccess(result, isAdd)
         }
     }
 
@@ -77,7 +81,7 @@ class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView) 
      * @param isAdd true add, false remove
      */
     override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
-        homeFragmentView.collectArticleFailed(errorMessage, isAdd)
+        collectArticleView.collectArticleFailed(errorMessage, isAdd)
     }
 
     /**
@@ -85,5 +89,6 @@ class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView) 
      */
     fun cancelRequest() {
         homeModel.cancelHomeListRequest()
+        collectArticleModel.cancelCollectRequest()
     }
 }

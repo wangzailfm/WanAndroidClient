@@ -15,11 +15,11 @@ class SearchAdapter(val context: Context, datas: MutableList<Datas>)
             helper.setText(R.id.homeItemTitle, Html.fromHtml(it.title))
                     .setText(R.id.homeItemAuthor, "作者：${it.author}")
                     .setText(R.id.homeItemType, "类别：${it.chapterName}")
-                    .setText(R.id.homeItemDate, it.niceDate)
+                    .setText(R.id.homeItemDate, if (it.originId > 0) "收藏时间：${it.niceDate}" else it.niceDate)
                     .addOnClickListener(R.id.homeItemType)
                     .setTextColor(R.id.homeItemType, context.resources.getColor(R.color.colorPrimary))
                     .linkify(R.id.homeItemType)
-                    .setImageResource(R.id.homeItemLike, if (it.collect) R.drawable.ic_action_like else R.drawable.ic_action_no_like)
+                    .setImageResource(R.id.homeItemLike, if (it.originId > 0 || it.collect) R.drawable.ic_action_like else R.drawable.ic_action_no_like)
                     .addOnClickListener(R.id.homeItemLike)
         }
     }

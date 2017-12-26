@@ -53,4 +53,5 @@ object Constant {
     const val CONTENT_SHARE_TYPE = "text/plain"
 
     const val MAIN_REQUEST_CODE = 100
+    const val MAIN_LIKE_REQUEST_CODE = 101
 }

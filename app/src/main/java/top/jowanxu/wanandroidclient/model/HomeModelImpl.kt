@@ -23,7 +23,7 @@ import top.jowanxu.wanandroidclient.bean.LoginResponse
 import top.jowanxu.wanandroidclient.bean.TreeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomePresenter
 
-class HomeModelImpl : HomeModel {
+class HomeModelImpl : HomeModel, CollectArticleModel {
 
     /**
      * Home list Call

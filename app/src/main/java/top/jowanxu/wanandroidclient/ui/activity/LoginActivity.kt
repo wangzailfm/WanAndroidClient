@@ -100,13 +100,13 @@ class LoginActivity : BaseActivity(), LoginView {
         view ->
         when (view.id) {
             R.id.login -> {
-                if (checkContent(true)) {
+                if (checkContent()) {
                     loginProgress.visibility = View.VISIBLE
                     loginPresenter.loginWanAndroid(username.text.toString(), password.text.toString())
                 }
             }
             R.id.register -> {
-                if (checkContent(false)) {
+                if (checkContent()) {
                     loginProgress.visibility = View.VISIBLE
                     loginPresenter.registerWanAndroid(username.text.toString(),
                             password.text.toString(), password.text.toString())
@@ -117,10 +117,9 @@ class LoginActivity : BaseActivity(), LoginView {
 
     /**
      * check username and password and password confirm field to login or register.
-     * @param isLogin login is true, register is false.
      * @return success return true, failed return false.
      */
-    private fun checkContent(isLogin: Boolean): Boolean {
+    private fun checkContent(): Boolean {
         // error hint
         username.error = null
         password.error = null

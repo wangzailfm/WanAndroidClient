@@ -139,9 +139,12 @@ class MainActivity : BaseActivity() {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Constant.MAIN_REQUEST_CODE && resultCode == RESULT_OK) {
-            navigationViewUsername.text = data?.getStringExtra(Constant.CONTENT_TITLE_KEY)
-            navigationViewLogout.text = getString(R.string.logout)
+        when (requestCode) {
+            Constant.MAIN_REQUEST_CODE -> if (resultCode == RESULT_OK) {
+                navigationViewUsername.text = data?.getStringExtra(Constant.CONTENT_TITLE_KEY)
+                navigationViewLogout.text = getString(R.string.logout)
+            }
+            Constant.MAIN_LIKE_REQUEST_CODE -> homeFragment?.refreshData()
         }
     }
 
@@ -276,7 +279,7 @@ class MainActivity : BaseActivity() {
                 }
                 Intent(this, SearchActivity::class.java).run {
                     putExtra("search", false)
-                    startActivity(this)
+                    startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
                 }
             }
         }
