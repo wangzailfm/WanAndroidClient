@@ -21,6 +21,7 @@ import top.jowanxu.wanandroidclient.bean.FriendListResponse
 import top.jowanxu.wanandroidclient.bean.HotKeyResponse
 import top.jowanxu.wanandroidclient.presenter.CommonUseFragmentPresenterImpl
 import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
+import top.jowanxu.wanandroidclient.ui.activity.SearchActivity
 import top.jowanxu.wanandroidclient.view.CommonUseFragmentView
 
 class CommonUseFragment : Fragment(), CommonUseFragmentView {
@@ -66,10 +67,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
         super.onActivityCreated(savedInstanceState)
         tagFlowLayout.run {
             adapter = commonUseTagAdapter
-            setOnTagClickListener { view, position, parent ->
-                activity.toast("position-------$position")
-                true
-            }
+            setOnTagClickListener(onTagClickListener)
         }
         commonSwipeRefreshLayout.run {
             isRefreshing = true
@@ -155,5 +153,17 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
                 startActivity(this)
             }
         }
+    }
+
+    private val onTagClickListener = TagFlowLayout.OnTagClickListener {
+        _, position, _ ->
+        if (tagDatas.size != 0) {
+            Intent(activity, SearchActivity::class.java).run {
+                putExtra(Constant.SEARCH_KEY, true)
+                putExtra(Constant.CONTENT_TITLE_KEY, tagDatas[position].name)
+                startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
+            }
+        }
+        true
     }
 }

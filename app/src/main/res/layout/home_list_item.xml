@@ -14,6 +14,7 @@
         android:layout_height="24dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/dp_4"
         android:layout_marginEnd="@dimen/dp_4"
         app:srcCompat="@mipmap/ic_launcher_round"
         tools:ignore="ContentDescription"/>
@@ -51,10 +52,9 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/homeItemHead"
         android:layout_marginEnd="@dimen/dp_4"
-        android:layout_marginTop="@dimen/dp_4"
         android:gravity="center_vertical"
         android:textColor="@android:color/primary_text_light"
-        android:textSize="18sp"
+        android:textSize="19sp"
         tools:text="标题"/>
 
     <TextView

@@ -11,7 +11,7 @@ Try to build a www.wanandroid.com client
 - [x] 文章内容
 - [x] 分享文章、专题
 - [x] 常用网站
-- [ ] 热词搜索
+- [x] 热词搜索
 - [ ] 搜索记录
 - [ ] 离线数据
 

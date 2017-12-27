@@ -15,6 +15,8 @@ class CommonUseTagAdapter(val context: Context,  val datas: List<HotKeyResponse.
     override fun getView(parent: FlowLayout, position: Int, data: HotKeyResponse.Data): View {
         return (inflater.inflate(R.layout.common_hot_item, parent, false) as TextView).apply {
             text = data.name
+            @Suppress("DEPRECATION")
+            setTextColor(context.resources.getColor(R.color.colorPrimary))
         }
     }
 }

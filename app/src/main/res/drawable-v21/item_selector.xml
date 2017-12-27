@@ -5,8 +5,9 @@
          android:drawable="@android:color/white" />
    <item>
       <shape android:shape="rectangle" >
-         <corners android:radius="@dimen/dp_4"/>
-         <solid android:color="@android:color/transparent"/>
+         <corners android:radius="@dimen/dp_40"/>
+         <solid android:color="@color/item_bg"/>
+         <stroke android:color="@color/while_most_color" android:width="1px"/>
       </shape>
    </item>
 </ripple>

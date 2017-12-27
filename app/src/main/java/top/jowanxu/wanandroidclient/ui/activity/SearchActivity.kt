@@ -96,6 +96,10 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
         }
         if (!isSearch) {
             searchPresenter.getLikeList()
+        } else {
+            intent.extras?.let {
+                searchKey = it.getString(Constant.CONTENT_TITLE_KEY, null)
+            }
         }
     }
 
@@ -113,6 +117,9 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
             searchView = menu.findItem(R.id.menuSearch).actionView as SearchView
             // init SearchView
             searchView?.init(1920, false, onQueryTextListener = onQueryTextListener)
+            searchKey?.let {
+                searchView?.setQuery(it, true)
+            }
         }
         return super.onCreateOptionsMenu(menu)
     }

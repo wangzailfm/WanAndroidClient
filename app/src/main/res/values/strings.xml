@@ -5,7 +5,7 @@
     <!-- home -->
     <string name="title_home">Home</string>
     <string name="title_dashboard">Knowledge</string>
-    <string name="hot_title">CommonUse</string>
+    <string name="hot_title">Hot</string>
     <!--no data-->
     <string name="no_data">Here the empty…</string>
     <string name="get_data_error">Failed to get the data</string>
@@ -54,4 +54,5 @@
     <string name="loading">Loading…</string>
     <string name="browser_title">Use system browser open</string>
     <string name="hot_key">大家都在搜</string>
+    <string name="common_use">常用网址</string>
 </resources>

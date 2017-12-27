@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:zhy="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="RtlSymmetry">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:paddingStart="@dimen/dp_10"
-        android:text="@string/hot_key"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        tools:ignore="RtlSymmetry"/>
-
-    <com.zhy.view.flowlayout.TagFlowLayout
-        xmlns:zhy="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/hotFlowLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp_10"
         android:background="@drawable/list_item_selector"
-        android:padding="20dp"
-        zhy:max_select="0">
+        android:padding="@dimen/dp_10"
+        android:text="@string/hot_key"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-    </com.zhy.view.flowlayout.TagFlowLayout>
+    <com.zhy.view.flowlayout.TagFlowLayout
+        android:id="@+id/hotFlowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:paddingStart="@dimen/dp_10"
+        zhy:max_select="0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@drawable/list_item_selector"
+        android:text="@string/common_use"
+        android:padding="@dimen/dp_10"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
 </LinearLayout>

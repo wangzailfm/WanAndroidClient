@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:padding="@dimen/dp_10"
-    android:background="@drawable/list_item_selector"
+    android:background="@drawable/item_selector"
     android:gravity="center"
     android:textColor="@android:color/primary_text_light"
     android:textSize="18sp"
