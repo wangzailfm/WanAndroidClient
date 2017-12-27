@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:paddingStart="@dimen/dp_10"
+        android:text="@string/hot_key"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:ignore="RtlSymmetry"/>
+
+    <com.zhy.view.flowlayout.TagFlowLayout
+        xmlns:zhy="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/hotFlowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@drawable/list_item_selector"
+        android:padding="20dp"
+        zhy:max_select="0">
+
+    </com.zhy.view.flowlayout.TagFlowLayout>
+</LinearLayout>

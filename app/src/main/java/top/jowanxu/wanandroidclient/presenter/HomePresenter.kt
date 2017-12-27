@@ -1,9 +1,6 @@
 package top.jowanxu.wanandroidclient.presenter
 
-import top.jowanxu.wanandroidclient.bean.FriendListResponse
-import top.jowanxu.wanandroidclient.bean.HomeListResponse
-import top.jowanxu.wanandroidclient.bean.LoginResponse
-import top.jowanxu.wanandroidclient.bean.TreeListResponse
+import top.jowanxu.wanandroidclient.bean.*
 
 /**
  * 首页Presenter接口
@@ -120,7 +117,7 @@ interface HomePresenter {
          * get friend list success
          * @param result result
          */
-        fun getFriendListSuccess(result: FriendListResponse)
+        fun getFriendListSuccess(result: FriendListResponse, hotResult: HotKeyResponse)
 
         /**
          * get friend list failed

@@ -12,6 +12,8 @@ ext.test_espresso_version = "3.0.1"
 ext.brvah_version = "2.9.34"
 ext.glide_version = "3.7.0"
 ext.agentweb_version = "3.0.0-beta"
+ext.barlibrary_version = "2.3.0"
+ext.flowlayout_version = "1.1.2"
 
 buildscript {
     ext.kotlin_version = '1.2.0'

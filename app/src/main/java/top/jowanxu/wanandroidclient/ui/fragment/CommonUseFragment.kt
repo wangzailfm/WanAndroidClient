@@ -9,12 +9,16 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.zhy.view.flowlayout.TagFlowLayout
 import kotlinx.android.synthetic.main.fragment_common.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.CommonUseAdapter
+import top.jowanxu.wanandroidclient.adapter.CommonUseTagAdapter
 import top.jowanxu.wanandroidclient.bean.FriendListResponse
+import top.jowanxu.wanandroidclient.bean.HotKeyResponse
 import top.jowanxu.wanandroidclient.presenter.CommonUseFragmentPresenterImpl
 import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
 import top.jowanxu.wanandroidclient.view.CommonUseFragmentView
@@ -28,7 +32,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
     /**
      * Data list
      */
-    private var datas = mutableListOf<FriendListResponse.Data>()
+    private val datas = mutableListOf<FriendListResponse.Data>()
     /**
      * presenter
      */
@@ -41,17 +45,32 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
     private val commonUseAdapter: CommonUseAdapter by lazy {
         CommonUseAdapter(activity, datas)
     }
+    private lateinit var flowLayout: LinearLayout
+    private lateinit var tagFlowLayout: TagFlowLayout
+    private val tagDatas = mutableListOf<HotKeyResponse.Data>()
+    private val commonUseTagAdapter: CommonUseTagAdapter by lazy {
+        CommonUseTagAdapter(activity, tagDatas)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         mainView ?: let {
             mainView = inflater.inflate(R.layout.fragment_common, container, false)
+            flowLayout = LayoutInflater.from(activity).inflate(R.layout.common_hot, null) as LinearLayout
+            tagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.hotFlowLayout)
         }
         return  mainView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        tagFlowLayout.run {
+            adapter = commonUseTagAdapter
+            setOnTagClickListener { view, position, parent ->
+                activity.toast("position-------$position")
+                true
+            }
+        }
         commonSwipeRefreshLayout.run {
             isRefreshing = true
             setOnRefreshListener(onRefreshListener)
@@ -64,6 +83,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
             bindToRecyclerView(commonRecyclerView)
             onItemClickListener = this@CommonUseFragment.onItemClickListener
             setEmptyView(R.layout.fragment_home_empty)
+            commonUseAdapter.addHeaderView(flowLayout)
         }
         commonUseFragmentPresenter.getFriendList()
     }
@@ -82,13 +102,18 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
     /**
      * get Friend list Success
      */
-    override fun getFriendListSuccess(result: FriendListResponse) {
+    override fun getFriendListSuccess(result: FriendListResponse, hotResult: HotKeyResponse) {
         result.data.let {
             if (commonSwipeRefreshLayout.isRefreshing) {
                 commonUseAdapter.replaceData(it)
             } else {
                 commonUseAdapter.addData(it)
             }
+        }
+        hotResult.data?.let {
+            tagDatas.clear()
+            tagDatas.addAll(it)
+            commonUseTagAdapter.notifyDataChanged()
         }
     }
 

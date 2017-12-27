@@ -28,7 +28,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
     /**
      * Data List
      */
-    private var datas = mutableListOf<Datas>()
+    private val datas = mutableListOf<Datas>()
     /**
      * presenter
      */

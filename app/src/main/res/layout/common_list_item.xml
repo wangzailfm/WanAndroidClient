@@ -14,7 +14,6 @@
         android:id="@+id/commonItemTitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toStartOf="@+id/typeItemArrow"
         android:background="@drawable/list_item_selector"
         android:gravity="center"
         android:padding="@dimen/dp_10"

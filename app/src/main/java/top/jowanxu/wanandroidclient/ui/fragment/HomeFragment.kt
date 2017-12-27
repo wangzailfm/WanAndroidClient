@@ -30,7 +30,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     /**
      * Data List
      */
-    private var datas = mutableListOf<Datas>()
+    private val datas = mutableListOf<Datas>()
     /**
      * presenter
      */

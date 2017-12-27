@@ -43,7 +43,8 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glide_version"
     implementation "com.just.agentweb:agentweb:$agentweb_version"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:1.5.4"
-    implementation 'com.gyf.barlibrary:barlibrary:2.3.0'
+    implementation "com.gyf.barlibrary:barlibrary:$barlibrary_version"
+    implementation "com.hyman:flowlayout-lib:$flowlayout_version"
 }
 kotlin {
     experimental {

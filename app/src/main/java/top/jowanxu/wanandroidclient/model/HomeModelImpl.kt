@@ -7,6 +7,7 @@ import cancelCall
 import collectArticleCall
 import getFriendListCall
 import getHomeListCall
+import getHotListCall
 import getTypeTreeListCall
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Deferred
@@ -17,10 +18,7 @@ import registerWanAndroid
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import top.jowanxu.wanandroidclient.bean.FriendListResponse
-import top.jowanxu.wanandroidclient.bean.HomeListResponse
-import top.jowanxu.wanandroidclient.bean.LoginResponse
-import top.jowanxu.wanandroidclient.bean.TreeListResponse
+import top.jowanxu.wanandroidclient.bean.*
 import top.jowanxu.wanandroidclient.presenter.HomePresenter
 
 class HomeModelImpl : HomeModel, CollectArticleModel {
@@ -41,6 +39,14 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * TypeTree async
      */
     private var typeTreeListAsync: Deferred<Any>? = null
+    /**
+     * Hot list Call
+     */
+    private var hotListCall: Call<HotKeyResponse>? = null
+    /**
+     * Hot async
+     */
+    private var hotListAsync: Deferred<Any>? = null
     /**
      * Login Call
      */
@@ -299,11 +305,40 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
                     }
                 }
                 val result = friendListAsync?.await()
-                when (result) {
-                    is String -> onFriendListListener.getFriendListFailed(result)
-                    is FriendListResponse -> onFriendListListener.getFriendListSuccess(result)
+                if (result !is FriendListResponse) {
+                    if (result is String) {
+                        onFriendListListener.getFriendListFailed(result)
+                        return@async
+                    } else {
+                        onFriendListListener.getFriendListFailed(Constant.RESULT_NULL)
+                        return@async
+                    }
+                }
+                hotListAsync?.cancelAndJoinByActive()
+                hotListAsync = async(CommonPool) {
+                    asyncRequestSuspend<HotKeyResponse> { cont ->
+                        hotListCall?.cancelCall()
+                        getHotListCall().apply {
+                            hotListCall = this@apply
+                        }.enqueue(object : Callback<HotKeyResponse> {
+                            override fun onResponse(call: Call<HotKeyResponse>,
+                                                    response: Response<HotKeyResponse>) {
+                                cont.resume(response.body())
+                            }
+
+                            override fun onFailure(call: Call<HotKeyResponse>, t: Throwable) {
+                                cont.resumeWithException(t)
+                            }
+                        })
+                    }
+                }
+                val hotResult = hotListAsync?.await()
+                when (hotResult) {
+                    is String -> onFriendListListener.getFriendListFailed(hotResult)
+                    is HotKeyResponse -> onFriendListListener.getFriendListSuccess(result, hotResult)
                     else -> onFriendListListener.getFriendListFailed(Constant.RESULT_NULL)
                 }
+
             } catch (t: Throwable) {
                 t.printStackTrace()
                 onFriendListListener.getFriendListFailed(t.toString())
@@ -318,6 +353,8 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
     override fun cancelFriendRequest() {
         friendListCall?.cancelCall()
         friendListAsync?.cancel()
+        hotListCall?.cancelCall()
+        hotListAsync?.cancel()
     }
 
     /**

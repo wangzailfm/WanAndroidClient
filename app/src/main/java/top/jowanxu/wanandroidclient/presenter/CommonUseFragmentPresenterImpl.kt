@@ -1,6 +1,7 @@
 package top.jowanxu.wanandroidclient.presenter
 
 import top.jowanxu.wanandroidclient.bean.FriendListResponse
+import top.jowanxu.wanandroidclient.bean.HotKeyResponse
 import top.jowanxu.wanandroidclient.model.HomeModel
 import top.jowanxu.wanandroidclient.model.HomeModelImpl
 import top.jowanxu.wanandroidclient.view.CommonUseFragmentView
@@ -19,7 +20,7 @@ class CommonUseFragmentPresenterImpl(private val commonUseFragmentView: CommonUs
      * get friend list success
      * @param result result
      */
-    override fun getFriendListSuccess(result: FriendListResponse) {
+    override fun getFriendListSuccess(result: FriendListResponse, hotResult: HotKeyResponse) {
         commonUseFragmentView.getFriendListAfter()
         if (result.errorCode != 0) {
             commonUseFragmentView.getFriendListFailed(result.errorMsg)
@@ -29,7 +30,7 @@ class CommonUseFragmentPresenterImpl(private val commonUseFragmentView: CommonUs
             commonUseFragmentView.getFriendListZero()
             return
         }
-        commonUseFragmentView.getFriendListSuccess(result)
+        commonUseFragmentView.getFriendListSuccess(result, hotResult)
     }
 
     /**

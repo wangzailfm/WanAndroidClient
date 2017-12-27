@@ -28,7 +28,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
     /**
      * Data List
      */
-    private var datas = mutableListOf<Datas>()
+    private val datas = mutableListOf<Datas>()
     /**
      * presenter
      */
@@ -49,6 +49,9 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
      * SearView
      */
     private var searchView: SearchView? = null
+    /**
+     * true search, false bookmark
+     */
     private var isSearch: Boolean = true
 
     override fun setLayoutId(): Int = R.layout.activity_search

@@ -145,3 +145,5 @@ fun getLikeListCall(page: Int = 0) = RetrofitHelper.retrofitService.getLikeList(
 fun collectArticleCall(id: Int, isAdd: Boolean) =
         if (isAdd) RetrofitHelper.retrofitService.addCollectArticle(id)
         else RetrofitHelper.retrofitService.removeCollectArticle(id)
+
+fun getHotListCall() = RetrofitHelper.retrofitService.getHotKeyList()

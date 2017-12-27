@@ -24,7 +24,7 @@ class TypeFragment : Fragment(), TypeFragmentView {
      * mainView
      */
     private var mainView: View? = null
-    private var datas = mutableListOf<TreeListResponse.Data>()
+    private val datas = mutableListOf<TreeListResponse.Data>()
     private val typeFragmentPresenter: TypeFragmentPresenterImpl by lazy {
         TypeFragmentPresenterImpl(this)
     }

@@ -53,4 +53,5 @@
     <!-- article -->
     <string name="loading">Loading…</string>
     <string name="browser_title">Use system browser open</string>
+    <string name="hot_key">大家都在搜</string>
 </resources>
