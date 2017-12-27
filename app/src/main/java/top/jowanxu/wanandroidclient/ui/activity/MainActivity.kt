@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.widget.AppCompatButton
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -51,11 +52,17 @@ class MainActivity : BaseActivity() {
     /**
      * login or logout
      */
-    private lateinit var navigationViewLogout: TextView
+    private lateinit var navigationViewLogout: AppCompatButton
+
+    override fun setLayoutId(): Int = R.layout.activity_main
+
+    override fun initImmersionBar() {
+        super.initImmersionBar()
+        immersionBar.titleBar(R.id.toolbar).init()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         toolbar.run {
             title = getString(R.string.app_name)
             setSupportActionBar(this)
@@ -74,7 +81,7 @@ class MainActivity : BaseActivity() {
             setNavigationItemSelectedListener(onDrawerNavigationItemSelectedListener)
         }
         navigationViewUsername = navigationView.getHeaderView(0).findViewById<TextView>(R.id.navigationViewUsername)
-        navigationViewLogout = navigationView.getHeaderView(0).findViewById<TextView>(R.id.navigationViewLogout)
+        navigationViewLogout = navigationView.getHeaderView(0).findViewById<AppCompatButton>(R.id.navigationViewLogout)
         navigationViewUsername.run {
             if (!isLogin) {
                 text = getString(R.string.not_login)
@@ -84,7 +91,7 @@ class MainActivity : BaseActivity() {
         }
         navigationViewLogout.run {
             text = if (!isLogin) {
-                "点击登录"
+                getString(R.string.goto_login)
             } else {
                 getString(R.string.logout)
             }
@@ -96,7 +103,8 @@ class MainActivity : BaseActivity() {
                 } else {
                     Preference.clear()
                     navigationViewUsername.text = getString(R.string.not_login)
-                    text = "点击登录"
+                    text = getString(R.string.goto_login)
+                    homeFragment?.refreshData()
                 }
             }
         }
@@ -140,9 +148,12 @@ class MainActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            Constant.MAIN_REQUEST_CODE -> if (resultCode == RESULT_OK) {
-                navigationViewUsername.text = data?.getStringExtra(Constant.CONTENT_TITLE_KEY)
-                navigationViewLogout.text = getString(R.string.logout)
+            Constant.MAIN_REQUEST_CODE ->  {
+                if (resultCode == RESULT_OK) {
+                    navigationViewUsername.text = data?.getStringExtra(Constant.CONTENT_TITLE_KEY)
+                    navigationViewLogout.text = getString(R.string.logout)
+                }
+                homeFragment?.refreshData()
             }
             Constant.MAIN_LIKE_REQUEST_CODE -> homeFragment?.refreshData()
         }
@@ -182,6 +193,9 @@ class MainActivity : BaseActivity() {
      * 显示对应Fragment
      */
     private fun setFragment(index: Int) {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
         fragmentManager.beginTransaction().apply {
             homeFragment ?: let {
                 HomeFragment().let {
@@ -210,7 +224,7 @@ class MainActivity : BaseActivity() {
                     }
                 }
                 R.id.navigation_type -> {
-                    toolbar.title = getString(R.string.app_name)
+                    toolbar.title = getString(R.string.title_dashboard)
                     typeFragment?.let {
                         this.show(it)
                     }
@@ -274,11 +288,11 @@ class MainActivity : BaseActivity() {
                     Intent().run {
                         startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
                     }
-                    toast("请先登录...")
+                    toast(getString(R.string.login_please_login))
                     return@OnNavigationItemSelectedListener true
                 }
                 Intent(this, SearchActivity::class.java).run {
-                    putExtra("search", false)
+                    putExtra(Constant.SEARCH_KEY, false)
                     startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
                 }
             }

@@ -98,7 +98,10 @@ fun encodeCookie(cookies: List<String>): String {
 /**
  * getAgentWeb
  */
-fun String.getAgentWeb(activity: Activity, webContent: ViewGroup, layoutParams: ViewGroup.LayoutParams, receivedTitleCallback: ChromeClientCallbackManager.ReceivedTitleCallback?) = AgentWeb.with(activity)//传入Activity or Fragment
+fun String.getAgentWeb(activity: Activity, webContent: ViewGroup,
+                       layoutParams: ViewGroup.LayoutParams,
+                       receivedTitleCallback: ChromeClientCallbackManager.ReceivedTitleCallback?)
+        = AgentWeb.with(activity)//传入Activity or Fragment
         .setAgentWebParent(webContent, layoutParams)//传入AgentWeb 的父控件
         .useDefaultIndicator()// 使用默认进度条
         .defaultProgressBarColor() // 使用默认进度条颜色

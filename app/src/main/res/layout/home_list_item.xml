@@ -1,62 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/dp_10"
-    android:background="@drawable/list_item_selector"
-    android:padding="10dp">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:background="@drawable/list_item_selector"
+                android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/homeItemHead"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/dp_4"
+        app:srcCompat="@mipmap/ic_launcher_round"
+        tools:ignore="ContentDescription"/>
+
+    <TextView
+        android:id="@+id/homeItemAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/homeItemHead"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/homeItemHead"
+        android:layout_toStartOf="@+id/homeItemLike"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/secondary_text_light"
+        android:textSize="@dimen/sp_16"
+        tools:text="作者"/>
+
+    <TextView
+        android:id="@+id/homeItemDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/homeItemHead"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:paddingEnd="@dimen/dp_10"
+        android:textColor="@android:color/darker_gray"
+        tools:ignore="RtlSymmetry"
+        tools:text="日期"/>
 
     <TextView
         android:id="@+id/homeItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/homeItemHead"
         android:layout_marginEnd="@dimen/dp_4"
-        android:layout_toStartOf="@+id/homeItemLike"
+        android:layout_marginTop="@dimen/dp_4"
+        android:gravity="center_vertical"
         android:textColor="@android:color/primary_text_light"
         android:textSize="18sp"
-        tools:text="标题" />
-
-    <TextView
-        android:id="@+id/homeItemAuthor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/homeItemTitle"
-        android:layout_marginTop="20dp"
-        android:textColor="@android:color/secondary_text_light"
-        android:textSize="@dimen/sp_16"
-        tools:text="作者" />
+        tools:text="标题"/>
 
     <TextView
         android:id="@+id/homeItemType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/homeItemAuthor"
+        android:layout_below="@+id/homeItemTitle"
         android:layout_marginTop="@dimen/dp_10"
+        android:layout_toStartOf="@+id/homeItemLike"
+        android:paddingTop="@dimen/dp_10"
         android:textColor="@android:color/secondary_text_light"
         android:textSize="@dimen/sp_16"
-        tools:text="类型" />
-
-    <TextView
-        android:id="@+id/homeItemDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/homeItemType"
-        android:layout_alignBottom="@+id/homeItemType"
-        android:layout_alignParentEnd="true"
-        android:textColor="@android:color/secondary_text_light"
-        tools:text="日期" />
+        tools:text="类型"/>
 
     <ImageView
         android:id="@+id/homeItemLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/homeItemType"
+        android:padding="@dimen/dp_10"
         app:srcCompat="@drawable/ic_action_no_like"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"/>
 </RelativeLayout>

@@ -4,16 +4,16 @@ import Constant
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_type_content.*
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.TypeArticlePagerAdapter
+import top.jowanxu.wanandroidclient.base.BaseActivity
 import top.jowanxu.wanandroidclient.bean.TreeListResponse
 import top.jowanxu.wanandroidclient.bean.TreeListResponse.Data.Children
 
-class TypeContentActivity : AppCompatActivity() {
+class TypeContentActivity : BaseActivity() {
     /**
      * toolbar title
      */
@@ -33,9 +33,15 @@ class TypeContentActivity : AppCompatActivity() {
         TypeArticlePagerAdapter(list, supportFragmentManager)
     }
 
+    override fun setLayoutId(): Int = R.layout.activity_type_content
+
+    override fun initImmersionBar() {
+        super.initImmersionBar()
+        immersionBar.titleBar(R.id.typeSecondToolbar).init()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_type_content)
 
         typeSecondToolbar.run {
             setSupportActionBar(this)

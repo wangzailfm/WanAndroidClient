@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import com.gyf.barlibrary.ImmersionBar
 import kotlinx.android.synthetic.main.activity_login.*
 import toast
 import top.jowanxu.wanandroidclient.R
@@ -33,11 +34,19 @@ class LoginActivity : BaseActivity(), LoginView {
         LoginPresenterImpl(this)
     }
 
+    override fun setLayoutId(): Int = R.layout.activity_login
+
+    override fun initImmersionBar() {
+        super.initImmersionBar()
+        if (ImmersionBar.isSupportStatusBarDarkFont())
+            immersionBar.statusBarDarkFont(true).init()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
         login.setOnClickListener(onClickListener)
         register.setOnClickListener(onClickListener)
+        loginExit.setOnClickListener(onClickListener)
     }
 
     /**
@@ -88,6 +97,7 @@ class LoginActivity : BaseActivity(), LoginView {
     override fun registerFailed(errorMessage: String?) {
         isLogin = false
         loginProgress.visibility = View.GONE
+        username.requestFocus()
         errorMessage?.let {
             toast(it)
         }
@@ -111,6 +121,9 @@ class LoginActivity : BaseActivity(), LoginView {
                     loginPresenter.registerWanAndroid(username.text.toString(),
                             password.text.toString(), password.text.toString())
                 }
+            }
+            R.id.loginExit -> {
+                finish()
             }
         }
     }

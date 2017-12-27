@@ -4,7 +4,6 @@ import Constant
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -15,18 +14,25 @@ import getAgentWeb
 import kotlinx.android.synthetic.main.activity_content.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import top.jowanxu.wanandroidclient.R
+import top.jowanxu.wanandroidclient.base.BaseActivity
 
 /**
  * WebViewActivity
  */
-class ContentActivity : AppCompatActivity() {
+class ContentActivity : BaseActivity() {
     private lateinit var agentWeb: AgentWeb
     private lateinit var shareTitle: String
     private lateinit var shareUrl: String
 
+    override fun setLayoutId(): Int = R.layout.activity_content
+
+    override fun initImmersionBar() {
+        super.initImmersionBar()
+        immersionBar.titleBar(R.id.toolbar).init()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_content)
         toolbar.run {
             title = getString(R.string.loading)
             setSupportActionBar(this)

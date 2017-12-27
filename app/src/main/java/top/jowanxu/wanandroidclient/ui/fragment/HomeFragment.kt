@@ -144,7 +144,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
      * @param isAdd true add, false remove
      */
     override fun collectArticleSuccess(result: HomeListResponse, isAdd: Boolean) {
-        activity.toast(if (isAdd) "收藏成功" else "取消收藏成功")
+        activity.toast(if (isAdd) activity.getString(R.string.bookmark_success) else activity.getString(R.string.bookmark_cancel_success))
     }
 
     /**
@@ -153,7 +153,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
      * @param isAdd true add, false remove
      */
     override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
-        activity.toast(if (isAdd) "收藏失败：$errorMessage" else "取消收藏成功：$errorMessage")
+        activity.toast(if (isAdd) activity.getString(R.string.bookmark_failed, errorMessage) else activity.getString(R.string.bookmark_cancel_failed, errorMessage))
     }
 
     /**

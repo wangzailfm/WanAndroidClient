@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/passwordLayout"
+        android:orientation="horizontal"
         app:hintTextAppearance="@style/TextAppearance.AppCompat.Large">
 
         <EditText
@@ -29,7 +30,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/prompt_username"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -50,7 +51,7 @@
             android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -90,6 +91,15 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/loginExit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/dp_40"
+        app:srcCompat="@drawable/ic_clear_black_24dp"
+        tools:ignore="ContentDescription"/>
 </RelativeLayout>

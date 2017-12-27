@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import com.chad.library.adapter.base.BaseQuickAdapter
 import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.SearchAdapter
@@ -52,11 +51,17 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
     private var searchView: SearchView? = null
     private var isSearch: Boolean = true
 
+    override fun setLayoutId(): Int = R.layout.activity_search
+
+    override fun initImmersionBar() {
+        super.initImmersionBar()
+        immersionBar.titleBar(R.id.toolbar).init()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
         intent.extras?.let {
-            isSearch = it.getBoolean("search", true)
+            isSearch = it.getBoolean(Constant.SEARCH_KEY, true)
         }
         toolbar.run {
             title = if (isSearch) "" else getString(R.string.my_like)
@@ -124,7 +129,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
     }
 
     override fun getSearchListZero() {
-        toast("未搜索到关键词相关文章")
+        toast(getString(R.string.search_failed_not_article))
     }
 
     override fun getSearchListSmall(result: HomeListResponse) {
@@ -176,7 +181,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
      * @param isAdd true add, false remove
      */
     override fun collectArticleSuccess(result: HomeListResponse, isAdd: Boolean) {
-        toast(if (isAdd) "收藏成功" else "取消收藏成功")
+        toast(if (isAdd) getString(R.string.bookmark_success) else getString(R.string.bookmark_cancel_success))
     }
 
     /**
@@ -185,7 +190,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
      * @param isAdd true add, false remove
      */
     override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
-        toast(if (isAdd) "收藏失败：$errorMessage" else "取消收藏成功：$errorMessage")
+        toast(if (isAdd) getString(R.string.bookmark_failed, errorMessage) else getString(R.string.bookmark_cancel_failed, errorMessage))
     }
 
     /**
@@ -201,7 +206,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
                 searchPresenter.getSearchList(k = it)
             } ?: let {
                 swipeRefreshLayout.isRefreshing = false
-                toast("搜索关键字不能为空")
+                toast(getString(R.string.search_not_empty))
             }
             searchView?.clearFocus()
             return false
@@ -227,7 +232,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
             searchPresenter.getSearchList(k = it)
         } ?: let {
             swipeRefreshLayout.isRefreshing = false
-            toast("搜索关键字不能为空")
+            toast(getString(R.string.search_not_empty))
         }
     }
 
@@ -317,14 +322,14 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
         if (sMaxWidth != 0) {
             maxWidth = sMaxWidth
         }
-        // false为展开
+        // false open
         isIconified = sIconified
-        // 不关闭
+        // not close
         if (!isClose) {
-            // 展开
+            // open
             onActionViewExpanded()
         }
-        // 搜索监听
+        // search listener
         setOnQueryTextListener(onQueryTextListener)
     }
 }
