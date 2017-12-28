@@ -11,8 +11,6 @@ import com.just.agentweb.ChromeClientCallbackManager
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.cancelAndJoin
 import retrofit2.Call
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
  * Log
@@ -44,14 +42,6 @@ fun Context.toast(content: String) {
 fun Context.toast(@StringRes id: Int) {
     toast(getString(id))
 }
-
-/**
- * async change to sync
- */
-suspend fun <T> asyncRequestSuspend(block: (Continuation<T>) -> Unit) = suspendCoroutine<T> {
-    block(it)
-}
-
 /**
  * cancel coroutines
  */
