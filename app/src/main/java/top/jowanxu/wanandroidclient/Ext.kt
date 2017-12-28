@@ -51,6 +51,12 @@ suspend fun Deferred<Any>?.cancelAndJoinByActive() = this?.run {
     }
 }
 
+fun Deferred<Any>?.cancelByActive() = this?.run {
+    if (isActive) {
+        this.cancel()
+    }
+}
+
 /**
  * cancel call request
  */

@@ -3,6 +3,7 @@ package top.jowanxu.wanandroidclient.model
 import Constant
 import RetrofitHelper
 import cancelAndJoinByActive
+import cancelByActive
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -69,7 +70,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel HomeList Request
      */
     override fun cancelHomeListRequest() {
-        homeListAsync?.cancel()
+        homeListAsync?.cancelByActive()
     }
 
     /**
@@ -98,7 +99,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel TypeTree Request
      */
     override fun cancelTypeTreeRequest() {
-        loginAsync?.cancel()
+        loginAsync?.cancelByActive()
     }
 
     /**
@@ -131,7 +132,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel login Request
      */
     override fun cancelLoginRequest() {
-        registerAsync?.cancel()
+        registerAsync?.cancelByActive()
     }
 
     /**
@@ -165,7 +166,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel register Request
      */
     override fun cancelRegisterRequest() {
-        typeTreeListAsync?.cancel()
+        typeTreeListAsync?.cancelByActive()
     }
 
     /**
@@ -201,8 +202,8 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel friend list Request
      */
     override fun cancelFriendRequest() {
-        friendListAsync?.cancel()
-        hotListAsync?.cancel()
+        friendListAsync?.cancelByActive()
+        hotListAsync?.cancelByActive()
     }
 
     /**
@@ -235,6 +236,6 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel collect article Request
      */
     override fun cancelCollectRequest() {
-        collectArticleAsync?.cancel()
+        collectArticleAsync?.cancelByActive()
     }
 }

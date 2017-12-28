@@ -3,6 +3,7 @@ package top.jowanxu.wanandroidclient.model
 import Constant
 import RetrofitHelper
 import cancelAndJoinByActive
+import cancelByActive
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -44,6 +45,6 @@ class TypeArticleModelImpl : TypeArticleModel {
      * cancel request
      */
     override fun cancelRequest() {
-        typeArticleListAsync?.cancel()
+        typeArticleListAsync?.cancelByActive()
     }
 }

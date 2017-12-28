@@ -14,9 +14,8 @@
         android:layout_height="24dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/dp_4"
         android:layout_marginEnd="@dimen/dp_4"
-        app:srcCompat="@mipmap/ic_launcher_round"
+        app:srcCompat="@mipmap/ic_launcher"
         tools:ignore="ContentDescription"/>
 
     <TextView
@@ -27,9 +26,8 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/homeItemHead"
         android:layout_toStartOf="@+id/homeItemLike"
-        android:gravity="center_vertical"
+        android:gravity="bottom"
         android:textColor="@android:color/secondary_text_light"
-        android:textSize="@dimen/sp_16"
         tools:text="作者"/>
 
     <TextView
@@ -49,9 +47,10 @@
         android:id="@+id/homeItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/homeItemHead"
-        android:layout_marginEnd="@dimen/dp_4"
+        android:paddingTop="@dimen/dp_10"
         android:gravity="center_vertical"
         android:textColor="@android:color/primary_text_light"
         android:textSize="19sp"
@@ -66,7 +65,6 @@
         android:layout_alignTop="@id/homeItemLike"
         android:layout_toStartOf="@+id/homeItemLike"
         android:gravity="center_vertical"
-        android:paddingTop="@dimen/dp_10"
         android:textColor="@android:color/secondary_text_light"
         android:textSize="@dimen/sp_16"
         tools:text="类型"/>
@@ -77,7 +75,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/homeItemTitle"
-        android:layout_marginTop="@dimen/dp_10"
         android:padding="@dimen/dp_10"
         app:srcCompat="@drawable/ic_action_no_like"
         tools:ignore="ContentDescription"/>

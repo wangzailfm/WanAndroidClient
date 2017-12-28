@@ -94,11 +94,11 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
         super.onActivityCreated(savedInstanceState)
         hotTagFlowLayout.run {
             adapter = hotTagAdapter
-            setOnTagClickListener(onTagClickListener)
+            setOnTagClickListener(onHotTagClickListener)
         }
         commonUseTagFlowLayout.run {
             adapter = commonUseTagAdapter
-            setOnTagClickListener(onTagClickListener)
+            setOnTagClickListener(onCommonUseTagClickListener)
         }
         commonSwipeRefreshLayout.run {
             isRefreshing = true
@@ -168,28 +168,29 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
     }
 
     /**
-     * onTagClickListener
+     * onCommonUseTagClickListener
      */
-    private val onTagClickListener = TagFlowLayout.OnTagClickListener {
-        view, position, _ ->
-        when (view.id) {
-            R.id.hotFlowLayout -> {
-                if (hotTagDatas.size != 0) {
-                    Intent(activity, SearchActivity::class.java).run {
-                        putExtra(Constant.SEARCH_KEY, true)
-                        putExtra(Constant.CONTENT_TITLE_KEY, hotTagDatas[position].name)
-                        startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
-                    }
-                }
+    private val onCommonUseTagClickListener = TagFlowLayout.OnTagClickListener {
+        _, position, _ ->
+        if (commonUseDatas.size != 0) {
+            Intent(activity, ContentActivity::class.java).run {
+                putExtra(Constant.CONTENT_URL_KEY, commonUseDatas[position].link)
+                putExtra(Constant.CONTENT_TITLE_KEY, commonUseDatas[position].name)
+                startActivity(this)
             }
-            R.id.commonUseFlowLayout -> {
-                if (commonUseDatas.size != 0) {
-                    Intent(activity, ContentActivity::class.java).run {
-                        putExtra(Constant.CONTENT_URL_KEY, commonUseDatas[position].link)
-                        putExtra(Constant.CONTENT_TITLE_KEY, commonUseDatas[position].name)
-                        startActivity(this)
-                    }
-                }
+        }
+        true
+    }
+    /**
+     * hot onCommonUseTagClickListener
+     */
+    private val onHotTagClickListener = TagFlowLayout.OnTagClickListener {
+        _, position, _ ->
+        if (hotTagDatas.size != 0) {
+            Intent(activity, SearchActivity::class.java).run {
+                putExtra(Constant.SEARCH_KEY, true)
+                putExtra(Constant.CONTENT_TITLE_KEY, hotTagDatas[position].name)
+                startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
             }
         }
         true

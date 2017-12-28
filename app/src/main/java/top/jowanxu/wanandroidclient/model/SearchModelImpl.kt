@@ -3,6 +3,7 @@ package top.jowanxu.wanandroidclient.model
 import Constant
 import RetrofitHelper
 import cancelAndJoinByActive
+import cancelByActive
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -42,7 +43,7 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
     }
 
     override fun cancelRequest() {
-        searchListAsync?.cancel()
+        searchListAsync?.cancelByActive()
     }
 
     /**
@@ -74,7 +75,7 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
      * cancel HomeList Request
      */
     override fun cancelLikeListRequest() {
-        likeListAsync?.cancel()
+        likeListAsync?.cancelByActive()
     }
 
     /**
@@ -107,6 +108,6 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
      * cancel collect article Request
      */
     override fun cancelCollectRequest() {
-        collectArticleAsync?.cancel()
+        collectArticleAsync?.cancelByActive()
     }
 }
