@@ -103,12 +103,12 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
         }
     }
 
-    override fun onPause() {
+/*    override fun onPause() {
         super.onPause()
         searchPresenter.cancelRequest()
         searchAdapter.setEnableLoadMore(false)
         searchAdapter.loadMoreComplete()
-    }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (isSearch) {

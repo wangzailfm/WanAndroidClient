@@ -71,12 +71,12 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
         homeFragmentPresenter.getHomeList()
     }
 
-    override fun onPause() {
+/*    override fun onPause() {
         super.onPause()
         homeFragmentPresenter.cancelRequest()
         homeAdapter.loadMoreComplete()
         swipeRefreshLayout.isRefreshing = false
-    }
+    }*/
 
     /**
      * scroll to top
