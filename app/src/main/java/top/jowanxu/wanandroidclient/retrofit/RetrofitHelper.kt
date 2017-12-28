@@ -1,4 +1,5 @@
 
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -67,7 +68,9 @@ object RetrofitHelper {
 
         return RetrofitBuild(url = url,
                 client = okHttpClientBuilder.build(),
-                gsonFactory = GsonConverterFactory.create()).retrofit
+                gsonFactory = GsonConverterFactory.create(),
+                coroutineCallAdapterFactory = CoroutineCallAdapterFactory())
+                .retrofit
     }
 
     /**
@@ -91,59 +94,13 @@ object RetrofitHelper {
 /**
  * create retrofit build
  */
-class RetrofitBuild(url: String, client: OkHttpClient, gsonFactory: GsonConverterFactory) {
+class RetrofitBuild(url: String, client: OkHttpClient,
+                    gsonFactory: GsonConverterFactory,
+                    coroutineCallAdapterFactory: CoroutineCallAdapterFactory) {
     val retrofit: Retrofit = Retrofit.Builder().apply {
         baseUrl(url)
         client(client)
         addConverterFactory(gsonFactory)
+        addCallAdapterFactory(coroutineCallAdapterFactory)
     }.build()
 }
-
-/**
- * Home list call
- */
-fun getHomeListCall(page: Int = 0) = RetrofitHelper.retrofitService.getHomeList(page)
-
-/**
- * Search list call
- */
-fun getSearchListCall(page: Int = 0, k: String) = RetrofitHelper.retrofitService.getSearchList(page, k)
-
-/**
- * Type tree list call
- */
-fun getTypeTreeListCall() = RetrofitHelper.retrofitService.getTypeTreeList()
-
-/**
- * Type second list call
- */
-fun getArticleListCall(page: Int = 0, cid: Int) = RetrofitHelper.retrofitService.getArticleList(page, cid)
-
-/**
- * login
- */
-fun loginWanAndroid(username: String, password: String) = RetrofitHelper.retrofitService.loginWanAndroid(username, password)
-
-/**
- * register
- */
-fun registerWanAndroid(username: String, password: String, repassword: String) = RetrofitHelper.retrofitService.registerWanAndroid(username, password, repassword)
-
-/**
- * Friend list call
- */
-fun getFriendListCall() = RetrofitHelper.retrofitService.getFriendList()
-
-/**
- * Like list call
- */
-fun getLikeListCall(page: Int = 0) = RetrofitHelper.retrofitService.getLikeList(page)
-
-/**
- * add or remove collect article
- */
-fun collectArticleCall(id: Int, isAdd: Boolean) =
-        if (isAdd) RetrofitHelper.retrofitService.addCollectArticle(id)
-        else RetrofitHelper.retrofitService.removeCollectArticle(id)
-
-fun getHotListCall() = RetrofitHelper.retrofitService.getHotKeyList()

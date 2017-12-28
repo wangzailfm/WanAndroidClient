@@ -1,40 +1,22 @@
 package top.jowanxu.wanandroidclient.model
 
 import Constant
-import asyncRequestSuspend
+import RetrofitHelper
 import cancelAndJoinByActive
-import cancelCall
-import collectArticleCall
-import getLikeListCall
-import getSearchListCall
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomePresenter
 import top.jowanxu.wanandroidclient.presenter.SearchPresenter
 
 class SearchModelImpl : SearchModel, CollectArticleModel {
 
-    private var searchListCall: Call<HomeListResponse>? = null
     private var searchListAsync: Deferred<Any>? = null
-
-    /**
-     * Home list Call
-     */
-    private var likeListCall: Call<HomeListResponse>? = null
     /**
      * Home list async
      */
     private var likeListAsync: Deferred<Any>? = null
-    /**
-     * Collect Article Call
-     */
-    private var collectArticleCall: Call<HomeListResponse>? = null
     /**
      * Collect Article async
      */
@@ -44,27 +26,12 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
         async(UI) {
             try {
                 searchListAsync?.cancelAndJoinByActive()
-                searchListAsync = async(CommonPool) {
-                    asyncRequestSuspend<HomeListResponse> { cont ->
-                        searchListCall?.cancelCall()
-                        getSearchListCall(page, k).apply {
-                            searchListCall = this@apply
-                        }.enqueue(object : Callback<HomeListResponse> {
-                            override fun onFailure(call: Call<HomeListResponse>, t: Throwable) {
-                                cont.resumeWithException(t)
-                            }
-
-                            override fun onResponse(call: Call<HomeListResponse>, response: Response<HomeListResponse>) {
-                                cont.resume(response.body())
-                            }
-                        })
-                    }
-                }
+                searchListAsync = RetrofitHelper.retrofitService.getSearchList(page, k)
                 val result = searchListAsync?.await()
-                when (result) {
-                    is String -> onSearchListListener.getSearchListFailed(result)
-                    is HomeListResponse -> onSearchListListener.getSearchListSuccess(result)
-                    else -> onSearchListListener.getSearchListFailed(Constant.RESULT_NULL)
+                if (result is HomeListResponse) {
+                    onSearchListListener.getSearchListSuccess(result)
+                } else {
+                    onSearchListListener.getSearchListFailed(Constant.RESULT_NULL)
                 }
             } catch (t: Throwable) {
                 t.printStackTrace()
@@ -75,7 +42,6 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
     }
 
     override fun cancelRequest() {
-        searchListCall?.cancel()
         searchListAsync?.cancel()
     }
 
@@ -88,31 +54,13 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
         async(UI) {
             try {
                 likeListAsync?.cancelAndJoinByActive()
-                likeListAsync = async(CommonPool) {
-                    // Async Request, wait resume
-                    asyncRequestSuspend<HomeListResponse> { cont ->
-                        likeListCall?.cancelCall()
-                        getLikeListCall(page).apply {
-                            likeListCall = this@apply
-                        }.enqueue(object : Callback<HomeListResponse> {
-                            override fun onResponse(call: Call<HomeListResponse>,
-                                                    response: Response<HomeListResponse>) {
-                                // resume
-                                cont.resume(response.body())
-                            }
-
-                            override fun onFailure(call: Call<HomeListResponse>, t: Throwable) {
-                                cont.resumeWithException(t)
-                            }
-                        })
-                    }
-                }
+                likeListAsync = RetrofitHelper.retrofitService.getLikeList(page)
                 // Get async result
                 val result = likeListAsync?.await()
-                when (result) {
-                    is String -> onLikeListListener.getLikeListFailed(result)
-                    is HomeListResponse -> onLikeListListener.getLikeListSuccess(result)
-                    else -> onLikeListListener.getLikeListFailed(Constant.RESULT_NULL)
+                if (result is HomeListResponse) {
+                    onLikeListListener.getLikeListSuccess(result)
+                } else {
+                    onLikeListListener.getLikeListFailed(Constant.RESULT_NULL)
                 }
             } catch (t: Throwable) {
                 t.printStackTrace()
@@ -126,7 +74,6 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
      * cancel HomeList Request
      */
     override fun cancelLikeListRequest() {
-        likeListCall?.cancel()
         likeListAsync?.cancel()
     }
 
@@ -137,28 +84,16 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
         async(UI) {
             try {
                 collectArticleAsync?.cancelAndJoinByActive()
-                collectArticleAsync = async(CommonPool) {
-                    asyncRequestSuspend<HomeListResponse> { cont ->
-                        collectArticleCall?.cancelCall()
-                        collectArticleCall(id, isAdd).apply {
-                            collectArticleCall = this@apply
-                        }.enqueue(object : Callback<HomeListResponse> {
-                            override fun onResponse(call: Call<HomeListResponse>,
-                                                    response: Response<HomeListResponse>) {
-                                cont.resume(response.body())
-                            }
-
-                            override fun onFailure(call: Call<HomeListResponse>, t: Throwable) {
-                                cont.resumeWithException(t)
-                            }
-                        })
-                    }
+                collectArticleAsync = if (isAdd) {
+                    RetrofitHelper.retrofitService.addCollectArticle(id)
+                } else {
+                    RetrofitHelper.retrofitService.removeCollectArticle(id)
                 }
                 val result = collectArticleAsync?.await()
-                when (result) {
-                    is String -> onCollectArticleListener.collectArticleFailed(result, isAdd)
-                    is HomeListResponse -> onCollectArticleListener.collectArticleSuccess(result, isAdd)
-                    else -> onCollectArticleListener.collectArticleFailed(Constant.RESULT_NULL, isAdd)
+                if (result is HomeListResponse) {
+                    onCollectArticleListener.collectArticleSuccess(result, isAdd)
+                } else {
+                    onCollectArticleListener.collectArticleFailed(Constant.RESULT_NULL, isAdd)
                 }
             } catch (t: Throwable) {
                 t.printStackTrace()
@@ -172,7 +107,6 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
      * cancel collect article Request
      */
     override fun cancelCollectRequest() {
-        collectArticleCall.cancelCall()
         collectArticleAsync?.cancel()
     }
 }

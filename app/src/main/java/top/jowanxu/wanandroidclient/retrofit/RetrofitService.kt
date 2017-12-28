@@ -1,4 +1,5 @@
-import retrofit2.Call
+
+import kotlinx.coroutines.experimental.Deferred
 import retrofit2.http.*
 import top.jowanxu.wanandroidclient.bean.*
 
@@ -12,17 +13,18 @@ interface RetrofitService {
      * http://www.wanandroid.com/article/list/0/json
      * @param page page
      */
+
     @GET("/article/list/{page}/json")
     fun getHomeList(
             @Path("page") page: Int
-    ): Call<HomeListResponse>
+    ): Deferred<HomeListResponse>
 
     /**
      * 知识体系
      * http://www.wanandroid.com/tree/json
      */
     @GET("/tree/json")
-    fun getTypeTreeList(): Call<TreeListResponse>
+    fun getTypeTreeList(): Deferred<TreeListResponse>
 
     /**
      * 知识体系下的文章
@@ -34,21 +36,21 @@ interface RetrofitService {
     fun getArticleList(
             @Path("page") page: Int,
             @Query("cid") cid: Int
-    ): Call<ArticleListResponse>
+    ): Deferred<ArticleListResponse>
 
     /**
      * 常用网站
      * http://www.wanandroid.com/friend/json
      */
     @GET("/friend/json")
-    fun getFriendList(): Call<FriendListResponse>
+    fun getFriendList(): Deferred<FriendListResponse>
 
     /**
      * 大家都在搜
      * http://www.wanandroid.com/hotkey/json
      */
     @GET("/hotkey/json")
-    fun getHotKeyList(): Call<HotKeyResponse>
+    fun getHotKeyList(): Deferred<HotKeyResponse>
 
     /**
      * 搜索
@@ -61,27 +63,27 @@ interface RetrofitService {
     fun getSearchList(
             @Path("page") page: Int,
             @Field("k") k: String
-    ): Call<HomeListResponse>
+    ): Deferred<HomeListResponse>
 
     /**
      * 登录
      * @param username username
      * @param password password
-     * @return Call<LoginResponse>
+     * @return Deferred<LoginResponse>
      */
     @POST("/user/login")
     @FormUrlEncoded
     fun loginWanAndroid(
             @Field("username") username: String,
             @Field("password") password: String
-    ): Call<LoginResponse>
+    ): Deferred<LoginResponse>
 
     /**
      * 注册
      * @param username username
      * @param password password
      * @param repassword repassword
-     * @return Call<LoginResponse>
+     * @return Deferred<LoginResponse>
      */
     @POST("/user/register")
     @FormUrlEncoded
@@ -89,38 +91,38 @@ interface RetrofitService {
             @Field("username") username: String,
             @Field("password") password: String,
             @Field("repassword") repassowrd: String
-    ): Call<LoginResponse>
+    ): Deferred<LoginResponse>
 
     /**
      * 获取自己收藏的文章列表
      * @param page page
-     * @return Call<HomeListResponse>
+     * @return Deferred<HomeListResponse>
      */
     @GET("/lg/collect/list/{page}/json")
     fun getLikeList(
             @Path("page") page: Int
-    ): Call<HomeListResponse>
+    ): Deferred<HomeListResponse>
 
     /**
      * 收藏文章
      * @param id id
-     * @return Call<HomeListResponse>
+     * @return Deferred<HomeListResponse>
      */
     @POST("/lg/collect/{id}/json")
     fun addCollectArticle(
             @Path("id") id: Int
-    ): Call<HomeListResponse>
+    ): Deferred<HomeListResponse>
 
     /**
      * 删除收藏文章
      * @param id id
      * @param originId -1
-     * @return Call<HomeListResponse>
+     * @return Deferred<HomeListResponse>
      */
     @POST("/lg/uncollect/{id}/json")
     @FormUrlEncoded
     fun removeCollectArticle(
             @Path("id") id: Int,
             @Field("originId") originId: Int = -1
-    ): Call<HomeListResponse>
+    ): Deferred<HomeListResponse>
 }

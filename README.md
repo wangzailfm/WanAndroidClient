@@ -1,6 +1,8 @@
 # WanAndroidClient
 Try to build a www.wanandroid.com client
 
+**Kotlin + MVP + Kotlin-Coroutines + Retrofit2(GsonCallAdapterFactory + CoroutineCallAdapterFactory)**
+
 ## 功能
 - [x] 首页
 - [x] 知识体系

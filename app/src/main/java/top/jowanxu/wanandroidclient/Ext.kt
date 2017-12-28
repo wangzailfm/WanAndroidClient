@@ -71,6 +71,9 @@ fun <T> Call<T>?.cancelCall() = this?.run {
     }
 }
 
+/**
+ * save cookie string
+ */
 fun encodeCookie(cookies: List<String>): String {
     val sb = StringBuilder()
     val set = HashSet<String>()
@@ -94,6 +97,12 @@ fun encodeCookie(cookies: List<String>): String {
 
     return sb.toString()
 }
+
+/**
+ * get random color
+ * @return 16777215 is FFFFFF, 0 is 000000
+ */
+fun getRandomColor(): String = "#${Integer.toHexString((Math.random() * 16777215).toInt())}"
 
 /**
  * getAgentWeb

@@ -5,18 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.chad.library.adapter.base.BaseQuickAdapter
 import com.zhy.view.flowlayout.TagFlowLayout
 import kotlinx.android.synthetic.main.fragment_common.*
 import toast
 import top.jowanxu.wanandroidclient.R
-import top.jowanxu.wanandroidclient.adapter.CommonUseAdapter
+import top.jowanxu.wanandroidclient.adapter.CommonAdapter
 import top.jowanxu.wanandroidclient.adapter.CommonUseTagAdapter
+import top.jowanxu.wanandroidclient.adapter.HotTagAdapter
 import top.jowanxu.wanandroidclient.bean.FriendListResponse
 import top.jowanxu.wanandroidclient.bean.HotKeyResponse
 import top.jowanxu.wanandroidclient.presenter.CommonUseFragmentPresenterImpl
@@ -31,7 +31,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
      */
     private var mainView: View? = null
     /**
-     * Data list
+     * common data list
      */
     private val datas = mutableListOf<FriendListResponse.Data>()
     /**
@@ -41,16 +41,42 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
         CommonUseFragmentPresenterImpl(this)
     }
     /**
-     * adapter
+     * common adapter
      */
-    private val commonUseAdapter: CommonUseAdapter by lazy {
-        CommonUseAdapter(activity, datas)
+    private val commonAdapter: CommonAdapter by lazy {
+        CommonAdapter(activity, datas)
     }
+    /**
+     * common use and hot key layout
+     */
     private lateinit var flowLayout: LinearLayout
-    private lateinit var tagFlowLayout: TagFlowLayout
-    private val tagDatas = mutableListOf<HotKeyResponse.Data>()
+    /**
+     * hot key tag flowLayout
+     */
+    private lateinit var hotTagFlowLayout: TagFlowLayout
+    /**
+     * hot key tag data
+     */
+    private val hotTagDatas = mutableListOf<HotKeyResponse.Data>()
+    /**
+     * hot key tag adapter
+     */
+    private val hotTagAdapter: HotTagAdapter by lazy {
+        HotTagAdapter(activity, hotTagDatas)
+    }
+    /**
+     * common use tag flowLayout
+     */
+    private lateinit var commonUseTagFlowLayout: TagFlowLayout
+    /**
+     * common use tag data
+     */
+    private val commonUseDatas = mutableListOf<FriendListResponse.Data>()
+    /**
+     * common use tag adapter
+     */
     private val commonUseTagAdapter: CommonUseTagAdapter by lazy {
-        CommonUseTagAdapter(activity, tagDatas)
+        CommonUseTagAdapter(activity, commonUseDatas)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -58,14 +84,19 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
         mainView ?: let {
             mainView = inflater.inflate(R.layout.fragment_common, container, false)
             flowLayout = LayoutInflater.from(activity).inflate(R.layout.common_hot, null) as LinearLayout
-            tagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.hotFlowLayout)
+            hotTagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.hotFlowLayout)
+            commonUseTagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.commonUseFlowLayout)
         }
         return  mainView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        tagFlowLayout.run {
+        hotTagFlowLayout.run {
+            adapter = hotTagAdapter
+            setOnTagClickListener(onTagClickListener)
+        }
+        commonUseTagFlowLayout.run {
             adapter = commonUseTagAdapter
             setOnTagClickListener(onTagClickListener)
         }
@@ -74,14 +105,12 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
             setOnRefreshListener(onRefreshListener)
         }
         commonRecyclerView.run {
-            layoutManager = GridLayoutManager(activity, 2)
-            adapter = commonUseAdapter
+            layoutManager = LinearLayoutManager(activity)
+            adapter = commonAdapter
         }
-        commonUseAdapter.run {
+        commonAdapter.run {
             bindToRecyclerView(commonRecyclerView)
-            onItemClickListener = this@CommonUseFragment.onItemClickListener
-            setEmptyView(R.layout.fragment_home_empty)
-            commonUseAdapter.addHeaderView(flowLayout)
+            commonAdapter.addHeaderView(flowLayout)
         }
         commonUseFragmentPresenter.getFriendList()
     }
@@ -102,16 +131,14 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
      */
     override fun getFriendListSuccess(result: FriendListResponse, hotResult: HotKeyResponse) {
         result.data.let {
-            if (commonSwipeRefreshLayout.isRefreshing) {
-                commonUseAdapter.replaceData(it)
-            } else {
-                commonUseAdapter.addData(it)
-            }
+            commonUseDatas.clear()
+            commonUseDatas.addAll(it)
+            commonUseTagAdapter.notifyDataChanged()
         }
         hotResult.data?.let {
-            tagDatas.clear()
-            tagDatas.addAll(it)
-            commonUseTagAdapter.notifyDataChanged()
+            hotTagDatas.clear()
+            hotTagDatas.addAll(it)
+            hotTagAdapter.notifyDataChanged()
         }
     }
 
@@ -137,31 +164,32 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
         commonSwipeRefreshLayout.isRefreshing = true
-        datas.clear()
-        commonUseAdapter.setEnableLoadMore(false)
         commonUseFragmentPresenter.getFriendList()
     }
-    /**
-     * ItemClickListener
-     */
-    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
-        _, _, position ->
-        if (datas.size != 0) {
-            Intent(activity, ContentActivity::class.java).run {
-                putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
-                putExtra(Constant.CONTENT_TITLE_KEY, datas[position].name)
-                startActivity(this)
-            }
-        }
-    }
 
+    /**
+     * onTagClickListener
+     */
     private val onTagClickListener = TagFlowLayout.OnTagClickListener {
-        _, position, _ ->
-        if (tagDatas.size != 0) {
-            Intent(activity, SearchActivity::class.java).run {
-                putExtra(Constant.SEARCH_KEY, true)
-                putExtra(Constant.CONTENT_TITLE_KEY, tagDatas[position].name)
-                startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
+        view, position, _ ->
+        when (view.id) {
+            R.id.hotFlowLayout -> {
+                if (hotTagDatas.size != 0) {
+                    Intent(activity, SearchActivity::class.java).run {
+                        putExtra(Constant.SEARCH_KEY, true)
+                        putExtra(Constant.CONTENT_TITLE_KEY, hotTagDatas[position].name)
+                        startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
+                    }
+                }
+            }
+            R.id.commonUseFlowLayout -> {
+                if (commonUseDatas.size != 0) {
+                    Intent(activity, ContentActivity::class.java).run {
+                        putExtra(Constant.CONTENT_URL_KEY, commonUseDatas[position].link)
+                        putExtra(Constant.CONTENT_TITLE_KEY, commonUseDatas[position].name)
+                        startActivity(this)
+                    }
+                }
             }
         }
         true
