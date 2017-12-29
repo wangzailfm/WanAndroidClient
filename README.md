@@ -7,6 +7,17 @@ Try to build a www.wanandroid.com client
 ## 代码结构
 **Kotlin + MVP + Kotlin-Coroutines + Retrofit2(GsonCallAdapterFactory + CoroutineCallAdapterFactory)**
 
+- [Kotlin](https://github.com/JetBrains/kotlin)
+- [Kotlin协程](https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md)
+- [Retrofit2](https://github.com/square/retrofit)
+- [Retrofit2-Kotlin协程适配器](https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter)
+- [鸿神的Flowlayout](https://github.com/hongyangAndroid/FlowLayout)
+- [BRVAH](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
+- [Agentweb](https://github.com/Justson/AgentWeb)
+- [ImmersionBar](https://github.com/gyf-dev/ImmersionBar)
+- [Leakcanary](https://github.com/square/leakcanary)
+- [Glide](https://github.com/bumptech/glide)
+
 ## 功能
 - [x] 首页
 - [x] 知识体系
