@@ -7,10 +7,6 @@ import top.jowanxu.wanandroidclient.bean.HomeListResponse
  */
 interface SearchListView {
     /**
-     * get search result List after operation
-     */
-    fun getSearchListAfter()
-    /**
      * get search result list success
      */
     fun getSearchListSuccess(result: HomeListResponse)
@@ -26,10 +22,6 @@ interface SearchListView {
      * get search result list data less than 20
      */
     fun getSearchListSmall(result: HomeListResponse)
-    /**
-     * get Home list after operation
-     */
-    fun getLikeListAfter()
     /**
      * get Home list Success
      */

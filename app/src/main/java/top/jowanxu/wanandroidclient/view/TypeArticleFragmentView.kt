@@ -4,10 +4,6 @@ import top.jowanxu.wanandroidclient.bean.ArticleListResponse
 
 interface TypeArticleFragmentView {
     /**
-     * get Type Article list after operation
-     */
-    fun getTypeArticleListAfter()
-    /**
      * get Type Article list Success
      * @param result ArticleListResponse
      */

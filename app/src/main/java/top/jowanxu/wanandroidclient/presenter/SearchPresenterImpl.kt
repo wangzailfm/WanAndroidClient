@@ -18,7 +18,6 @@ class SearchPresenterImpl(private val searchView: SearchListView, private val co
     }
 
     override fun getSearchListSuccess(result: HomeListResponse) {
-        searchView.getSearchListAfter()
         if (result.errorCode != 0) {
             searchView.getSearchListFailed(result.errorMsg)
             return
@@ -54,7 +53,6 @@ class SearchPresenterImpl(private val searchView: SearchListView, private val co
      * @param result result
      */
     override fun getLikeListSuccess(result: HomeListResponse) {
-        searchView.getLikeListAfter()
         if (result.errorCode != 0) {
             searchView.getLikeListFailed(result.errorMsg)
             return
@@ -78,7 +76,6 @@ class SearchPresenterImpl(private val searchView: SearchListView, private val co
      * @param errorMessage error message
      */
     override fun getLikeListFailed(errorMessage: String?) {
-        searchView.getLikeListAfter()
         searchView.getLikeListFailed(errorMessage)
     }
 

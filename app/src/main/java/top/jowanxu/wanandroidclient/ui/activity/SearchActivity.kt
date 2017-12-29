@@ -139,14 +139,11 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun getSearchListAfter() {
-        swipeRefreshLayout.isRefreshing = false
-    }
-
     override fun getSearchListZero() {
         if (isSearch) {
             toast(getString(R.string.search_failed_not_article))
         }
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun getSearchListSmall(result: HomeListResponse) {
@@ -158,6 +155,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
                 setEnableLoadMore(false)
             }
         }
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun getSearchListSuccess(result: HomeListResponse) {
@@ -166,7 +164,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
                 // 列表总数
                 val total = result.data.total
                 // 当前总数
-                if (data.size >= total) {
+                if (result.data.offset >= total || data.size >= total) {
                     loadMoreEnd()
                     return@let
                 }
@@ -179,6 +177,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
                 setEnableLoadMore(true)
             }
         }
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun getSearchListFailed(errorMessage: String?) {
@@ -190,6 +189,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
         } ?: let {
             toast(getString(R.string.get_data_error))
         }
+        swipeRefreshLayout.isRefreshing = false
     }
 
     /**
@@ -218,7 +218,6 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
             query?.let {
                 searchKey = it
                 swipeRefreshLayout.isRefreshing = true
-                datas.clear()
                 searchAdapter.setEnableLoadMore(false)
                 searchPresenter.getSearchList(k = it)
             } ?: let {
@@ -236,28 +235,19 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
         if (!isSearch) {
-            swipeRefreshLayout.isRefreshing = true
-            datas.clear()
             searchAdapter.setEnableLoadMore(false)
+            swipeRefreshLayout.isRefreshing = true
             searchPresenter.getLikeList()
             return@OnRefreshListener
         }
         searchKey?.let {
-            swipeRefreshLayout.isRefreshing = true
-            datas.clear()
             searchAdapter.setEnableLoadMore(false)
+            swipeRefreshLayout.isRefreshing = true
             searchPresenter.getSearchList(k = it)
         } ?: let {
             swipeRefreshLayout.isRefreshing = false
             toast(getString(R.string.search_not_empty))
         }
-    }
-
-    /**
-     * get Home list after operation
-     */
-    override fun getLikeListAfter() {
-        getSearchListAfter()
     }
 
     /**

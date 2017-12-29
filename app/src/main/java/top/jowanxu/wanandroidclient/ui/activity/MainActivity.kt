@@ -132,7 +132,7 @@ class MainActivity : BaseActivity() {
             }
             R.id.menuHot -> {
                 if (currentIndex == R.id.menuHot) {
-                    commonUseFragment?.smoothScrollToPosition()
+                    commonUseFragment?.refreshData()
                 }
                 setFragment(R.id.menuHot)
                 currentIndex = R.id.menuHot

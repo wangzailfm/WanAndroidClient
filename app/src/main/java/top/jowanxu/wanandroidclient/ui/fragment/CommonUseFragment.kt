@@ -114,17 +114,6 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
         }
         commonUseFragmentPresenter.getFriendList()
     }
-    /**
-     * scroll to top
-     */
-    fun smoothScrollToPosition() = commonRecyclerView.smoothScrollToPosition(0)
-
-    /**
-     * get Friend list after operation
-     */
-    override fun getFriendListAfter() {
-        commonSwipeRefreshLayout.isRefreshing = false
-    }
 
     /**
      * get Friend list Success
@@ -140,6 +129,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
             hotTagDatas.addAll(it)
             hotTagAdapter.notifyDataChanged()
         }
+        commonSwipeRefreshLayout.isRefreshing = false
     }
 
     /**
@@ -151,6 +141,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
         } ?: let {
             activity.toast(getString(R.string.get_data_error))
         }
+        commonSwipeRefreshLayout.isRefreshing = false
     }
 
     /**
@@ -158,6 +149,14 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
      */
     override fun getFriendListZero() {
         activity.toast(getString(R.string.get_data_error))
+        commonSwipeRefreshLayout.isRefreshing = false
+    }
+    /**
+     * refresh
+     */
+    fun refreshData() {
+        commonSwipeRefreshLayout.isRefreshing = true
+        commonUseFragmentPresenter.getFriendList()
     }
     /**
      * RefreshListener

@@ -89,13 +89,6 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
     }
 
     /**
-     * get Type Article list after operation
-     */
-    override fun getTypeArticleListAfter() {
-        tabSwipeRefreshLayout.isRefreshing = false
-    }
-
-    /**
      * get Type Article list Success
      * @param result ArticleListResponse
      */
@@ -105,7 +98,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
                 // 列表总数
                 val total = result.data.total
                 // 当前总数
-                if (data.size >= total) {
+                if (result.data.offset >= total || data.size >= total) {
                     loadMoreEnd()
                     return@let
                 }
@@ -118,6 +111,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
                 setEnableLoadMore(true)
             }
         }
+        tabSwipeRefreshLayout.isRefreshing = false
     }
 
     /**
@@ -132,6 +126,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
         } ?: let {
             activity.toast(getString(R.string.get_data_error))
         }
+        tabSwipeRefreshLayout.isRefreshing = false
     }
 
     /**
@@ -139,6 +134,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
      */
     override fun getTypeArticleListZero() {
         activity.toast(getString(R.string.get_data_error))
+        tabSwipeRefreshLayout.isRefreshing = false
     }
 
     /**
@@ -154,6 +150,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
                 setEnableLoadMore(false)
             }
         }
+        tabSwipeRefreshLayout.isRefreshing = false
     }
     /**
      * add article success
@@ -178,7 +175,6 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
         tabSwipeRefreshLayout.isRefreshing = true
-        datas.clear()
         typeArticleAdapter.setEnableLoadMore(false)
         typeArticlePresenter.getTypeArticleList(cid = cid)
     }

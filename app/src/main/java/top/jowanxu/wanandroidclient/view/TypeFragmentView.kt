@@ -7,10 +7,6 @@ import top.jowanxu.wanandroidclient.bean.TreeListResponse
  */
 interface TypeFragmentView {
     /**
-     * get Type list after operation
-     */
-    fun getTypeListAfter()
-    /**
      * get Type list Success
      */
     fun getTypeListSuccess(result: TreeListResponse)

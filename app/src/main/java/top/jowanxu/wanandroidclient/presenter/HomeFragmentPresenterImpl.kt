@@ -25,7 +25,6 @@ class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView,
      * @param result result
      */
     override fun getHomeListSuccess(result: HomeListResponse) {
-        homeFragmentView.getHomeListAfter()
         if (result.errorCode != 0) {
             homeFragmentView.getHomeListFailed(result.errorMsg)
             return
@@ -49,7 +48,6 @@ class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView,
      * @param errorMessage error message
      */
     override fun getHomeListFailed(errorMessage: String?) {
-        homeFragmentView.getHomeListAfter()
         homeFragmentView.getHomeListFailed(errorMessage)
     }
 

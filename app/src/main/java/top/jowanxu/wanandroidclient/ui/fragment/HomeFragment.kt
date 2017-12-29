@@ -87,20 +87,20 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     /**
      * scroll to top
      */
-    fun smoothScrollToPosition() = recyclerView.smoothScrollToPosition(0)
+    fun smoothScrollToPosition() = recyclerView.scrollToPosition(0)
     /**
      * refresh
      */
     fun refreshData() {
         swipeRefreshLayout.isRefreshing = true
-        datas.clear()
         homeAdapter.setEnableLoadMore(false)
         homeFragmentPresenter.getHomeList()
     }
 
-    override fun getHomeListAfter() { swipeRefreshLayout.isRefreshing = false }
-
-    override fun getHomeListZero() { activity.toast(getString(R.string.get_data_error)) }
+    override fun getHomeListZero() {
+        activity.toast(getString(R.string.get_data_error))
+        swipeRefreshLayout.isRefreshing = false
+    }
 
     override fun getHomeListSmall(result: HomeListResponse) {
         result.data.datas?.let {
@@ -111,6 +111,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
                 setEnableLoadMore(false)
             }
         }
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun getHomeListSuccess(result: HomeListResponse) {
@@ -119,7 +120,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
                 // 列表总数
                 val total = result.data.total
                 // 当前总数
-                if (data.size >= total) {
+                if (result.data.offset >= total || data.size >= total) {
                     loadMoreEnd()
                     return@let
                 }
@@ -132,6 +133,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
                 setEnableLoadMore(true)
             }
         }
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun getHomeListFailed(errorMessage: String?) {
@@ -142,6 +144,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
         } ?: let {
             activity.toast(getString(R.string.get_data_error))
         }
+        swipeRefreshLayout.isRefreshing = false
     }
 
     /**

@@ -8,10 +8,6 @@ import top.jowanxu.wanandroidclient.bean.HotKeyResponse
  */
 interface CommonUseFragmentView {
     /**
-     * get Friend list after operation
-     */
-    fun getFriendListAfter()
-    /**
      * get Friend list Success
      */
     fun getFriendListSuccess(result: FriendListResponse, hotResult: HotKeyResponse)

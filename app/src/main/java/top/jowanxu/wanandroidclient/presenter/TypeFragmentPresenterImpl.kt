@@ -20,7 +20,6 @@ class TypeFragmentPresenterImpl(private val typeFragmentView: TypeFragmentView) 
      * @param result result
      */
     override fun getTypeTreeListSuccess(result: TreeListResponse) {
-        typeFragmentView.getTypeListAfter()
         if (result.errorCode != 0) {
             typeFragmentView.getTypeListFailed(result.errorMsg)
             return
@@ -37,7 +36,6 @@ class TypeFragmentPresenterImpl(private val typeFragmentView: TypeFragmentView) 
      * @param errorMessage error message
      */
     override fun getTypeTreeListFailed(errorMessage: String?) {
-        typeFragmentView.getTypeListAfter()
         typeFragmentView.getTypeListFailed(errorMessage)
     }
 

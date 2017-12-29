@@ -7,10 +7,6 @@ import top.jowanxu.wanandroidclient.bean.HomeListResponse
  */
 interface HomeFragmentView {
     /**
-     * get Home list after operation
-     */
-    fun getHomeListAfter()
-    /**
      * get Home list Success
      */
     fun getHomeListSuccess(result: HomeListResponse)

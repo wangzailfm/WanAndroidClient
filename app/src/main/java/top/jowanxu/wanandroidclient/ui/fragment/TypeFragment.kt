@@ -67,13 +67,7 @@ class TypeFragment : Fragment(), TypeFragmentView {
     /**
      * scroll to top
      */
-    fun smoothScrollToPosition() = typeRecyclerView.smoothScrollToPosition(0)
-    /**
-     * get Type list after operation
-     */
-    override fun getTypeListAfter() {
-        typeSwipeRefreshLayout.isRefreshing = false
-    }
+    fun smoothScrollToPosition() = typeRecyclerView.scrollToPosition(0)
     /**
      * get Type list Success
      */
@@ -85,6 +79,7 @@ class TypeFragment : Fragment(), TypeFragmentView {
                 typeAdapter.addData(it)
             }
         }
+        typeSwipeRefreshLayout.isRefreshing = false
     }
     /**
      * get Type list Failed
@@ -95,19 +90,20 @@ class TypeFragment : Fragment(), TypeFragmentView {
         } ?: let {
             activity.toast(getString(R.string.get_data_error))
         }
+        typeSwipeRefreshLayout.isRefreshing = false
     }
     /**
      * get Type list data size equal zero
      */
     override fun getTypeListZero() {
         activity.toast(getString(R.string.get_data_error))
+        typeSwipeRefreshLayout.isRefreshing = false
     }
     /**
      * RefreshListener
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
         typeSwipeRefreshLayout.isRefreshing = true
-        datas.clear()
         typeFragmentPresenter.getTypeTreeList()
     }
     /**

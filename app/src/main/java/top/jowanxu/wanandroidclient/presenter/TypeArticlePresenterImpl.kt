@@ -28,7 +28,6 @@ class TypeArticlePresenterImpl(private val typeArticleFragmentView: TypeArticleF
      * @param result ArticleListResponse
      */
     override fun getTypeArticleListSuccess(result: ArticleListResponse) {
-        typeArticleFragmentView.getTypeArticleListAfter()
         if (result.errorCode != 0) {
             typeArticleFragmentView.getTypeArticleListFailed(result.errorMsg)
             return
@@ -50,7 +49,6 @@ class TypeArticlePresenterImpl(private val typeArticleFragmentView: TypeArticleF
      * @param errorMessage error message
      */
     override fun getTypeArticleListFailed(errorMessage: String?) {
-        typeArticleFragmentView.getTypeArticleListAfter()
         typeArticleFragmentView.getTypeArticleListFailed(errorMessage)
     }
 
