@@ -10,7 +10,6 @@ import com.just.agentweb.AgentWeb
 import com.just.agentweb.ChromeClientCallbackManager
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.cancelAndJoin
-import retrofit2.Call
 
 /**
  * Log
@@ -47,22 +46,12 @@ fun Context.toast(@StringRes id: Int) {
  */
 suspend fun Deferred<Any>?.cancelAndJoinByActive() = this?.run {
     if (isActive) {
-        this.cancelAndJoin()
+        cancelAndJoin()
     }
 }
 
 fun Deferred<Any>?.cancelByActive() = this?.run {
     if (isActive) {
-        this.cancel()
-    }
-}
-
-/**
- * cancel call request
- */
-fun <T> Call<T>?.cancelCall() = this?.run {
-    if (!isCanceled) {
-        // cancel request
         cancel()
     }
 }
