@@ -4,6 +4,7 @@ Try to build a www.wanandroid.com client
 ## 接口
 [玩Android接口](http://www.wanandroid.com/blog/2)
 
+## 代码结构
 **Kotlin + MVP + Kotlin-Coroutines + Retrofit2(GsonCallAdapterFactory + CoroutineCallAdapterFactory)**
 
 ## 功能
