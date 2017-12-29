@@ -14,10 +14,12 @@ import kotlinx.android.synthetic.main.activity_search.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.HomeAdapter
+import top.jowanxu.wanandroidclient.base.Preference
 import top.jowanxu.wanandroidclient.bean.Datas
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomeFragmentPresenterImpl
 import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
+import top.jowanxu.wanandroidclient.ui.activity.LoginActivity
 import top.jowanxu.wanandroidclient.ui.activity.TypeContentActivity
 import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.HomeFragmentView
@@ -43,6 +45,10 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     private val homeAdapter: HomeAdapter by lazy {
         HomeAdapter(activity, datas)
     }
+    /**
+     * check login for SharedPreferences
+     */
+    private val isLogin: Boolean by Preference(Constant.LOGIN_KEY, false)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mainView ?: let {
@@ -191,10 +197,17 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
                     }
                 }
                 R.id.homeItemLike -> {
-                    val collect = data.collect
-                    data.collect = !collect
-                    homeAdapter.setData(position, data)
-                    homeFragmentPresenter.collectArticle(data.id, !collect)
+                    if (isLogin) {
+                        val collect = data.collect
+                        data.collect = !collect
+                        homeAdapter.setData(position, data)
+                        homeFragmentPresenter.collectArticle(data.id, !collect)
+                    } else {
+                        Intent(activity, LoginActivity::class.java).run {
+                            startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                        }
+                        activity.toast(getString(R.string.login_please_login))
+                    }
                 }
             }
         }

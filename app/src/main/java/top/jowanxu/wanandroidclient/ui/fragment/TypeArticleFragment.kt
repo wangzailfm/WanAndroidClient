@@ -14,13 +14,17 @@ import kotlinx.android.synthetic.main.fragment_type_content.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.TypeArticleAdapter
+import top.jowanxu.wanandroidclient.base.Preference
 import top.jowanxu.wanandroidclient.bean.ArticleListResponse
 import top.jowanxu.wanandroidclient.bean.Datas
+import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.TypeArticlePresenterImpl
 import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
+import top.jowanxu.wanandroidclient.ui.activity.LoginActivity
+import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.TypeArticleFragmentView
 
-class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
+class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleView {
     /**
      * mainView
      */
@@ -33,7 +37,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
      * presenter
      */
     private val typeArticlePresenter: TypeArticlePresenterImpl by lazy {
-        TypeArticlePresenterImpl(this)
+        TypeArticlePresenterImpl(this, this)
     }
     /**
      * adapter
@@ -45,6 +49,10 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
      * type id
      */
     private var cid: Int = 0
+    /**
+     * check login for SharedPreferences
+     */
+    private val isLogin: Boolean by Preference(Constant.LOGIN_KEY, false)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -68,6 +76,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
         typeArticleAdapter.run {
             setOnLoadMoreListener(onRequestLoadMoreListener, tabRecyclerView)
             onItemClickListener = this@TypeArticleFragment.onItemClickListener
+            onItemChildClickListener = this@TypeArticleFragment.onItemChildClickListener
             setEmptyView(R.layout.fragment_home_empty)
         }
         typeArticlePresenter.getTypeArticleList(cid = cid)
@@ -146,6 +155,23 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
             }
         }
     }
+    /**
+     * add article success
+     * @param result HomeListResponse
+     * @param isAdd true add, false remove
+     */
+    override fun collectArticleSuccess(result: HomeListResponse, isAdd: Boolean) {
+        activity.toast(if (isAdd) activity.getString(R.string.bookmark_success) else activity.getString(R.string.bookmark_cancel_success))
+    }
+
+    /**
+     * add article false
+     * @param errorMessage error message
+     * @param isAdd true add, false remove
+     */
+    override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
+        activity.toast(if (isAdd) activity.getString(R.string.bookmark_failed, errorMessage) else activity.getString(R.string.bookmark_cancel_failed, errorMessage))
+    }
 
     /**
      * RefreshListener
@@ -174,6 +200,29 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView {
     private val onRequestLoadMoreListener = BaseQuickAdapter.RequestLoadMoreListener {
         val page = typeArticleAdapter.data.size / 20 + 1
         typeArticlePresenter.getTypeArticleList(page, cid)
+    }
+    /**
+     * ItemChildClickListener
+     */
+    private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { _, view, position ->
+        if (datas.size != 0) {
+            val data = datas[position]
+            when (view.id) {
+                R.id.homeItemLike -> {
+                    if (isLogin) {
+                        val collect = data.collect
+                        data.collect = !collect
+                        typeArticleAdapter.setData(position, data)
+                        typeArticlePresenter.collectArticle(data.id, !collect)
+                    } else {
+                        Intent(activity, LoginActivity::class.java).run {
+                            startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                        }
+                        activity.toast(getString(R.string.login_please_login))
+                    }
+                }
+            }
+        }
     }
 
     companion object {

@@ -14,6 +14,7 @@ import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.SearchAdapter
 import top.jowanxu.wanandroidclient.base.BaseActivity
+import top.jowanxu.wanandroidclient.base.Preference
 import top.jowanxu.wanandroidclient.bean.Datas
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.SearchPresenterImpl
@@ -53,6 +54,10 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
      * true search, false bookmark
      */
     private var isSearch: Boolean = true
+    /**
+     * check login for SharedPreferences
+     */
+    private val isLogin: Boolean by Preference(Constant.LOGIN_KEY, false)
 
     override fun setLayoutId(): Int = R.layout.activity_search
 
@@ -139,7 +144,9 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
     }
 
     override fun getSearchListZero() {
-        toast(getString(R.string.search_failed_not_article))
+        if (isSearch) {
+            toast(getString(R.string.search_failed_not_article))
+        }
     }
 
     override fun getSearchListSmall(result: HomeListResponse) {
@@ -311,6 +318,13 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
                     }
                 }
                 R.id.homeItemLike -> {
+                    if (!isLogin) {
+                        Intent(this, LoginActivity::class.java).run {
+                            startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                        }
+                        toast(getString(R.string.login_please_login))
+                        return@OnItemChildClickListener
+                    }
                     if (!isSearch) {
                         // delete data
                         searchAdapter.remove(position)
