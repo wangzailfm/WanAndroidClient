@@ -285,7 +285,7 @@ class MainActivity : BaseActivity() {
         when (item.itemId) {
             R.id.nav_like -> {
                 if (!isLogin) {
-                    Intent().run {
+                    Intent(this, LoginActivity::class.java).run {
                         startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
                     }
                     toast(getString(R.string.login_please_login))
