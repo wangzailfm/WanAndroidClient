@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">玩Android</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- home -->
     <string name="title_home">首页</string>
     <string name="title_dashboard">知识体系</string>
@@ -24,7 +26,9 @@
     <string name="like_title">收藏</string>
     <string name="bookmark_time">收藏时间：%1$s</string>
     <string name="bookmark_success">收藏成功</string>
+    <string name="bookmark_failed">收藏失败：%1$s</string>
     <string name="bookmark_cancel_success">取消收藏成功</string>
+    <string name="bookmark_cancel_failed">取消收藏失败：%1$s</string>
     <string name="my_bookmark">我收藏的</string>
     <string name="my_like">我喜欢的</string>
 
