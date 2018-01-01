@@ -5,7 +5,7 @@ Try to build a www.wanandroid.com client
 [1.0.0](https://raw.githubusercontent.com/wangzailfm/WanAndroidClient/master/app/release/app-release.apk)
 
 ## 接口
-[玩Android接口](http://www.wanandroid.com/blog/2)
+[玩Android接口](http://www.wanandroid.com/blog/show/2)
 
 ## 代码结构
 **Kotlin + MVP + Kotlin-Coroutines + Retrofit2(GsonCallAdapterFactory + CoroutineCallAdapterFactory)**
