@@ -23,8 +23,7 @@
             app:contentInsetStartWithNavigation="0dp"
             tools:text="@string/app_name"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="@android:color/white">
-        </android.support.v7.widget.Toolbar>
+            app:titleTextColor="@android:color/white"/>
 
     </android.support.design.widget.AppBarLayout>
 

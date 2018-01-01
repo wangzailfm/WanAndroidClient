@@ -8,4 +8,9 @@
         android:icon="@drawable/ic_action_my_like"
         android:title="@string/my_like"/>
 
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@drawable/ic_action_about"
+        android:title="@string/my_about"/>
+
 </menu>

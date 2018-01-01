@@ -125,4 +125,11 @@ interface RetrofitService {
             @Path("id") id: Int,
             @Field("originId") originId: Int = -1
     ): Deferred<HomeListResponse>
+
+    /**
+     * 首页Banner
+     * @return BannerResponse
+     */
+    @GET("/banner/json")
+    fun getBanner(): Deferred<BannerResponse>
 }

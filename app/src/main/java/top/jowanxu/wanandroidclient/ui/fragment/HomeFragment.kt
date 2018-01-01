@@ -192,6 +192,10 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
             val data = datas[position]
             when (view.id) {
                 R.id.homeItemType -> {
+                    data.chapterName ?: let {
+                        activity.toast("类别为空")
+                        return@OnItemChildClickListener
+                    }
                     Intent(activity, TypeContentActivity::class.java).run {
                         putExtra(Constant.CONTENT_TARGET_KEY, true)
                         putExtra(Constant.CONTENT_TITLE_KEY, data.chapterName)

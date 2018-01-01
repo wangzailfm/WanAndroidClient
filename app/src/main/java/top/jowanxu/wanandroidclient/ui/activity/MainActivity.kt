@@ -296,6 +296,11 @@ class MainActivity : BaseActivity() {
                     startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
                 }
             }
+            R.id.nav_about -> {
+                Intent(this, AboutActivity::class.java).run {
+                    startActivity(this)
+                }
+            }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         true

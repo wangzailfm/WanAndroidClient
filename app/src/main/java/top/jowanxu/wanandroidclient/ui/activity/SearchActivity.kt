@@ -300,6 +300,10 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
             val data = datas[position]
             when (view.id) {
                 R.id.homeItemType -> {
+                    data.chapterName ?: let {
+                        toast("类别为空")
+                        return@OnItemChildClickListener
+                    }
                     Intent(this, TypeContentActivity::class.java).run {
                         putExtra(Constant.CONTENT_TARGET_KEY, true)
                         putExtra(Constant.CONTENT_TITLE_KEY, data.chapterName)
