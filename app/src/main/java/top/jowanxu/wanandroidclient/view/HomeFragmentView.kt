@@ -1,5 +1,6 @@
 package top.jowanxu.wanandroidclient.view
 
+import top.jowanxu.wanandroidclient.bean.BannerResponse
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 
 /**
@@ -22,4 +23,18 @@ interface HomeFragmentView {
      * get Home list data less than 20
      */
     fun getHomeListSmall(result: HomeListResponse)
+    /**
+     * get Banner Success
+     * @param result BannerResponse
+     */
+    fun getBannerSuccess(result: BannerResponse)
+    /**
+     * get Banner Failed
+     * @param errorMessage error message
+     */
+    fun getBannerFailed(errorMessage: String?)
+    /**
+     * get Banner data size equal zero
+     */
+    fun getBannerZero()
 }

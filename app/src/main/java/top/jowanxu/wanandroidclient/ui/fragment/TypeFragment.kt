@@ -57,13 +57,6 @@ class TypeFragment : Fragment(), TypeFragmentView {
         typeFragmentPresenter.getTypeTreeList()
     }
 
-/*    override fun onPause() {
-        super.onPause()
-        typeFragmentPresenter.cancelRequest()
-        typeSwipeRefreshLayout.isRefreshing = false
-        typeAdapter.loadMoreComplete()
-    }*/
-
     /**
      * scroll to top
      */

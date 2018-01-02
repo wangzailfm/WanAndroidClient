@@ -1,5 +1,6 @@
 package top.jowanxu.wanandroidclient.presenter
 
+import top.jowanxu.wanandroidclient.bean.BannerResponse
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.model.CollectArticleModel
 import top.jowanxu.wanandroidclient.model.HomeModel
@@ -8,7 +9,7 @@ import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.HomeFragmentView
 
 class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView,
-                                private val collectArticleView: CollectArticleView) : HomePresenter.OnHomeListListener, HomePresenter.OnCollectArticleListener {
+                                private val collectArticleView: CollectArticleView) : HomePresenter.OnHomeListListener, HomePresenter.OnCollectArticleListener, HomePresenter.OnBannerListener {
 
     private val homeModel: HomeModel = HomeModelImpl()
     private val collectArticleModel: CollectArticleModel = HomeModelImpl()
@@ -80,6 +81,37 @@ class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView,
      */
     override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
         collectArticleView.collectArticleFailed(errorMessage, isAdd)
+    }
+
+    /**
+     * get banner
+     */
+    override fun getBanner() {
+        homeModel.getBanner(this)
+    }
+
+    /**
+     * get banner success
+     * @param result BannerResponse
+     */
+    override fun getBannerSuccess(result: BannerResponse) {
+        if (result.errorCode != 0) {
+            homeFragmentView.getBannerFailed(result.errorMsg)
+            return
+        }
+        result.data ?: let {
+            homeFragmentView.getBannerZero()
+            return
+        }
+        homeFragmentView.getBannerSuccess(result)
+    }
+
+    /**
+     * get banner failed
+     * @param errorMessage error message
+     */
+    override fun getBannerFailed(errorMessage: String?) {
+        homeFragmentView.getBannerFailed(errorMessage)
     }
 
     /**

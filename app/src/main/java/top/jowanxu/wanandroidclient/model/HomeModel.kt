@@ -55,6 +55,7 @@ interface HomeModel {
 
     /**
      * get friend list
+     * @param onFriendListListener HomePresenter.OnFriendListListener
      */
     fun getFriendList(onFriendListListener: HomePresenter.OnFriendListListener)
 
@@ -62,5 +63,16 @@ interface HomeModel {
      * cancel friend list Request
      */
     fun cancelFriendRequest()
+
+    /**
+     * get banner
+     * @param onBannerListener HomePresenter.OnBannerListener
+     */
+    fun getBanner(onBannerListener: HomePresenter.OnBannerListener)
+
+    /**
+     * cancel get banner request
+     */
+    fun cancelBannerRequest()
 
 }

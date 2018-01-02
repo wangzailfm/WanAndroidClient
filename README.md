@@ -32,8 +32,8 @@ Try to build a www.wanandroid.com client
 - [x] 分享文章、专题
 - [x] 常用网站
 - [x] 热词搜索
-- [ ] 关于我们
-- [ ] Banner
+- [x] 关于我们
+- [x] Banner
 - [ ] 搜索记录
 - [ ] 离线数据
 

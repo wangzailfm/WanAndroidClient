@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.zhy.view.flowlayout.TagFlowLayout
+import inflater
 import kotlinx.android.synthetic.main.fragment_common.*
 import toast
 import top.jowanxu.wanandroidclient.R
@@ -83,7 +84,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
                               savedInstanceState: Bundle?): View? {
         mainView ?: let {
             mainView = inflater.inflate(R.layout.fragment_common, container, false)
-            flowLayout = LayoutInflater.from(activity).inflate(R.layout.common_hot, null) as LinearLayout
+            flowLayout = activity.inflater(R.layout.common_hot) as LinearLayout
             hotTagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.hotFlowLayout)
             commonUseTagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.commonUseFlowLayout)
         }

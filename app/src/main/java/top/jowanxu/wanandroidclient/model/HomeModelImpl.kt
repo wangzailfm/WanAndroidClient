@@ -40,6 +40,10 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * Collect Article async
      */
     private var collectArticleAsync: Deferred<Any>? = null
+    /**
+     * get banner async
+     */
+    private var bannerAsync: Deferred<Any>? = null
 
     /**
      * get Home List
@@ -237,5 +241,35 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      */
     override fun cancelCollectRequest() {
         collectArticleAsync?.cancelByActive()
+    }
+
+    /**
+     * get banner
+     * @param onBannerListener HomePresenter.OnBannerListener
+     */
+    override fun getBanner(onBannerListener: HomePresenter.OnBannerListener) {
+        async(UI) {
+            try {
+                bannerAsync?.cancelAndJoinByActive()
+                bannerAsync = RetrofitHelper.retrofitService.getBanner()
+                val result = bannerAsync?.await()
+                if (result is BannerResponse) {
+                    onBannerListener.getBannerSuccess(result)
+                } else {
+                    onBannerListener.getBannerFailed(Constant.RESULT_NULL)
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                onBannerListener.getBannerFailed(t.toString())
+                return@async
+            }
+        }
+    }
+
+    /**
+     * cancel get banner request
+     */
+    override fun cancelBannerRequest() {
+        bannerAsync?.cancelByActive()
     }
 }

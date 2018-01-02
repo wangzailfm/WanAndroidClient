@@ -152,4 +152,26 @@ interface HomePresenter {
          */
         fun collectArticleFailed(errorMessage: String?, isAdd: Boolean)
     }
+
+    /**
+     * get banner listener
+     */
+    interface OnBannerListener {
+        /**
+         * get banner
+         */
+        fun getBanner()
+
+        /**
+         * get banner success
+         * @param result BannerResponse
+         */
+        fun getBannerSuccess(result: BannerResponse)
+
+        /**
+         * get banner failed
+         * @param errorMessage error message
+         */
+        fun getBannerFailed(errorMessage: String?)
+    }
 }

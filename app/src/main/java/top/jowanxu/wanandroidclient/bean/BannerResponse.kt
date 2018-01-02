@@ -1,8 +1,8 @@
 package top.jowanxu.wanandroidclient.bean
 
 data class BannerResponse(var errorCode: Int,
-                          var errorMsg: Any,
-                          var data: List<Data>) {
+                          var errorMsg: String?,
+                          var data: List<Data>?) {
     data class Data(var id: Int,
                     var url: String,
                     var imagePath: String,

@@ -6,25 +6,36 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.PagerSnapHelper
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.chad.library.adapter.base.BaseQuickAdapter
+import inflater
 import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.coroutines.experimental.*
 import toast
 import top.jowanxu.wanandroidclient.R
+import top.jowanxu.wanandroidclient.adapter.BannerAdapter
 import top.jowanxu.wanandroidclient.adapter.HomeAdapter
 import top.jowanxu.wanandroidclient.base.Preference
+import top.jowanxu.wanandroidclient.bean.BannerResponse
 import top.jowanxu.wanandroidclient.bean.Datas
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomeFragmentPresenterImpl
 import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
 import top.jowanxu.wanandroidclient.ui.activity.LoginActivity
 import top.jowanxu.wanandroidclient.ui.activity.TypeContentActivity
+import top.jowanxu.wanandroidclient.ui.view.HorizontalRecyclerView
 import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.HomeFragmentView
 
 class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
+    companion object {
+        private const val BANNER_TIME = 5000L
+    }
     /**
      * mainView
      */
@@ -49,10 +60,45 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
      * check login for SharedPreferences
      */
     private val isLogin: Boolean by Preference(Constant.LOGIN_KEY, false)
+    /**
+     * Banner
+     */
+    private lateinit var bannerRecyclerView: HorizontalRecyclerView
+    /**
+     * Banner data
+     */
+    private val bannerDatas = mutableListOf<BannerResponse.Data>()
+    /**
+     * Banner RecyclerView adapter
+     */
+    private val bannerAdapter: BannerAdapter by lazy {
+        BannerAdapter(activity, bannerDatas)
+    }
+    /**
+     * Banner PagerSnapHelper
+     */
+    private val bannerPagerSnap: PagerSnapHelper by lazy {
+        PagerSnapHelper()
+    }
+    /**
+     * LinearLayoutManager
+     */
+    private val linearLayoutManager: LinearLayoutManager by lazy {
+        LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+    }
+    /**
+     * Banner switch job
+     */
+    private var bannerSwitchJob: Job? = null
+    /**
+     * save current index
+     */
+    private var currentIndex = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mainView ?: let {
             mainView = inflater.inflate(R.layout.fragment_home, container, false)
+            bannerRecyclerView = activity.inflater(R.layout.home_banner) as HorizontalRecyclerView
         }
         return mainView
     }
@@ -67,34 +113,96 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
             layoutManager = LinearLayoutManager(activity)
             adapter = homeAdapter
         }
+        bannerRecyclerView.run {
+            layoutManager = linearLayoutManager
+            bannerPagerSnap.attachToRecyclerView(this)
+            requestDisallowInterceptTouchEvent(true)
+            setOnTouchListener(onTouchListener)
+            addOnScrollListener(onScrollListener)
+        }
+        bannerAdapter.run {
+            bindToRecyclerView(bannerRecyclerView)
+            onItemClickListener = this@HomeFragment.onBannerItemClickListener
+        }
         homeAdapter.run {
             bindToRecyclerView(recyclerView)
             setOnLoadMoreListener(onRequestLoadMoreListener, recyclerView)
             onItemClickListener = this@HomeFragment.onItemClickListener
             onItemChildClickListener = this@HomeFragment.onItemChildClickListener
+            addHeaderView(bannerRecyclerView)
             setEmptyView(R.layout.fragment_home_empty)
         }
+        homeFragmentPresenter.getBanner()
         homeFragmentPresenter.getHomeList()
     }
 
-/*    override fun onPause() {
+    /**
+     * pause banner switch
+     */
+    override fun onPause() {
         super.onPause()
-        homeFragmentPresenter.cancelRequest()
-        homeAdapter.loadMoreComplete()
-        swipeRefreshLayout.isRefreshing = false
-    }*/
+        bannerSwitchJob?.run {
+            if (isActive) {
+                cancel()
+            }
+        }
+    }
+
+    /**
+     * resume banner switch
+     */
+    override fun onResume() {
+        super.onResume()
+        bannerSwitchJob?.run {
+            if (isCancelled) {
+                bannerSwitchJob = getBannerSwitchJob().apply { start() }
+            }
+        }
+    }
 
     /**
      * scroll to top
      */
     fun smoothScrollToPosition() = recyclerView.scrollToPosition(0)
+
     /**
      * refresh
      */
     fun refreshData() {
         swipeRefreshLayout.isRefreshing = true
         homeAdapter.setEnableLoadMore(false)
+        homeFragmentPresenter.getBanner()
         homeFragmentPresenter.getHomeList()
+    }
+
+    /**
+     * get Banner Success
+     * @param result BannerResponse
+     */
+    override fun getBannerSuccess(result: BannerResponse) {
+        result.data?.let {
+            bannerAdapter.replaceData(it)
+            bannerSwitchJob = getBannerSwitchJob().apply { start() }
+        }
+    }
+
+    /**
+     * get Banner Failed
+     * @param errorMessage error message
+     */
+    override fun getBannerFailed(errorMessage: String?) {
+        errorMessage?.let {
+            activity.toast(it)
+        } ?: let {
+            activity.toast(getString(R.string.get_data_error))
+        }
+    }
+
+    /**
+     * get Banner data size equal zero
+     */
+    override fun getBannerZero() {
+        activity.toast(getString(R.string.get_data_error))
     }
 
     override fun getHomeListZero() {
@@ -184,6 +292,16 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
             }
         }
     }
+    private val onBannerItemClickListener = BaseQuickAdapter.OnItemClickListener {
+        _, _, position ->
+        if (bannerDatas.size != 0) {
+            Intent(activity, ContentActivity::class.java).run {
+                putExtra(Constant.CONTENT_URL_KEY, bannerDatas[position].url)
+                putExtra(Constant.CONTENT_TITLE_KEY, bannerDatas[position].title)
+                startActivity(this)
+            }
+        }
+    }
     /**
      * ItemChildClickListener
      */
@@ -225,5 +343,52 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     private val onRequestLoadMoreListener = BaseQuickAdapter.RequestLoadMoreListener {
         val page = homeAdapter.data.size / 20 + 1
         homeFragmentPresenter.getHomeList(page)
+    }
+
+    private fun getBannerSwitchJob() = launch(CommonPool, CoroutineStart.LAZY) {
+        (1..Int.MAX_VALUE).forEach {
+            if (bannerDatas.size == 0) {
+                return@launch
+            }
+            delay(BANNER_TIME)
+            currentIndex++
+            val index = currentIndex % bannerDatas.size
+            bannerRecyclerView.smoothScrollToPosition(index)
+            currentIndex = index
+        }
+    }
+
+    /**
+     * SCROLL_STATE_IDLE to start job
+     */
+    private val onScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            when (newState) {
+                RecyclerView.SCROLL_STATE_IDLE -> {
+                    currentIndex = linearLayoutManager.findFirstVisibleItemPosition()
+                    // resume banner switch
+                    bannerSwitchJob?.run {
+                        if (isCancelled) {
+                            bannerSwitchJob = getBannerSwitchJob().apply { start() }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * ACTION_MOVE to cancel job
+     */
+    private val onTouchListener = View.OnTouchListener {
+        _, event ->
+        when (event.action) {
+            MotionEvent.ACTION_MOVE -> {
+                // cancel banner switch
+                bannerSwitchJob?.run { if (isActive) { cancel() } }
+            }
+        }
+        false
     }
 }

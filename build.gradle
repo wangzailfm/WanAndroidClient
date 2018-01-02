@@ -15,7 +15,6 @@ ext.glide_version = "3.7.0"
 ext.agentweb_version = "3.0.0-beta"
 ext.barlibrary_version = "2.3.0"
 ext.flowlayout_version = "1.1.2"
-ext.gravitysnaphelper_version = "1.5"
 
 buildscript {
     ext.kotlin_version = '1.2.10'

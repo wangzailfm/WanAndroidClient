@@ -6,4 +6,5 @@
     <color name="colorCardBg">#FFFFFF</color>
     <color name="item_bg">#FFFFFF</color>
     <color name="while_most_color">#e4e4e4</color>
+    <color name="black_trans">#5c000000</color>
 </resources>

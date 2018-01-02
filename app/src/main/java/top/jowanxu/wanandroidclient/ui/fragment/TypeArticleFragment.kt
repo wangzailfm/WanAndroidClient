@@ -181,7 +181,8 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
     /**
      * ItemClickListener
      */
-    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
+        _, _, position ->
         if (datas.size != 0) {
             Intent(activity, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
