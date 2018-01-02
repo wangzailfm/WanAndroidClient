@@ -3,11 +3,12 @@ package top.jowanxu.wanandroidclient.base
 import android.app.Application
 import android.content.ComponentCallbacks2
 import com.bumptech.glide.Glide
+import com.squareup.leakcanary.LeakCanary
 
 class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-//        LeakCanary.install(this)
+        LeakCanary.install(this)
         Preference.setContext(applicationContext)
     }
 
