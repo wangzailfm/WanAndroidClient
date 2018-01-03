@@ -33,7 +33,7 @@ Try to build a www.wanandroid.com client
 - [x] 常用网站
 - [x] 热词搜索
 - [x] 关于我们
-- [x] Banner
+- [ ] Banner(Writing)
 - [ ] 搜索记录
 - [ ] 离线数据
 
