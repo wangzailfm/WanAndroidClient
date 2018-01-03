@@ -90,7 +90,7 @@ fun encodeCookie(cookies: List<String>): String {
  * get random color
  * @return 16777215 is FFFFFF, 0 is 000000
  */
-fun getRandomColor(): String = "#${Integer.toHexString((Math.random() * 16777215).toInt())}"
+fun getRandomColor(): String = Integer.toHexString((Math.random() * 16777215).toInt())
 
 /**
  * getAgentWeb
@@ -105,7 +105,7 @@ fun String.getAgentWeb(activity: Activity, webContent: ViewGroup,
         .setReceivedTitleCallback(receivedTitleCallback) //设置 Web 页面的 title 回调
         .createAgentWeb()//
         .ready()
-        .go(this)
+        .go(this)!!
 
 /**
  * LayoutInflater.from(this).inflate
