@@ -35,6 +35,12 @@ import top.jowanxu.wanandroidclient.view.HomeFragmentView
 class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     companion object {
         private const val BANNER_TIME = 5000L
+        private inline fun Job.cancelBannerSwitchJob(block: Job.() -> Unit) {
+
+        }
+        private inline fun Job.startBannerSwitchJob(block: Job.() -> Unit) {
+
+        }
     }
     /**
      * mainView
@@ -141,11 +147,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
      */
     override fun onPause() {
         super.onPause()
-        bannerSwitchJob?.run {
-            if (isActive) {
-                cancel()
-            }
-        }
+        cancelSwitchJob()
     }
 
     /**
@@ -153,10 +155,18 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
      */
     override fun onResume() {
         super.onResume()
-        bannerSwitchJob?.run {
-            if (isCancelled) {
-                bannerSwitchJob = getBannerSwitchJob().apply { start() }
-            }
+        startSwitchJob()
+    }
+
+    /**
+     * if hidden to cancel, else to start
+     */
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            cancelSwitchJob()
+        } else {
+            startSwitchJob()
         }
     }
 
@@ -171,6 +181,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     fun refreshData() {
         swipeRefreshLayout.isRefreshing = true
         homeAdapter.setEnableLoadMore(false)
+        cancelSwitchJob()
         homeFragmentPresenter.getBanner()
         homeFragmentPresenter.getHomeList()
     }
@@ -345,6 +356,37 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
         homeFragmentPresenter.getHomeList(page)
     }
 
+    /**
+     * SCROLL_STATE_IDLE to start job
+     */
+    private val onScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            when (newState) {
+                RecyclerView.SCROLL_STATE_IDLE -> {
+                    currentIndex = linearLayoutManager.findFirstVisibleItemPosition()
+                    startSwitchJob()
+                }
+            }
+        }
+    }
+
+    /**
+     * ACTION_MOVE to cancel job
+     */
+    private val onTouchListener = View.OnTouchListener {
+        _, event ->
+        when (event.action) {
+            MotionEvent.ACTION_MOVE -> {
+                cancelSwitchJob()
+            }
+        }
+        false
+    }
+
+    /**
+     * get Banner switch job
+     */
     private fun getBannerSwitchJob() = launch(CommonPool, CoroutineStart.LAZY) {
         (1..Int.MAX_VALUE).forEach {
             if (bannerDatas.size == 0) {
@@ -359,36 +401,20 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     }
 
     /**
-     * SCROLL_STATE_IDLE to start job
+     * resume banner switch
      */
-    private val onScrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            when (newState) {
-                RecyclerView.SCROLL_STATE_IDLE -> {
-                    currentIndex = linearLayoutManager.findFirstVisibleItemPosition()
-                    // resume banner switch
-                    bannerSwitchJob?.run {
-                        if (isCancelled) {
-                            bannerSwitchJob = getBannerSwitchJob().apply { start() }
-                        }
-                    }
-                }
-            }
+    private fun startSwitchJob() = bannerSwitchJob?.run {
+        if (isCancelled) {
+            bannerSwitchJob = getBannerSwitchJob().apply { start() }
         }
     }
 
     /**
-     * ACTION_MOVE to cancel job
+     * cancel banner switch
      */
-    private val onTouchListener = View.OnTouchListener {
-        _, event ->
-        when (event.action) {
-            MotionEvent.ACTION_MOVE -> {
-                // cancel banner switch
-                bannerSwitchJob?.run { if (isActive) { cancel() } }
-            }
+    private fun cancelSwitchJob() = bannerSwitchJob?.run {
+        if (isActive) {
+            cancel()
         }
-        false
     }
 }
