@@ -35,12 +35,6 @@ import top.jowanxu.wanandroidclient.view.HomeFragmentView
 class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     companion object {
         private const val BANNER_TIME = 5000L
-        private inline fun Job.cancelBannerSwitchJob(block: Job.() -> Unit) {
-
-        }
-        private inline fun Job.startBannerSwitchJob(block: Job.() -> Unit) {
-
-        }
     }
     /**
      * mainView
