@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import inflater
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.coroutines.experimental.*
+import loge
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.BannerAdapter
@@ -187,7 +188,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     override fun getBannerSuccess(result: BannerResponse) {
         result.data?.let {
             bannerAdapter.replaceData(it)
-            bannerSwitchJob = getBannerSwitchJob().apply { start() }
+            startSwitchJob()
         }
     }
 
@@ -388,6 +389,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
             }
             delay(BANNER_TIME)
             currentIndex++
+            loge("info", "---------$it------currentIndex")
             val index = currentIndex % bannerDatas.size
             bannerRecyclerView.smoothScrollToPosition(index)
             currentIndex = index
@@ -398,9 +400,11 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
      * resume banner switch
      */
     private fun startSwitchJob() = bannerSwitchJob?.run {
-        if (isCancelled) {
+        if (!isActive) {
             bannerSwitchJob = getBannerSwitchJob().apply { start() }
         }
+    } ?: let {
+        bannerSwitchJob = getBannerSwitchJob().apply { start() }
     }
 
     /**
