@@ -154,6 +154,34 @@ interface HomePresenter {
     }
 
     /**
+     * collect outside article listener
+     */
+    interface OnCollectOutsideArticleListener {
+        /**
+         *  add or remove outside collect article
+         *  @param title article title
+         *  @param author article author
+         *  @param link article link
+         *  @param isAdd true add, false remove
+         */
+        fun collectOutSideArticle(title: String, author: String, link: String, isAdd: Boolean)
+
+        /**
+         * add collect outside article success
+         * @param result HomeListResponse
+         * @param isAdd true add, false remove
+         */
+        fun collectOutsideArticleSuccess(result: HomeListResponse, isAdd: Boolean)
+
+        /**
+         * add collect outside article failed
+         * @param errorMessage error message
+         * @param isAdd true add, false remove
+         */
+        fun collectOutsideArticleFailed(errorMessage: String?, isAdd: Boolean)
+    }
+
+    /**
      * get banner listener
      */
     interface OnBannerListener {

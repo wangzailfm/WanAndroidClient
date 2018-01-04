@@ -114,6 +114,21 @@ interface RetrofitService {
     ): Deferred<HomeListResponse>
 
     /**
+     * 收藏站外文章
+     * @param title title
+     * @param author author
+     * @param link link
+     * @return Deferred<HomeListResponse>
+     */
+    @POST("/lg/collect/add/json")
+    @FormUrlEncoded
+    fun addCollectOutsideArticle(
+            @Field("title") title: String,
+            @Field("author") author: String,
+            @Field("link") link: String
+    ): Deferred<HomeListResponse>
+
+    /**
      * 删除收藏文章
      * @param id id
      * @param originId -1

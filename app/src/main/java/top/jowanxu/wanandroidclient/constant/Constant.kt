@@ -36,6 +36,10 @@ object Constant {
      */
     const val CONTENT_TITLE_KEY = "title"
     /**
+     * id key
+     */
+    const val CONTENT_ID_KEY = "id"
+    /**
      * cid key
      */
     const val CONTENT_CID_KEY = "cid"

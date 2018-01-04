@@ -175,6 +175,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
         if (commonUseDatas.size != 0) {
             Intent(activity, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, commonUseDatas[position].link)
+                putExtra(Constant.CONTENT_ID_KEY, commonUseDatas[position].id)
                 putExtra(Constant.CONTENT_TITLE_KEY, commonUseDatas[position].name)
                 startActivity(this)
             }

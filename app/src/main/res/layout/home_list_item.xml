@@ -51,6 +51,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/homeItemHead"
         android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_4"
         android:gravity="center_vertical"
         android:textColor="@android:color/primary_text_light"
         android:textSize="19sp"

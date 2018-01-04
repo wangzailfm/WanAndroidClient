@@ -16,7 +16,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import inflater
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.coroutines.experimental.*
-import loge
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.BannerAdapter
@@ -293,6 +292,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
         if (datas.size != 0) {
             Intent(activity, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
+                putExtra(Constant.CONTENT_ID_KEY, datas[position].id)
                 putExtra(Constant.CONTENT_TITLE_KEY, datas[position].title)
                 startActivity(this)
             }
@@ -389,7 +389,6 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
             }
             delay(BANNER_TIME)
             currentIndex++
-            loge("info", "---------$it------currentIndex")
             val index = currentIndex % bannerDatas.size
             bannerRecyclerView.smoothScrollToPosition(index)
             currentIndex = index

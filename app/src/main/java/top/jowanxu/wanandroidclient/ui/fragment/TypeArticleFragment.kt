@@ -186,6 +186,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
         if (datas.size != 0) {
             Intent(activity, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
+                putExtra(Constant.CONTENT_ID_KEY, datas[position].id)
                 putExtra(Constant.CONTENT_TITLE_KEY, datas[position].title)
                 startActivity(this)
             }
@@ -213,7 +214,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
                         typeArticlePresenter.collectArticle(data.id, !collect)
                     } else {
                         Intent(activity, LoginActivity::class.java).run {
-                            startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                            startActivity(this)
                         }
                         activity.toast(getString(R.string.login_please_login))
                     }

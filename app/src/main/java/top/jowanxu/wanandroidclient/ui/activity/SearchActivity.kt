@@ -108,13 +108,6 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
         }
     }
 
-/*    override fun onPause() {
-        super.onPause()
-        searchPresenter.cancelRequest()
-        searchAdapter.setEnableLoadMore(false)
-        searchAdapter.loadMoreComplete()
-    }*/
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (isSearch) {
             menuInflater.inflate(R.menu.menu_search, menu)
@@ -314,7 +307,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
                 R.id.homeItemLike -> {
                     if (!isLogin) {
                         Intent(this, LoginActivity::class.java).run {
-                            startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                            startActivity(this)
                         }
                         toast(getString(R.string.login_please_login))
                         return@OnItemChildClickListener
