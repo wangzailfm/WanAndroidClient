@@ -22,7 +22,7 @@ Try to build a www.wanandroid.com client
 - [Glide](https://github.com/bumptech/glide)
 
 ## 版本
-### 1.1
+### 1.1(计划)
 - 搜索记录
 - 离线数据
 
