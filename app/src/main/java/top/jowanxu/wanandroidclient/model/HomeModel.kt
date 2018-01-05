@@ -75,4 +75,15 @@ interface HomeModel {
      */
     fun cancelBannerRequest()
 
+    /**
+     * get friend list
+     * @param onBookmarkListListener HomePresenter.OnBookmarkListListener
+     */
+    fun getBookmarkList(onBookmarkListListener: HomePresenter.OnBookmarkListListener)
+
+    /**
+     * cancel friend list Request
+     */
+    fun cancelBookmarkRequest()
+
 }

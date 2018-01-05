@@ -44,6 +44,10 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * get banner async
      */
     private var bannerAsync: Deferred<Any>? = null
+    /**
+     * Bookmark list async
+     */
+    private var bookmarkListAsync: Deferred<Any>? = null
 
     /**
      * get Home List
@@ -271,5 +275,35 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      */
     override fun cancelBannerRequest() {
         bannerAsync?.cancelByActive()
+    }
+
+    /**
+     * get friend list
+     * @param onBookmarkListListener HomePresenter.OnBookmarkListListener
+     */
+    override fun getBookmarkList(onBookmarkListListener: HomePresenter.OnBookmarkListListener) {
+        async(UI) {
+            try {
+                bookmarkListAsync?.cancelAndJoinByActive()
+                bookmarkListAsync = RetrofitHelper.retrofitService.getBookmarkList()
+                val result = bookmarkListAsync?.await()
+                if (result is FriendListResponse) {
+                    onBookmarkListListener.getFriendListSuccess(result)
+                } else {
+                    onBookmarkListListener.getFriendListFailed(Constant.RESULT_NULL)
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                onBookmarkListListener.getFriendListFailed(t.toString())
+                return@async
+            }
+        }
+    }
+
+    /**
+     * cancel friend list Request
+     */
+    override fun cancelBookmarkRequest() {
+        bookmarkListAsync?.cancelByActive()
     }
 }

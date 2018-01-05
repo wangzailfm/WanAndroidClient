@@ -19,6 +19,7 @@ import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.base.BaseActivity
 import top.jowanxu.wanandroidclient.base.Preference
+import top.jowanxu.wanandroidclient.ui.fragment.BookmarkFragment
 import top.jowanxu.wanandroidclient.ui.fragment.CommonUseFragment
 import top.jowanxu.wanandroidclient.ui.fragment.HomeFragment
 import top.jowanxu.wanandroidclient.ui.fragment.TypeFragment
@@ -32,6 +33,7 @@ class MainActivity : BaseActivity() {
     private var homeFragment: HomeFragment? = null
     private var typeFragment: TypeFragment? = null
     private var commonUseFragment: CommonUseFragment? = null
+    private var bookmarkFragment: BookmarkFragment? = null
     private val fragmentManager by lazy {
         supportFragmentManager
     }
@@ -168,6 +170,7 @@ class MainActivity : BaseActivity() {
             is HomeFragment -> homeFragment ?: let { homeFragment = fragment }
             is TypeFragment -> typeFragment ?: let { typeFragment = fragment }
             is CommonUseFragment -> commonUseFragment ?: let { commonUseFragment = fragment }
+            is BookmarkFragment -> bookmarkFragment ?: let { bookmarkFragment = fragment }
         }
     }
 
@@ -215,6 +218,12 @@ class MainActivity : BaseActivity() {
                     add(R.id.content, it)
                 }
             }
+            bookmarkFragment ?: let {
+                BookmarkFragment().let {
+                    bookmarkFragment = it
+                    add(R.id.content, it)
+                }
+            }
             hideFragment(this)
             when (index) {
                 R.id.navigation_home -> {
@@ -235,6 +244,12 @@ class MainActivity : BaseActivity() {
                         this.show(it)
                     }
                 }
+                R.id.nav_bookmark -> {
+                    toolbar.title = getString(R.string.my_bookmark)
+                    bookmarkFragment?.let {
+                        this.show(it)
+                    }
+                }
             }
         }.commit()
     }
@@ -250,6 +265,9 @@ class MainActivity : BaseActivity() {
             transaction.hide(it)
         }
         commonUseFragment?.let {
+            transaction.hide(it)
+        }
+        bookmarkFragment?.let {
             transaction.hide(it)
         }
     }
@@ -295,6 +313,20 @@ class MainActivity : BaseActivity() {
                     putExtra(Constant.SEARCH_KEY, false)
                     startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
                 }
+            }
+            R.id.nav_bookmark -> {
+                if (!isLogin) {
+                    Intent(this, LoginActivity::class.java).run {
+                        startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                    }
+                    toast(getString(R.string.login_please_login))
+                    return@OnNavigationItemSelectedListener true
+                }
+                if (currentIndex == R.id.nav_bookmark) {
+                    bookmarkFragment?.refreshData()
+                }
+                setFragment(R.id.nav_bookmark)
+                currentIndex = R.id.nav_bookmark
             }
             R.id.nav_about -> {
                 Intent(this, AboutActivity::class.java).run {

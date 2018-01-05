@@ -2,7 +2,7 @@
 Try to build a www.wanandroid.com client
 
 ## apk
-[1.0.1](https://raw.githubusercontent.com/wangzailfm/WanAndroidClient/master/app/release/app-release.apk)
+[1.0.3](https://raw.githubusercontent.com/wangzailfm/WanAndroidClient/master/app/release/app-release.apk)
 
 ## 接口
 [玩Android接口](http://www.wanandroid.com/blog/show/2)
@@ -26,14 +26,14 @@ Try to build a www.wanandroid.com client
 - 搜索记录
 - 离线数据
 
-### 1.0.2
-- 收藏站外文章
-
-### 1.0.1
-- 添加Banner
-
 ### 1.0
-- 基本的功能
+- 1.0.1
+    - 添加Banner([PagerSnapHelper](https://developer.android.google.cn/reference/android/support/v7/widget/PagerSnapHelper.html))
+- **1.0.2**
+    - 收藏站外文章
+- **1.0.3**
+    - 我的常用网站(侧边栏->我的书签)![常用网站](http://ovlhlis72.bkt.clouddn.com/18-1-5/22904350.jpg)
+
 
 ## 功能
 - [x] 首页
@@ -47,7 +47,7 @@ Try to build a www.wanandroid.com client
 - [x] 常用网站
 - [x] 热词搜索
 - [x] 关于我们
-- [x] Banner([PagerSnapHelper](https://developer.android.google.cn/reference/android/support/v7/widget/PagerSnapHelper.html))
+- [x] Banner
 - [ ] 搜索记录
 - [ ] 离线数据
 

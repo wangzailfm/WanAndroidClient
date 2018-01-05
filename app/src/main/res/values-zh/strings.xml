@@ -11,6 +11,7 @@
     <!--no data-->
     <string name="no_data">这里空空的…</string>
     <string name="get_data_error">获取数据失败</string>
+    <string name="get_data_zero">获取数据为空</string>
 
     <string name="double_click_exit">再按一次退出</string>
 
@@ -57,7 +58,7 @@
     <string name="common_use">常用网址</string>
 
     <!-- navigation -->
-    <string name="my_bookmark">我收藏的</string>
+    <string name="my_bookmark">我的书签</string>
     <string name="my_like">我喜欢的</string>
     <string name="my_about">关于我们</string>
     <string name="about_content"><![CDATA[

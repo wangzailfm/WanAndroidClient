@@ -111,7 +111,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
         }
         commonAdapter.run {
             bindToRecyclerView(commonRecyclerView)
-            commonAdapter.addHeaderView(flowLayout)
+            addHeaderView(flowLayout)
         }
         commonUseFragmentPresenter.getFriendList()
     }
@@ -149,7 +149,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
      * get Friend list data size equal zero
      */
     override fun getFriendListZero() {
-        activity.toast(getString(R.string.get_data_error))
+        activity.toast(getString(R.string.get_data_zero))
         commonSwipeRefreshLayout.isRefreshing = false
     }
     /**
@@ -163,8 +163,7 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
      * RefreshListener
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
-        commonSwipeRefreshLayout.isRefreshing = true
-        commonUseFragmentPresenter.getFriendList()
+        refreshData()
     }
 
     /**

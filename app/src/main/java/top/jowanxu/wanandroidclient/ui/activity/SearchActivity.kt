@@ -51,9 +51,13 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
      */
     private var searchView: SearchView? = null
     /**
-     * true search, false bookmark
+     * true search, false like
      */
     private var isSearch: Boolean = true
+    /**
+     * true like, false bookmark
+     */
+    private var isLike: Boolean = true
     /**
      * check login for SharedPreferences
      */
@@ -70,9 +74,10 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
         super.onCreate(savedInstanceState)
         intent.extras?.let {
             isSearch = it.getBoolean(Constant.SEARCH_KEY, true)
+            isLike = it.getBoolean(Constant.LIKE_KEY, true)
         }
         toolbar.run {
-            title = if (isSearch) "" else getString(R.string.my_like)
+            title = if (isSearch) "" else if (isLike) getString(R.string.my_like) else getString(R.string.my_bookmark)
             setSupportActionBar(this)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
@@ -135,6 +140,8 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
     override fun getSearchListZero() {
         if (isSearch) {
             toast(getString(R.string.search_failed_not_article))
+        } else {
+            toast(getString(R.string.get_data_zero))
         }
         swipeRefreshLayout.isRefreshing = false
     }

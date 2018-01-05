@@ -89,15 +89,21 @@ class TypeFragment : Fragment(), TypeFragmentView {
      * get Type list data size equal zero
      */
     override fun getTypeListZero() {
-        activity.toast(getString(R.string.get_data_error))
+        activity.toast(getString(R.string.get_data_zero))
         typeSwipeRefreshLayout.isRefreshing = false
+    }
+    /**
+     * refresh
+     */
+    fun refreshData() {
+        typeSwipeRefreshLayout.isRefreshing = true
+        typeFragmentPresenter.getTypeTreeList()
     }
     /**
      * RefreshListener
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
-        typeSwipeRefreshLayout.isRefreshing = true
-        typeFragmentPresenter.getTypeTreeList()
+        refreshData()
     }
     /**
      * ItemClickListener

@@ -207,11 +207,11 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
      * get Banner data size equal zero
      */
     override fun getBannerZero() {
-        activity.toast(getString(R.string.get_data_error))
+        activity.toast(getString(R.string.get_data_zero))
     }
 
     override fun getHomeListZero() {
-        activity.toast(getString(R.string.get_data_error))
+        activity.toast(getString(R.string.get_data_zero))
         swipeRefreshLayout.isRefreshing = false
     }
 

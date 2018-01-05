@@ -10,6 +10,7 @@
     <!--no data-->
     <string name="no_data">Here the empty…</string>
     <string name="get_data_error">Failed to get the data</string>
+    <string name="get_data_zero">Get data size is zero</string>
 
     <string name="double_click_exit">Again according to the exit</string>
 
@@ -56,7 +57,7 @@
     <string name="common_use">Commonly Site</string>
 
     <!-- navigation -->
-    <string name="my_bookmark">My collection</string>
+    <string name="my_bookmark">My Bookmark</string>
     <string name="my_like">My favorite</string>
     <string name="my_about">About us</string>
     <string name="about_content"><![CDATA[

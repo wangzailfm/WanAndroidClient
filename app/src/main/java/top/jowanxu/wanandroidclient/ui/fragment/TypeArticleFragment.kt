@@ -133,7 +133,7 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
      * get Type Article list data size equal zero
      */
     override fun getTypeArticleListZero() {
-        activity.toast(getString(R.string.get_data_error))
+        activity.toast(getString(R.string.get_data_zero))
         tabSwipeRefreshLayout.isRefreshing = false
     }
 

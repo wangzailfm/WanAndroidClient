@@ -147,4 +147,11 @@ interface RetrofitService {
      */
     @GET("/banner/json")
     fun getBanner(): Deferred<BannerResponse>
+
+    /**
+     * 我的常用网址
+     * @return FriendListResponse
+     */
+    @GET("/lg/collect/usertools/json")
+    fun getBookmarkList(): Deferred<FriendListResponse>
 }

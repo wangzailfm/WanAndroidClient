@@ -202,4 +202,27 @@ interface HomePresenter {
          */
         fun getBannerFailed(errorMessage: String?)
     }
+
+    /**
+     * get friend list interface
+     */
+    interface OnBookmarkListListener {
+
+        /**
+         * get friend tree list
+         */
+        fun getFriendList()
+
+        /**
+         * get friend list success
+         * @param result result
+         */
+        fun getFriendListSuccess(result: FriendListResponse)
+
+        /**
+         * get friend list failed
+         * @param errorMessage error message
+         */
+        fun getFriendListFailed(errorMessage: String?)
+    }
 }
