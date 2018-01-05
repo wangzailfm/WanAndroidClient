@@ -28,7 +28,8 @@ Try to build a www.wanandroid.com client
 
 ### 1.0
 - **1.0.3**
-    - 我的常用网站(侧边栏->我的书签)![常用网站](http://ovlhlis72.bkt.clouddn.com/18-1-5/22904350.jpg)
+    - 我的常用网站(侧边栏->我的书签)
+    - ![常用网站](http://ovlhlis72.bkt.clouddn.com/18-1-5/22904350.jpg)
 - **1.0.2**
     - 收藏站外文章
 - **1.0.1**
