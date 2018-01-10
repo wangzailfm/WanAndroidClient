@@ -9,6 +9,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import top.jowanxu.wanandroidclient.bean.*
 import top.jowanxu.wanandroidclient.presenter.HomePresenter
+import tryCatch
 
 class HomeModelImpl : HomeModel, CollectArticleModel {
 
@@ -181,28 +182,55 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * get friend list
      */
     override fun getFriendList(onFriendListListener: HomePresenter.OnFriendListListener) {
+        var throwable: Throwable? = null
+        var bookmarkResult: FriendListResponse? = null
+        var hotResult: HotKeyResponse? = null
+        var commonResult: FriendListResponse? = null
         async(UI) {
-            try {
+            tryCatch({
+                throwable = it
+                it.printStackTrace()
+            }) {
+                bookmarkListAsync?.cancelAndJoinByActive()
+                bookmarkListAsync = RetrofitHelper.retrofitService.getBookmarkList()
+                val result = bookmarkListAsync?.await()
+                if (result is FriendListResponse) {
+                    bookmarkResult = result
+                }
+            }
+            tryCatch({
+                throwable = it
+                it.printStackTrace()
+            }) {
+                hotListAsync?.cancelAndJoinByActive()
+                hotListAsync = RetrofitHelper.retrofitService.getHotKeyList()
+                val result = hotListAsync?.await()
+                if (result is HotKeyResponse) {
+                    hotResult = result
+                }
+            }
+            tryCatch({
+                throwable = it
+                it.printStackTrace()
+            }) {
                 friendListAsync?.cancelAndJoinByActive()
                 friendListAsync = RetrofitHelper.retrofitService.getFriendList()
                 val result = friendListAsync?.await()
-                if (result !is FriendListResponse) {
-                    onFriendListListener.getFriendListFailed(Constant.RESULT_NULL)
-                    return@async
+                if (result is FriendListResponse) {
+                    commonResult = result
                 }
-                hotListAsync?.cancelAndJoinByActive()
-                hotListAsync = RetrofitHelper.retrofitService.getHotKeyList()
-                val hotResult = hotListAsync?.await()
-                if (hotResult is HotKeyResponse) {
-                    onFriendListListener.getFriendListSuccess(result, hotResult)
-                } else {
-                    onFriendListListener.getFriendListFailed(Constant.RESULT_NULL)
-                }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onFriendListListener.getFriendListFailed(t.toString())
+            }
+            throwable?.let {
+                onFriendListListener.getFriendListFailed(it.toString())
                 return@async
             }
+            hotResult ?: let {
+                onFriendListListener.getFriendListFailed(Constant.RESULT_NULL)
+            }
+            commonResult ?: let {
+                onFriendListListener.getFriendListFailed(Constant.RESULT_NULL)
+            }
+            onFriendListListener.getFriendListSuccess(bookmarkResult, commonResult!!, hotResult!!)
         }
     }
 
@@ -210,6 +238,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel friend list Request
      */
     override fun cancelFriendRequest() {
+        bookmarkListAsync?.cancelByActive()
         friendListAsync?.cancelByActive()
         hotListAsync?.cancelByActive()
     }
@@ -275,35 +304,5 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      */
     override fun cancelBannerRequest() {
         bannerAsync?.cancelByActive()
-    }
-
-    /**
-     * get friend list
-     * @param onBookmarkListListener HomePresenter.OnBookmarkListListener
-     */
-    override fun getBookmarkList(onBookmarkListListener: HomePresenter.OnBookmarkListListener) {
-        async(UI) {
-            try {
-                bookmarkListAsync?.cancelAndJoinByActive()
-                bookmarkListAsync = RetrofitHelper.retrofitService.getBookmarkList()
-                val result = bookmarkListAsync?.await()
-                if (result is FriendListResponse) {
-                    onBookmarkListListener.getFriendListSuccess(result)
-                } else {
-                    onBookmarkListListener.getFriendListFailed(Constant.RESULT_NULL)
-                }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onBookmarkListListener.getFriendListFailed(t.toString())
-                return@async
-            }
-        }
-    }
-
-    /**
-     * cancel friend list Request
-     */
-    override fun cancelBookmarkRequest() {
-        bookmarkListAsync?.cancelByActive()
     }
 }

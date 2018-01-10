@@ -115,9 +115,8 @@ interface HomePresenter {
 
         /**
          * get friend list success
-         * @param result result
          */
-        fun getFriendListSuccess(result: FriendListResponse, hotResult: HotKeyResponse)
+        fun getFriendListSuccess(bookmarkResult: FriendListResponse?, commonResult: FriendListResponse, hotResult: HotKeyResponse)
 
         /**
          * get friend list failed

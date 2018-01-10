@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.zhy.view.flowlayout.TagFlowLayout
 import inflater
 import kotlinx.android.synthetic.main.fragment_common.*
@@ -79,6 +80,21 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
     private val commonUseTagAdapter: CommonUseTagAdapter by lazy {
         CommonUseTagAdapter(activity, commonUseDatas)
     }
+    private lateinit var bookmarkTitle: TextView
+    /**
+     * bookmark tag flowLayout
+     */
+    private lateinit var bookmarkTagFlowLayout: TagFlowLayout
+    /**
+     * bookmark tag data
+     */
+    private val bookmarkUseDatas = mutableListOf<FriendListResponse.Data>()
+    /**
+     * bookmark tag adapter
+     */
+    private val bookmarkTagAdapter: CommonUseTagAdapter by lazy {
+        CommonUseTagAdapter(activity, bookmarkUseDatas)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -87,12 +103,18 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
             flowLayout = activity.inflater(R.layout.common_hot) as LinearLayout
             hotTagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.hotFlowLayout)
             commonUseTagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.commonUseFlowLayout)
+            bookmarkTitle = flowLayout.findViewById<TextView>(R.id.bookmarkTitle)
+            bookmarkTagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.bookmarkFlowLayout)
         }
         return  mainView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        bookmarkTagFlowLayout.run {
+            adapter = bookmarkTagAdapter
+            setOnTagClickListener(onBookmarkTagClickListener)
+        }
         hotTagFlowLayout.run {
             adapter = hotTagAdapter
             setOnTagClickListener(onHotTagClickListener)
@@ -119,8 +141,20 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
     /**
      * get Friend list Success
      */
-    override fun getFriendListSuccess(result: FriendListResponse, hotResult: HotKeyResponse) {
-        result.data.let {
+    override fun getFriendListSuccess(bookmarkResult: FriendListResponse?, commonResult: FriendListResponse, hotResult: HotKeyResponse) {
+        bookmarkResult?.let {
+            it.data?.let {
+                bookmarkTitle.visibility = View.VISIBLE
+                bookmarkTagFlowLayout.visibility = View.VISIBLE
+                bookmarkUseDatas.clear()
+                bookmarkUseDatas.addAll(it)
+                bookmarkTagAdapter.notifyDataChanged()
+            }?: let {
+                bookmarkTitle.visibility = View.GONE
+                bookmarkTagFlowLayout.visibility = View.GONE
+            }
+        }
+        commonResult.data?.let {
             commonUseDatas.clear()
             commonUseDatas.addAll(it)
             commonUseTagAdapter.notifyDataChanged()
@@ -164,6 +198,22 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
      */
     private val onRefreshListener = SwipeRefreshLayout.OnRefreshListener {
         refreshData()
+    }
+
+    /**
+     * onBookmarkTagClickListener
+     */
+    private val onBookmarkTagClickListener = TagFlowLayout.OnTagClickListener {
+        _, position, _ ->
+        if (bookmarkUseDatas.size != 0) {
+            Intent(activity, ContentActivity::class.java).run {
+                putExtra(Constant.CONTENT_URL_KEY, bookmarkUseDatas[position].link)
+                putExtra(Constant.CONTENT_ID_KEY, bookmarkUseDatas[position].id)
+                putExtra(Constant.CONTENT_TITLE_KEY, bookmarkUseDatas[position].name)
+                startActivity(this)
+            }
+        }
+        true
     }
 
     /**

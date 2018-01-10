@@ -10,7 +10,7 @@ interface CommonUseFragmentView {
     /**
      * get Friend list Success
      */
-    fun getFriendListSuccess(result: FriendListResponse, hotResult: HotKeyResponse)
+    fun getFriendListSuccess(bookmarkResult: FriendListResponse?, commonResult: FriendListResponse, hotResult: HotKeyResponse)
     /**
      * get Friend list Failed
      */

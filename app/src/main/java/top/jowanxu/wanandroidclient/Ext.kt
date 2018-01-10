@@ -113,3 +113,11 @@ fun String.getAgentWeb(activity: Activity, webContent: ViewGroup,
  * @return View
  */
 fun Context.inflater(@LayoutRes resource: Int): View = LayoutInflater.from(this).inflate(resource, null)
+
+inline fun tryCatch(catchBlock: (Throwable) -> Unit = {}, tryBlock: () -> Unit) {
+    try {
+        tryBlock()
+    } catch (t: Throwable) {
+        catchBlock(t)
+    }
+}

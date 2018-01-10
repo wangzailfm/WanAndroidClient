@@ -18,18 +18,21 @@ class CommonUseFragmentPresenterImpl(private val commonUseFragmentView: CommonUs
 
     /**
      * get friend list success
-     * @param result result
      */
-    override fun getFriendListSuccess(result: FriendListResponse, hotResult: HotKeyResponse) {
-        if (result.errorCode != 0) {
-            commonUseFragmentView.getFriendListFailed(result.errorMsg)
+    override fun getFriendListSuccess(bookmarkResult: FriendListResponse?, commonResult: FriendListResponse, hotResult: HotKeyResponse) {
+        if (commonResult.errorCode != 0 || hotResult.errorCode != 0) {
+            commonUseFragmentView.getFriendListFailed(commonResult.errorMsg)
             return
         }
-        if (result.data.isEmpty()) {
+        if (commonResult.data == null || commonResult.data == null) {
             commonUseFragmentView.getFriendListZero()
             return
         }
-        commonUseFragmentView.getFriendListSuccess(result, hotResult)
+        if (commonResult.data?.size == 0 && hotResult.data?.size == 0) {
+            commonUseFragmentView.getFriendListZero()
+            return
+        }
+        commonUseFragmentView.getFriendListSuccess(bookmarkResult, commonResult, hotResult)
     }
 
     /**

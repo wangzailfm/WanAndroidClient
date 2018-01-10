@@ -9,11 +9,6 @@
         android:title="@string/my_like"/>
 
     <item
-        android:id="@+id/nav_bookmark"
-        android:icon="@drawable/ic_action_my_bookmark"
-        android:title="@string/my_bookmark"/>
-
-    <item
         android:id="@+id/nav_about"
         android:icon="@drawable/ic_action_about"
         android:title="@string/my_about"/>
