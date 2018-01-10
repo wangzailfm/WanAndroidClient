@@ -11,6 +11,7 @@ object RetrofitHelper {
     private const val TAG = "RetrofitHelper"
     private const val CONTENT_PRE = "OkHttp: "
     private const val SAVE_USER_LOGIN_KEY = "user/login"
+    private const val SAVE_USER_REGISTER_KEY = "user/register"
     private const val SET_COOKIE_KEY = "set-cookie"
     private const val COOKIE_NAME = "Cookie"
     private const val CONNECT_TIMEOUT = 60L
@@ -33,7 +34,8 @@ object RetrofitHelper {
                 val requestUrl = request.url().toString()
                 val domain = request.url().host()
                 // set-cookie maybe has multi, login to save cookie
-                if (requestUrl.contains(SAVE_USER_LOGIN_KEY) && !response.headers(SET_COOKIE_KEY).isEmpty()) {
+                if ((requestUrl.contains(SAVE_USER_LOGIN_KEY) || requestUrl.contains(SAVE_USER_REGISTER_KEY))
+                        && !response.headers(SET_COOKIE_KEY).isEmpty()) {
                     val cookies = response.headers(SET_COOKIE_KEY)
                     val cookie = encodeCookie(cookies)
                     saveCookie(requestUrl, domain, cookie)
