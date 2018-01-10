@@ -10,7 +10,7 @@ android {
         applicationId "top.jowanxu.wanandroidclient"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 8
+        versionCode 9
         versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

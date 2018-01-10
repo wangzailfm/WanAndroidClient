@@ -253,6 +253,16 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // other activity login
+        if (isLogin && navigationViewUsername.text.toString() != username) {
+            navigationViewUsername.text = username
+            navigationViewLogout.text = getString(R.string.logout)
+            homeFragment?.refreshData()
+        }
+    }
+
     /**
      * NavigationItemSelect监听
      */

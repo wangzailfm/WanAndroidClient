@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
-import loge
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.BannerAdapter
@@ -320,7 +319,7 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
             when (view.id) {
                 R.id.homeItemType -> {
                     data.chapterName ?: let {
-                        activity.toast("类别为空")
+                        activity.toast(getString(R.string.type_null))
                         return@OnItemChildClickListener
                     }
                     Intent(activity, TypeContentActivity::class.java).run {
@@ -371,7 +370,6 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        loge("info", "=============onDestroyView")
         cancelSwitchJob()
     }
 
