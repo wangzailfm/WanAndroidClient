@@ -14,7 +14,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.base.BaseActivity

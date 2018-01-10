@@ -12,7 +12,6 @@ import com.just.agentweb.AgentWeb
 import com.just.agentweb.ChromeClientCallbackManager
 import getAgentWeb
 import kotlinx.android.synthetic.main.activity_content.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.base.BaseActivity

@@ -11,16 +11,13 @@
         android:id="@+id/typeSecondAppbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/SplashTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/typeSecondToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/SplashTheme.PopupOverlay"
             app:title="@string/app_name">
 

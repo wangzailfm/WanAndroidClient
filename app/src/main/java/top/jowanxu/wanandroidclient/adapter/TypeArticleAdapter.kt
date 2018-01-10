@@ -9,14 +9,13 @@ import top.jowanxu.wanandroidclient.bean.Datas
 class TypeArticleAdapter(val context: Context, datas: MutableList<Datas>)
     : BaseQuickAdapter<Datas, BaseViewHolder>(R.layout.home_list_item, datas) {
     override fun convert(helper: BaseViewHolder, item: Datas?) {
-        item?.let {
-            @Suppress("DEPRECATION")
-            helper.setText(R.id.homeItemTitle, it.title)
-                    .setText(R.id.homeItemAuthor, it.author)
-                    .setVisible(R.id.homeItemType, false)
-                    .setText(R.id.homeItemDate, it.niceDate)
-                    .setImageResource(R.id.homeItemLike, if (it.collect) R.drawable.ic_action_like else R.drawable.ic_action_no_like)
-                    .addOnClickListener(R.id.homeItemLike)
-        }
+        item ?: return
+        @Suppress("DEPRECATION")
+        helper.setText(R.id.homeItemTitle, item.title)
+                .setText(R.id.homeItemAuthor, item.author)
+                .setVisible(R.id.homeItemType, false)
+                .setText(R.id.homeItemDate, item.niceDate)
+                .setImageResource(R.id.homeItemLike, if (item.collect) R.drawable.ic_action_like else R.drawable.ic_action_no_like)
+                .addOnClickListener(R.id.homeItemLike)
     }
 }

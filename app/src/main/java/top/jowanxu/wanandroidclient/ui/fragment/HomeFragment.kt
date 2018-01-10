@@ -15,7 +15,10 @@ import android.view.ViewGroup
 import com.chad.library.adapter.base.BaseQuickAdapter
 import inflater
 import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
+import loge
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.BannerAdapter
@@ -366,6 +369,12 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        loge("info", "=============onDestroyView")
+        cancelSwitchJob()
+    }
+
     /**
      * ACTION_MOVE to cancel job
      */
@@ -382,8 +391,8 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
     /**
      * get Banner switch job
      */
-    private fun getBannerSwitchJob() = launch(CommonPool, CoroutineStart.LAZY) {
-        (1..Int.MAX_VALUE).forEach {
+    private fun getBannerSwitchJob() = launch {
+        repeat(Int.MAX_VALUE) {
             if (bannerDatas.size == 0) {
                 return@launch
             }

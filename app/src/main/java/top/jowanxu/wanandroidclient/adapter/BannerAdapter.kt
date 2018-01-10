@@ -11,10 +11,9 @@ import top.jowanxu.wanandroidclient.bean.BannerResponse
 class BannerAdapter(val context: Context, datas: MutableList<BannerResponse.Data>)
     : BaseQuickAdapter<BannerResponse.Data, BaseViewHolder>(R.layout.banner_item, datas) {
     override fun convert(helper: BaseViewHolder, item: BannerResponse.Data?) {
-        item?.let {
-            helper.setText(R.id.bannerTitle, it.title.trim())
-            val imageView = helper.getView(R.id.bannerImage) as ImageView
-            Glide.with(context).load(it.imagePath).placeholder(R.drawable.logo).into(imageView)
-        }
+        item ?: return
+        helper.setText(R.id.bannerTitle, item.title.trim())
+        val imageView = helper.getView<ImageView>(R.id.bannerImage)
+        Glide.with(context).load(item.imagePath).placeholder(R.drawable.logo).into(imageView)
     }
 }

@@ -9,8 +9,7 @@ import top.jowanxu.wanandroidclient.bean.FriendListResponse
 class CommonAdapter(val context: Context, datas: MutableList<FriendListResponse.Data>)
     : BaseQuickAdapter<FriendListResponse.Data, BaseViewHolder>(R.layout.common_list_item, datas) {
     override fun convert(helper: BaseViewHolder, item: FriendListResponse.Data?) {
-        item?.let {
-            helper.setText(R.id.commonItemTitle, it.name.trim())
-        }
+        item ?: return
+        helper.setText(R.id.commonItemTitle, item.name.trim())
     }
 }
