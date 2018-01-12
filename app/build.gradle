@@ -47,6 +47,7 @@ dependencies {
     implementation "com.gyf.barlibrary:barlibrary:$barlibrary_version"
     implementation "com.hyman:flowlayout-lib:$flowlayout_version"
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:$retrofit2_converter_kotlin_coroutines_version"
+    implementation "com.google.android:flexbox:$flexbox_version"
 }
 kotlin {
     experimental {
