@@ -17,7 +17,6 @@ ext.agentweb_version = "3.0.0"
 ext.barlibrary_version = "2.3.0"
 ext.flowlayout_version = "1.1.2"
 ext.leakcanary_version = "1.5.4"
-ext.flexbox_version = "0.3.2"
 
 buildscript {
     ext.kotlin_version = '1.2.10'
