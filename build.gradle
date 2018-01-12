@@ -1,5 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+
 ext.retrofit2_version = "2.1.0"
 ext.retrofit2_converter_gson_version = "2.1.0"
 ext.retrofit2_converter_kotlin_coroutines_version = "1.0.0"
