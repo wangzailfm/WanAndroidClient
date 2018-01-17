@@ -40,4 +40,7 @@ class AboutActivity : BaseActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun cancelRequest() {
+    }
 }

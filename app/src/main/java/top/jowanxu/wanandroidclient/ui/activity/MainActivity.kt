@@ -159,6 +159,12 @@ class MainActivity : BaseActivity() {
     }
 
     /**
+     * cancel request
+     */
+    override fun cancelRequest() {
+    }
+
+    /**
      * 防止重叠
      */
     override fun onAttachFragment(fragment: Fragment) {

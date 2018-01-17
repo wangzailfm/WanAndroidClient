@@ -118,6 +118,7 @@ class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView,
      * cancel request
      */
     fun cancelRequest() {
+        homeModel.cancelBannerRequest()
         homeModel.cancelHomeListRequest()
         collectArticleModel.cancelCollectRequest()
     }

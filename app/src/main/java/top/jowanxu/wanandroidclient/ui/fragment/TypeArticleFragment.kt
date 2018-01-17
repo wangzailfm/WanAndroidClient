@@ -3,7 +3,6 @@ package top.jowanxu.wanandroidclient.ui.fragment
 import Constant
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -14,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_type_content.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.TypeArticleAdapter
+import top.jowanxu.wanandroidclient.base.BaseFragment
 import top.jowanxu.wanandroidclient.base.Preference
 import top.jowanxu.wanandroidclient.bean.ArticleListResponse
 import top.jowanxu.wanandroidclient.bean.Datas
@@ -24,7 +24,7 @@ import top.jowanxu.wanandroidclient.ui.activity.LoginActivity
 import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.TypeArticleFragmentView
 
-class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleView {
+class TypeArticleFragment : BaseFragment(), TypeArticleFragmentView, CollectArticleView {
     /**
      * mainView
      */
@@ -82,8 +82,8 @@ class TypeArticleFragment : Fragment(), TypeArticleFragmentView, CollectArticleV
         typeArticlePresenter.getTypeArticleList(cid = cid)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun cancelRequest() {
+        typeArticlePresenter.cancelRequest()
         typeArticleAdapter.loadMoreComplete()
         tabSwipeRefreshLayout.isRefreshing = false
     }

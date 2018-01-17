@@ -3,7 +3,6 @@ package top.jowanxu.wanandroidclient.ui.fragment
 import Constant
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -14,12 +13,13 @@ import kotlinx.android.synthetic.main.fragment_type.*
 import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.TypeAdapter
+import top.jowanxu.wanandroidclient.base.BaseFragment
 import top.jowanxu.wanandroidclient.bean.TreeListResponse
 import top.jowanxu.wanandroidclient.presenter.TypeFragmentPresenterImpl
 import top.jowanxu.wanandroidclient.ui.activity.TypeContentActivity
 import top.jowanxu.wanandroidclient.view.TypeFragmentView
 
-class TypeFragment : Fragment(), TypeFragmentView {
+class TypeFragment : BaseFragment(), TypeFragmentView {
     /**
      * mainView
      */
@@ -55,6 +55,11 @@ class TypeFragment : Fragment(), TypeFragmentView {
             onItemClickListener = this@TypeFragment.onItemClickListener
         }
         typeFragmentPresenter.getTypeTreeList()
+    }
+
+
+    override fun cancelRequest() {
+        typeFragmentPresenter.cancelRequest()
     }
 
     /**

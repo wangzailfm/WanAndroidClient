@@ -3,7 +3,6 @@ package top.jowanxu.wanandroidclient.ui.fragment
 import Constant
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -19,6 +18,7 @@ import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.CommonAdapter
 import top.jowanxu.wanandroidclient.adapter.CommonUseTagAdapter
 import top.jowanxu.wanandroidclient.adapter.HotTagAdapter
+import top.jowanxu.wanandroidclient.base.BaseFragment
 import top.jowanxu.wanandroidclient.bean.FriendListResponse
 import top.jowanxu.wanandroidclient.bean.HotKeyResponse
 import top.jowanxu.wanandroidclient.presenter.CommonUseFragmentPresenterImpl
@@ -26,7 +26,7 @@ import top.jowanxu.wanandroidclient.ui.activity.ContentActivity
 import top.jowanxu.wanandroidclient.ui.activity.SearchActivity
 import top.jowanxu.wanandroidclient.view.CommonUseFragmentView
 
-class CommonUseFragment : Fragment(), CommonUseFragmentView {
+class CommonUseFragment : BaseFragment(), CommonUseFragmentView {
 
     /**
      * mainView
@@ -136,6 +136,10 @@ class CommonUseFragment : Fragment(), CommonUseFragmentView {
             addHeaderView(flowLayout)
         }
         commonUseFragmentPresenter.getFriendList()
+    }
+
+    override fun cancelRequest() {
+        commonUseFragmentPresenter.cancelRequest()
     }
 
     /**

@@ -121,6 +121,10 @@ class ContentActivity : BaseActivity(), CollectArticleView {
         super.onResume()
     }
 
+    override fun cancelRequest() {
+        collectArticlePresenter.cancelRequest()
+    }
+
     override fun onDestroy() {
         agentWeb.webLifeCycle.onDestroy()
         super.onDestroy()

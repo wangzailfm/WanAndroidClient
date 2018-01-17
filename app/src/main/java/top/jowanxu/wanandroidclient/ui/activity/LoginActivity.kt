@@ -49,6 +49,10 @@ class LoginActivity : BaseActivity(), LoginView {
         loginExit.setOnClickListener(onClickListener)
     }
 
+    override fun cancelRequest() {
+        loginPresenter.cancelRequest()
+    }
+
     /**
      * login or register success after operation
      * @param result LoginResponse

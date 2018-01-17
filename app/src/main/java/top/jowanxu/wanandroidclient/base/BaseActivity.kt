@@ -31,9 +31,15 @@ abstract class BaseActivity : AppCompatActivity() {
         immersionBar.init()
     }
 
+    /**
+     * cancel request
+     */
+    protected abstract fun cancelRequest()
+
     override fun onDestroy() {
         super.onDestroy()
         immersionBar.destroy()  //必须调用该方法，防止内存泄漏，不调用该方法，如果界面bar发生改变，在不关闭app的情况下，退出此界面再进入将记忆最后一次bar改变的状态
+        cancelRequest()
     }
 
     override fun finish() {

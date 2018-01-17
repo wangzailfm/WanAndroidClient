@@ -3,7 +3,6 @@ package top.jowanxu.wanandroidclient.ui.fragment
 import Constant
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
@@ -22,6 +21,7 @@ import toast
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.adapter.BannerAdapter
 import top.jowanxu.wanandroidclient.adapter.HomeAdapter
+import top.jowanxu.wanandroidclient.base.BaseFragment
 import top.jowanxu.wanandroidclient.base.Preference
 import top.jowanxu.wanandroidclient.bean.BannerResponse
 import top.jowanxu.wanandroidclient.bean.Datas
@@ -34,7 +34,7 @@ import top.jowanxu.wanandroidclient.ui.view.HorizontalRecyclerView
 import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.HomeFragmentView
 
-class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
+class HomeFragment : BaseFragment(), HomeFragmentView, CollectArticleView {
     companion object {
         private const val BANNER_TIME = 5000L
     }
@@ -164,6 +164,13 @@ class HomeFragment : Fragment(), HomeFragmentView, CollectArticleView {
         } else {
             startSwitchJob()
         }
+    }
+
+    /**
+     * cancel request
+     */
+    override fun cancelRequest() {
+        homeFragmentPresenter.cancelRequest()
     }
 
     /**

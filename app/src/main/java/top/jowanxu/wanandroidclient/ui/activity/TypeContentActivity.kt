@@ -106,4 +106,6 @@ class TypeContentActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun cancelRequest() {
+    }
 }

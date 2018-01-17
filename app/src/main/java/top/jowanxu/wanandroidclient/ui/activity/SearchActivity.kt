@@ -146,6 +146,13 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
         swipeRefreshLayout.isRefreshing = false
     }
 
+    /**
+     * cancel request
+     */
+    override fun cancelRequest() {
+        searchPresenter.cancelRequest()
+    }
+
     override fun getSearchListSmall(result: HomeListResponse) {
         result.data.datas?.let {
             searchAdapter.run {

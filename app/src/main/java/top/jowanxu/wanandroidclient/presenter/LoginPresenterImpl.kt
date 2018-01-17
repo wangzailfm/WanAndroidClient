@@ -68,4 +68,9 @@ class LoginPresenterImpl(private val loginView: LoginView) : HomePresenter.OnLog
     override fun registerFailed(errorMessage: String?) {
         loginView.registerFailed(errorMessage)
     }
+
+    fun cancelRequest() {
+        homeModel.cancelLoginRequest()
+        homeModel.cancelRegisterRequest()
+    }
 }

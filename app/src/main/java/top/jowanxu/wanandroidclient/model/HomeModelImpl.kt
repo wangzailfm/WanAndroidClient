@@ -7,6 +7,7 @@ import cancelByActive
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
+import loge
 import top.jowanxu.wanandroidclient.bean.*
 import top.jowanxu.wanandroidclient.presenter.HomePresenter
 import tryCatch
@@ -79,6 +80,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel HomeList Request
      */
     override fun cancelHomeListRequest() {
+        loge("info", "$homeListAsync-------${homeListAsync?.isActive}")
         homeListAsync?.cancelByActive()
     }
 
@@ -108,7 +110,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel TypeTree Request
      */
     override fun cancelTypeTreeRequest() {
-        loginAsync?.cancelByActive()
+        typeTreeListAsync?.cancelByActive()
     }
 
     /**
@@ -141,7 +143,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel login Request
      */
     override fun cancelLoginRequest() {
-        registerAsync?.cancelByActive()
+        loginAsync?.cancelByActive()
     }
 
     /**
@@ -175,7 +177,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * cancel register Request
      */
     override fun cancelRegisterRequest() {
-        typeTreeListAsync?.cancelByActive()
+        registerAsync?.cancelByActive()
     }
 
     /**

@@ -112,6 +112,7 @@ class SearchPresenterImpl(private val searchView: SearchListView, private val co
 
     fun cancelRequest() {
         searchModel.cancelRequest()
+        searchModel.cancelLikeListRequest()
         collectArticleModel.cancelCollectRequest()
     }
 }

@@ -47,6 +47,6 @@ class CommonUseFragmentPresenterImpl(private val commonUseFragmentView: CommonUs
      * cancel request
      */
     fun cancelRequest() {
-        homeModel.cancelHomeListRequest()
+        homeModel.cancelFriendRequest()
     }
 }
