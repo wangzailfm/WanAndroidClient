@@ -15,6 +15,7 @@ interface LoginView {
      * @param errorMessage error message
      */
     fun loginFailed(errorMessage: String?)
+
     /**
      * register success
      * @param result LoginResponse

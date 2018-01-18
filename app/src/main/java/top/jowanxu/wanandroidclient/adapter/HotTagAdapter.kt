@@ -11,8 +11,8 @@ import getRandomColor
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.bean.HotKeyResponse
 
-class HotTagAdapter(context: Context, datas: List<HotKeyResponse.Data>)
-    : TagAdapter<HotKeyResponse.Data>(datas) {
+class HotTagAdapter(context: Context, datas: List<HotKeyResponse.Data>) :
+    TagAdapter<HotKeyResponse.Data>(datas) {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getView(parent: FlowLayout, position: Int, data: HotKeyResponse.Data): View {

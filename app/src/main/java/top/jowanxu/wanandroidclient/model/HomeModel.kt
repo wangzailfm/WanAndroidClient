@@ -12,6 +12,7 @@ interface HomeModel {
      * @param page page
      */
     fun getHomeList(onHomeListListener: HomePresenter.OnHomeListListener, page: Int = 0)
+
     /**
      * cancel HomeList Request
      */
@@ -22,6 +23,7 @@ interface HomeModel {
      * @param onTypeTreeListListener HomePresenter.OnTypeTreeListListener
      */
     fun getTypeTreeList(onTypeTreeListListener: HomePresenter.OnTypeTreeListListener)
+
     /**
      * cancel TypeTree Request
      */
@@ -33,7 +35,12 @@ interface HomeModel {
      * @param username username
      * @param password password
      */
-    fun loginWanAndroid(onLoginListener: HomePresenter.OnLoginListener, username: String, password: String)
+    fun loginWanAndroid(
+        onLoginListener: HomePresenter.OnLoginListener,
+        username: String,
+        password: String
+    )
+
     /**
      * cancel login Request
      */
@@ -46,7 +53,12 @@ interface HomeModel {
      * @param password password
      * @param repassword repassword
      */
-    fun registerWanAndroid(onRegisterListener: HomePresenter.OnRegisterListener, username: String, password: String, repassword: String)
+    fun registerWanAndroid(
+        onRegisterListener: HomePresenter.OnRegisterListener,
+        username: String,
+        password: String,
+        repassword: String
+    )
 
     /**
      * cancel register Request

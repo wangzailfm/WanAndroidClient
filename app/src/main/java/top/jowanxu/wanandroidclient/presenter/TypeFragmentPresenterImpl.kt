@@ -5,7 +5,8 @@ import top.jowanxu.wanandroidclient.model.HomeModel
 import top.jowanxu.wanandroidclient.model.HomeModelImpl
 import top.jowanxu.wanandroidclient.view.TypeFragmentView
 
-class TypeFragmentPresenterImpl(private val typeFragmentView: TypeFragmentView) : HomePresenter.OnTypeTreeListListener {
+class TypeFragmentPresenterImpl(private val typeFragmentView: TypeFragmentView) :
+    HomePresenter.OnTypeTreeListListener {
 
     private val homeModel: HomeModel = HomeModelImpl()
     /**

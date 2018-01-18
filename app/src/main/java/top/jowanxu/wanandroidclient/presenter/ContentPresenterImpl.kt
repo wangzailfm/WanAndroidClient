@@ -7,11 +7,12 @@ import top.jowanxu.wanandroidclient.model.CollectOutsideArticleModelImpl
 import top.jowanxu.wanandroidclient.model.SearchModelImpl
 import top.jowanxu.wanandroidclient.view.CollectArticleView
 
-class ContentPresenterImpl(private val collectArticleView: CollectArticleView)
-    : HomePresenter.OnCollectArticleListener, HomePresenter.OnCollectOutsideArticleListener {
+class ContentPresenterImpl(private val collectArticleView: CollectArticleView) :
+    HomePresenter.OnCollectArticleListener, HomePresenter.OnCollectOutsideArticleListener {
 
     private val collectArticleModel: CollectArticleModel = SearchModelImpl()
-    private val collectOutsideArticleModel: CollectOutsideArticleModel = CollectOutsideArticleModelImpl()
+    private val collectOutsideArticleModel: CollectOutsideArticleModel =
+        CollectOutsideArticleModelImpl()
 
     /**
      *  add or remove collect article
@@ -51,7 +52,12 @@ class ContentPresenterImpl(private val collectArticleView: CollectArticleView)
      *  @param link article link
      *  @param isAdd true add, false remove
      */
-    override fun collectOutSideArticle(title: String, author: String, link: String, isAdd: Boolean) {
+    override fun collectOutSideArticle(
+        title: String,
+        author: String,
+        link: String,
+        isAdd: Boolean
+    ) {
         collectOutsideArticleModel.collectOutsideArticle(this, title, author, link, isAdd)
     }
 

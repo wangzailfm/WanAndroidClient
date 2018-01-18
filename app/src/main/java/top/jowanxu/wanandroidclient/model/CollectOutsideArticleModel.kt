@@ -12,8 +12,10 @@ interface CollectOutsideArticleModel {
      * @param link article link
      * @param isAdd true add, false remove
      */
-    fun collectOutsideArticle(onCollectOutsideArticleListener: HomePresenter.OnCollectOutsideArticleListener,
-                              title: String, author: String, link: String, isAdd: Boolean)
+    fun collectOutsideArticle(
+        onCollectOutsideArticleListener: HomePresenter.OnCollectOutsideArticleListener,
+        title: String, author: String, link: String, isAdd: Boolean
+    )
 
     /**
      * cancel collect article Request

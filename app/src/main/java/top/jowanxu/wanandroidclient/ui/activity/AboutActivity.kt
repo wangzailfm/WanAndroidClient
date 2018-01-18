@@ -25,8 +25,10 @@ class AboutActivity : BaseActivity() {
             setSupportActionBar(this)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
-        aboutVersion.text = getString(R.string.version_code, getString(R.string.app_name),
-                packageManager.getPackageInfo(packageName, 0).versionName)
+        aboutVersion.text = getString(
+            R.string.version_code, getString(R.string.app_name),
+            packageManager.getPackageInfo(packageName, 0).versionName
+        )
         @Suppress("DEPRECATION")
         aboutContent.run {
             text = Html.fromHtml(getString(R.string.about_content))

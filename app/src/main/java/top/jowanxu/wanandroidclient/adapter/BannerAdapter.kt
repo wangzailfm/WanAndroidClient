@@ -8,8 +8,8 @@ import com.chad.library.adapter.base.BaseViewHolder
 import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.bean.BannerResponse
 
-class BannerAdapter(val context: Context, datas: MutableList<BannerResponse.Data>)
-    : BaseQuickAdapter<BannerResponse.Data, BaseViewHolder>(R.layout.banner_item, datas) {
+class BannerAdapter(val context: Context, datas: MutableList<BannerResponse.Data>) :
+    BaseQuickAdapter<BannerResponse.Data, BaseViewHolder>(R.layout.banner_item, datas) {
     override fun convert(helper: BaseViewHolder, item: BannerResponse.Data?) {
         item ?: return
         helper.setText(R.id.bannerTitle, item.title.trim())

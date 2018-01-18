@@ -75,6 +75,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
             }
         }
     }
+
     /**
      * cancel HomeList Request
      */
@@ -104,6 +105,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
             }
         }
     }
+
     /**
      * cancel TypeTree Request
      */
@@ -117,8 +119,10 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * @param username username
      * @param password password
      */
-    override fun loginWanAndroid(onLoginListener: HomePresenter.OnLoginListener,
-                                 username: String, password: String) {
+    override fun loginWanAndroid(
+        onLoginListener: HomePresenter.OnLoginListener,
+        username: String, password: String
+    ) {
         async(UI) {
             try {
                 loginAsync?.cancelAndJoinByActive()
@@ -137,6 +141,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
             }
         }
     }
+
     /**
      * cancel login Request
      */
@@ -151,12 +156,18 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      * @param password password
      * @param repassword repassword
      */
-    override fun registerWanAndroid(onRegisterListener: HomePresenter.OnRegisterListener,
-                                    username: String, password: String, repassword: String) {
+    override fun registerWanAndroid(
+        onRegisterListener: HomePresenter.OnRegisterListener,
+        username: String, password: String, repassword: String
+    ) {
         async(UI) {
             try {
                 registerAsync?.cancelAndJoinByActive()
-                registerAsync = RetrofitHelper.retrofitService.registerWanAndroid(username, password, repassword)
+                registerAsync = RetrofitHelper.retrofitService.registerWanAndroid(
+                    username,
+                    password,
+                    repassword
+                )
                 // Get async result
                 val result = registerAsync?.await()
                 if (result is LoginResponse) {
@@ -171,6 +182,7 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
             }
         }
     }
+
     /**
      * cancel register Request
      */
@@ -246,7 +258,11 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
     /**
      * add or remove collect article
      */
-    override fun collectArticle(onCollectArticleListener: HomePresenter.OnCollectArticleListener, id: Int, isAdd: Boolean) {
+    override fun collectArticle(
+        onCollectArticleListener: HomePresenter.OnCollectArticleListener,
+        id: Int,
+        isAdd: Boolean
+    ) {
         async(UI) {
             try {
                 collectArticleAsync?.cancelAndJoinByActive()

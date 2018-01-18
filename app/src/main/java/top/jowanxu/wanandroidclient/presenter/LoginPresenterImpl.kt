@@ -5,7 +5,8 @@ import top.jowanxu.wanandroidclient.model.HomeModel
 import top.jowanxu.wanandroidclient.model.HomeModelImpl
 import top.jowanxu.wanandroidclient.view.LoginView
 
-class LoginPresenterImpl(private val loginView: LoginView) : HomePresenter.OnLoginListener, HomePresenter.OnRegisterListener {
+class LoginPresenterImpl(private val loginView: LoginView) : HomePresenter.OnLoginListener,
+    HomePresenter.OnRegisterListener {
 
     private val homeModel: HomeModel = HomeModelImpl()
     /**

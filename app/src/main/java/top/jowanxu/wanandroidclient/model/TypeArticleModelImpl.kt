@@ -22,7 +22,11 @@ class TypeArticleModelImpl : TypeArticleModel {
      * @param page page
      * @param cid cid
      */
-    override fun getTypeArticleList(onTypeArticleListListener: TypeArticlePresenter.OnTypeArticleListListener, page: Int, cid: Int) {
+    override fun getTypeArticleList(
+        onTypeArticleListListener: TypeArticlePresenter.OnTypeArticleListListener,
+        page: Int,
+        cid: Int
+    ) {
         async(UI) {
             try {
                 typeArticleListAsync?.cancelAndJoinByActive()

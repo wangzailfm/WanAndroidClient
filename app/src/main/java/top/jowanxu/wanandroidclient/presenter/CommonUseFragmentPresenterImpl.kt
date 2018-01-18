@@ -6,7 +6,8 @@ import top.jowanxu.wanandroidclient.model.HomeModel
 import top.jowanxu.wanandroidclient.model.HomeModelImpl
 import top.jowanxu.wanandroidclient.view.CommonUseFragmentView
 
-class CommonUseFragmentPresenterImpl(private val commonUseFragmentView: CommonUseFragmentView) : HomePresenter.OnFriendListListener {
+class CommonUseFragmentPresenterImpl(private val commonUseFragmentView: CommonUseFragmentView) :
+    HomePresenter.OnFriendListListener {
 
     private val homeModel: HomeModel = HomeModelImpl()
     /**
@@ -19,7 +20,11 @@ class CommonUseFragmentPresenterImpl(private val commonUseFragmentView: CommonUs
     /**
      * get friend list success
      */
-    override fun getFriendListSuccess(bookmarkResult: FriendListResponse?, commonResult: FriendListResponse, hotResult: HotKeyResponse) {
+    override fun getFriendListSuccess(
+        bookmarkResult: FriendListResponse?,
+        commonResult: FriendListResponse,
+        hotResult: HotKeyResponse
+    ) {
         if (commonResult.errorCode != 0 || hotResult.errorCode != 0) {
             commonUseFragmentView.getFriendListFailed(commonResult.errorMsg)
             return

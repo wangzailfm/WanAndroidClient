@@ -72,15 +72,22 @@ class MainActivity : BaseActivity() {
         }
         drawerLayout.run {
             val toggle = ActionBarDrawerToggle(
-                    this@MainActivity, this, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+                this@MainActivity,
+                this,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+            )
             addDrawerListener(toggle)
             toggle.syncState()
         }
         navigationView.run {
             setNavigationItemSelectedListener(onDrawerNavigationItemSelectedListener)
         }
-        navigationViewUsername = navigationView.getHeaderView(0).findViewById<TextView>(R.id.navigationViewUsername)
-        navigationViewLogout = navigationView.getHeaderView(0).findViewById<AppCompatButton>(R.id.navigationViewLogout)
+        navigationViewUsername =
+                navigationView.getHeaderView(0).findViewById<TextView>(R.id.navigationViewUsername)
+        navigationViewLogout = navigationView.getHeaderView(0)
+            .findViewById<AppCompatButton>(R.id.navigationViewLogout)
         navigationViewUsername.run {
             if (!isLogin) {
                 text = getString(R.string.not_login)
@@ -147,7 +154,7 @@ class MainActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            Constant.MAIN_REQUEST_CODE ->  {
+            Constant.MAIN_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK) {
                     navigationViewUsername.text = data?.getStringExtra(Constant.CONTENT_TITLE_KEY)
                     navigationViewLogout.text = getString(R.string.logout)
@@ -273,51 +280,52 @@ class MainActivity : BaseActivity() {
      * NavigationItemSelect监听
      */
     private val onNavigationItemSelectedListener =
-            BottomNavigationView.OnNavigationItemSelectedListener { item ->
-                setFragment(item.itemId)
-                return@OnNavigationItemSelectedListener when (item.itemId) {
-                    R.id.navigation_home -> {
-                        if (currentIndex == R.id.navigation_home) {
-                            homeFragment?.smoothScrollToPosition()
-                        }
-                        currentIndex = R.id.navigation_home
-                        true
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            setFragment(item.itemId)
+            return@OnNavigationItemSelectedListener when (item.itemId) {
+                R.id.navigation_home -> {
+                    if (currentIndex == R.id.navigation_home) {
+                        homeFragment?.smoothScrollToPosition()
                     }
-                    R.id.navigation_type -> {
-                        if (currentIndex == R.id.navigation_type) {
-                            typeFragment?.smoothScrollToPosition()
-                        }
-                        currentIndex = R.id.navigation_type
-                        true
-                    }
-                    else -> {
-                        false
-                    }
+                    currentIndex = R.id.navigation_home
+                    true
                 }
-            }
-
-    private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.nav_like -> {
-                if (!isLogin) {
-                    Intent(this, LoginActivity::class.java).run {
-                        startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                R.id.navigation_type -> {
+                    if (currentIndex == R.id.navigation_type) {
+                        typeFragment?.smoothScrollToPosition()
                     }
-                    toast(getString(R.string.login_please_login))
-                    return@OnNavigationItemSelectedListener true
+                    currentIndex = R.id.navigation_type
+                    true
                 }
-                Intent(this, SearchActivity::class.java).run {
-                    putExtra(Constant.SEARCH_KEY, false)
-                    startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
-                }
-            }
-            R.id.nav_about -> {
-                Intent(this, AboutActivity::class.java).run {
-                    startActivity(this)
+                else -> {
+                    false
                 }
             }
         }
-        drawerLayout.closeDrawer(GravityCompat.START)
-        true
-    }
+
+    private val onDrawerNavigationItemSelectedListener =
+        NavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_like -> {
+                    if (!isLogin) {
+                        Intent(this, LoginActivity::class.java).run {
+                            startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                        }
+                        toast(getString(R.string.login_please_login))
+                        return@OnNavigationItemSelectedListener true
+                    }
+                    Intent(this, SearchActivity::class.java).run {
+                        putExtra(Constant.SEARCH_KEY, false)
+                        startActivityForResult(this, Constant.MAIN_LIKE_REQUEST_CODE)
+                    }
+                }
+                R.id.nav_about -> {
+                    Intent(this, AboutActivity::class.java).run {
+                        startActivity(this)
+                    }
+                }
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
 }

@@ -62,7 +62,9 @@ class LoginActivity : BaseActivity(), LoginView {
         user = result.data.username
         pwd = result.data.password
         loginProgress.visibility = View.GONE
-        setResult(Activity.RESULT_OK, Intent().apply { putExtra(Constant.CONTENT_TITLE_KEY, result.data.username) })
+        setResult(
+            Activity.RESULT_OK,
+            Intent().apply { putExtra(Constant.CONTENT_TITLE_KEY, result.data.username) })
         finish()
     }
 
@@ -110,20 +112,24 @@ class LoginActivity : BaseActivity(), LoginView {
     /**
      * OnClickListener
      */
-    private val onClickListener = View.OnClickListener {
-        view ->
+    private val onClickListener = View.OnClickListener { view ->
         when (view.id) {
             R.id.login -> {
                 if (checkContent()) {
                     loginProgress.visibility = View.VISIBLE
-                    loginPresenter.loginWanAndroid(username.text.toString(), password.text.toString())
+                    loginPresenter.loginWanAndroid(
+                        username.text.toString(),
+                        password.text.toString()
+                    )
                 }
             }
             R.id.register -> {
                 if (checkContent()) {
                     loginProgress.visibility = View.VISIBLE
-                    loginPresenter.registerWanAndroid(username.text.toString(),
-                            password.text.toString(), password.text.toString())
+                    loginPresenter.registerWanAndroid(
+                        username.text.toString(),
+                        password.text.toString(), password.text.toString()
+                    )
                 }
             }
             R.id.loginExit -> {

@@ -9,7 +9,11 @@ import top.jowanxu.wanandroidclient.model.TypeArticleModelImpl
 import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.TypeArticleFragmentView
 
-class TypeArticlePresenterImpl(private val typeArticleFragmentView: TypeArticleFragmentView, private val collectArticleView: CollectArticleView) : TypeArticlePresenter, TypeArticlePresenter.OnTypeArticleListListener, HomePresenter.OnCollectArticleListener {
+class TypeArticlePresenterImpl(
+    private val typeArticleFragmentView: TypeArticleFragmentView,
+    private val collectArticleView: CollectArticleView
+) : TypeArticlePresenter, TypeArticlePresenter.OnTypeArticleListListener,
+    HomePresenter.OnCollectArticleListener {
 
     private val typeArticleModel: TypeArticleModel = TypeArticleModelImpl()
     private val collectArticleModel: CollectArticleModel = HomeModelImpl()

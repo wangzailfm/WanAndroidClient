@@ -96,17 +96,20 @@ class CommonUseFragment : BaseFragment(), CommonUseFragmentView {
         CommonUseTagAdapter(activity, bookmarkUseDatas)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         mainView ?: let {
             mainView = inflater.inflate(R.layout.fragment_common, container, false)
             flowLayout = activity.inflater(R.layout.common_hot) as LinearLayout
             hotTagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.hotFlowLayout)
-            commonUseTagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.commonUseFlowLayout)
+            commonUseTagFlowLayout =
+                    flowLayout.findViewById<TagFlowLayout>(R.id.commonUseFlowLayout)
             bookmarkTitle = flowLayout.findViewById<TextView>(R.id.bookmarkTitle)
             bookmarkTagFlowLayout = flowLayout.findViewById<TagFlowLayout>(R.id.bookmarkFlowLayout)
         }
-        return  mainView
+        return mainView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -145,7 +148,11 @@ class CommonUseFragment : BaseFragment(), CommonUseFragmentView {
     /**
      * get Friend list Success
      */
-    override fun getFriendListSuccess(bookmarkResult: FriendListResponse?, commonResult: FriendListResponse, hotResult: HotKeyResponse) {
+    override fun getFriendListSuccess(
+        bookmarkResult: FriendListResponse?,
+        commonResult: FriendListResponse,
+        hotResult: HotKeyResponse
+    ) {
         bookmarkResult?.let {
             it.data?.let {
                 bookmarkTitle.visibility = View.VISIBLE
@@ -153,7 +160,7 @@ class CommonUseFragment : BaseFragment(), CommonUseFragmentView {
                 bookmarkUseDatas.clear()
                 bookmarkUseDatas.addAll(it)
                 bookmarkTagAdapter.notifyDataChanged()
-            }?: let {
+            } ?: let {
                 bookmarkTitle.visibility = View.GONE
                 bookmarkTagFlowLayout.visibility = View.GONE
             }
@@ -190,6 +197,7 @@ class CommonUseFragment : BaseFragment(), CommonUseFragmentView {
         activity.toast(getString(R.string.get_data_zero))
         commonSwipeRefreshLayout.isRefreshing = false
     }
+
     /**
      * refresh
      */
@@ -197,6 +205,7 @@ class CommonUseFragment : BaseFragment(), CommonUseFragmentView {
         commonSwipeRefreshLayout.isRefreshing = true
         commonUseFragmentPresenter.getFriendList()
     }
+
     /**
      * RefreshListener
      */
@@ -207,8 +216,7 @@ class CommonUseFragment : BaseFragment(), CommonUseFragmentView {
     /**
      * onBookmarkTagClickListener
      */
-    private val onBookmarkTagClickListener = TagFlowLayout.OnTagClickListener {
-        _, position, _ ->
+    private val onBookmarkTagClickListener = TagFlowLayout.OnTagClickListener { _, position, _ ->
         if (bookmarkUseDatas.size != 0) {
             Intent(activity, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, bookmarkUseDatas[position].link)
@@ -223,8 +231,7 @@ class CommonUseFragment : BaseFragment(), CommonUseFragmentView {
     /**
      * onCommonUseTagClickListener
      */
-    private val onCommonUseTagClickListener = TagFlowLayout.OnTagClickListener {
-        _, position, _ ->
+    private val onCommonUseTagClickListener = TagFlowLayout.OnTagClickListener { _, position, _ ->
         if (commonUseDatas.size != 0) {
             Intent(activity, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, commonUseDatas[position].link)
@@ -238,8 +245,7 @@ class CommonUseFragment : BaseFragment(), CommonUseFragmentView {
     /**
      * hot onCommonUseTagClickListener
      */
-    private val onHotTagClickListener = TagFlowLayout.OnTagClickListener {
-        _, position, _ ->
+    private val onHotTagClickListener = TagFlowLayout.OnTagClickListener { _, position, _ ->
         if (hotTagDatas.size != 0) {
             Intent(activity, SearchActivity::class.java).run {
                 putExtra(Constant.SEARCH_KEY, true)

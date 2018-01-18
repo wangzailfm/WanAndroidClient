@@ -7,11 +7,14 @@ import android.support.v4.view.PagerAdapter
 import top.jowanxu.wanandroidclient.bean.TreeListResponse.Data.Children
 import top.jowanxu.wanandroidclient.ui.fragment.TypeArticleFragment
 
-class TypeArticlePagerAdapter(val list: List<Children>, fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+class TypeArticlePagerAdapter(val list: List<Children>, fm: FragmentManager) :
+    FragmentStatePagerAdapter(fm) {
     private val listFragment = mutableListOf<Fragment>()
+
     init {
         list.forEach { listFragment.add(TypeArticleFragment.newInstance(it.id)) }
     }
+
     override fun getItem(position: Int): Fragment = listFragment[position]
 
     override fun getCount(): Int = list.size

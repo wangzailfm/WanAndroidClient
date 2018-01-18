@@ -8,8 +8,11 @@ import top.jowanxu.wanandroidclient.model.HomeModelImpl
 import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.HomeFragmentView
 
-class HomeFragmentPresenterImpl(private val homeFragmentView: HomeFragmentView,
-                                private val collectArticleView: CollectArticleView) : HomePresenter.OnHomeListListener, HomePresenter.OnCollectArticleListener, HomePresenter.OnBannerListener {
+class HomeFragmentPresenterImpl(
+    private val homeFragmentView: HomeFragmentView,
+    private val collectArticleView: CollectArticleView
+) : HomePresenter.OnHomeListListener, HomePresenter.OnCollectArticleListener,
+    HomePresenter.OnBannerListener {
 
     private val homeModel: HomeModel = HomeModelImpl()
     private val collectArticleModel: CollectArticleModel = HomeModelImpl()

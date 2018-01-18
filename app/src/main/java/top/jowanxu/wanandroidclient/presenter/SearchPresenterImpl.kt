@@ -7,8 +7,11 @@ import top.jowanxu.wanandroidclient.model.SearchModelImpl
 import top.jowanxu.wanandroidclient.view.CollectArticleView
 import top.jowanxu.wanandroidclient.view.SearchListView
 
-class SearchPresenterImpl(private val searchView: SearchListView, private val collectArticleView: CollectArticleView)
-    : SearchPresenter.OnSearchListListener, SearchPresenter.OnLikeListListener, HomePresenter.OnCollectArticleListener {
+class SearchPresenterImpl(
+    private val searchView: SearchListView,
+    private val collectArticleView: CollectArticleView
+) : SearchPresenter.OnSearchListListener, SearchPresenter.OnLikeListListener,
+    HomePresenter.OnCollectArticleListener {
 
     private val searchModel: SearchModel = SearchModelImpl()
     private val collectArticleModel: CollectArticleModel = SearchModelImpl()

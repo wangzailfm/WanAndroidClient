@@ -1,4 +1,3 @@
-
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -44,6 +43,7 @@ fun Context.toast(content: String) {
 fun Context.toast(@StringRes id: Int) {
     toast(getString(id))
 }
+
 /**
  * cancel coroutines
  */
@@ -66,11 +66,12 @@ fun encodeCookie(cookies: List<String>): String {
     val sb = StringBuilder()
     val set = HashSet<String>()
     cookies
-            .map { cookie ->
-                cookie.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() }
-            .forEach {
-                it.filterNot { set.contains(it) }.forEach { set.add(it) }
-            }
+        .map { cookie ->
+            cookie.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        }
+        .forEach {
+            it.filterNot { set.contains(it) }.forEach { set.add(it) }
+        }
 
     val ite = set.iterator()
     while (ite.hasNext()) {
@@ -95,24 +96,26 @@ fun getRandomColor(): String = "#${Integer.toHexString((Math.random() * 16777215
 /**
  * getAgentWeb
  */
-fun String.getAgentWeb(activity: Activity, webContent: ViewGroup,
-                       layoutParams: ViewGroup.LayoutParams,
-                       receivedTitleCallback: ChromeClientCallbackManager.ReceivedTitleCallback?)
-        = AgentWeb.with(activity)//传入Activity or Fragment
-        .setAgentWebParent(webContent, layoutParams)//传入AgentWeb 的父控件
-        .useDefaultIndicator()// 使用默认进度条
-        .defaultProgressBarColor() // 使用默认进度条颜色
-        .setReceivedTitleCallback(receivedTitleCallback) //设置 Web 页面的 title 回调
-        .createAgentWeb()//
-        .ready()
-        .go(this)!!
+fun String.getAgentWeb(
+    activity: Activity, webContent: ViewGroup,
+    layoutParams: ViewGroup.LayoutParams,
+    receivedTitleCallback: ChromeClientCallbackManager.ReceivedTitleCallback?
+) = AgentWeb.with(activity)//传入Activity or Fragment
+    .setAgentWebParent(webContent, layoutParams)//传入AgentWeb 的父控件
+    .useDefaultIndicator()// 使用默认进度条
+    .defaultProgressBarColor() // 使用默认进度条颜色
+    .setReceivedTitleCallback(receivedTitleCallback) //设置 Web 页面的 title 回调
+    .createAgentWeb()//
+    .ready()
+    .go(this)!!
 
 /**
  * LayoutInflater.from(this).inflate
  * @param resource layoutId
  * @return View
  */
-fun Context.inflater(@LayoutRes resource: Int): View = LayoutInflater.from(this).inflate(resource, null)
+fun Context.inflater(@LayoutRes resource: Int): View =
+    LayoutInflater.from(this).inflate(resource, null)
 
 inline fun tryCatch(catchBlock: (Throwable) -> Unit = {}, tryBlock: () -> Unit) {
     try {

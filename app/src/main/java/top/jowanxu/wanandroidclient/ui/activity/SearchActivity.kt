@@ -77,7 +77,8 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
             isLike = it.getBoolean(Constant.LIKE_KEY, true)
         }
         toolbar.run {
-            title = if (isSearch) "" else if (isLike) getString(R.string.my_like) else getString(R.string.my_bookmark)
+            title =
+                    if (isSearch) "" else if (isLike) getString(R.string.my_like) else getString(R.string.my_bookmark)
             setSupportActionBar(this)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
@@ -214,7 +215,12 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
      * @param isAdd true add, false remove
      */
     override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
-        toast(if (isAdd) getString(R.string.bookmark_failed, errorMessage) else getString(R.string.bookmark_cancel_failed, errorMessage))
+        toast(
+            if (isAdd) getString(
+                R.string.bookmark_failed,
+                errorMessage
+            ) else getString(R.string.bookmark_cancel_failed, errorMessage)
+        )
     }
 
     /**
@@ -288,8 +294,7 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
     /**
      * ItemClickListener
      */
-    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
-        _, _, position ->
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
         if (datas.size != 0) {
             Intent(this, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
@@ -301,49 +306,55 @@ class SearchActivity : BaseActivity(), SearchListView, CollectArticleView {
     /**
      * ItemChildClickListener
      */
-    private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener {
-        _, view, position ->
-        if (datas.size != 0) {
-            val data = datas[position]
-            when (view.id) {
-                R.id.homeItemType -> {
-                    data.chapterName ?: let {
-                        toast("类别为空")
-                        return@OnItemChildClickListener
-                    }
-                    Intent(this, TypeContentActivity::class.java).run {
-                        putExtra(Constant.CONTENT_TARGET_KEY, true)
-                        putExtra(Constant.CONTENT_TITLE_KEY, data.chapterName)
-                        putExtra(Constant.CONTENT_CID_KEY, data.chapterId)
-                        startActivity(this)
-                    }
-                }
-                R.id.homeItemLike -> {
-                    if (!isLogin) {
-                        Intent(this, LoginActivity::class.java).run {
+    private val onItemChildClickListener =
+        BaseQuickAdapter.OnItemChildClickListener { _, view, position ->
+            if (datas.size != 0) {
+                val data = datas[position]
+                when (view.id) {
+                    R.id.homeItemType -> {
+                        data.chapterName ?: let {
+                            toast("类别为空")
+                            return@OnItemChildClickListener
+                        }
+                        Intent(this, TypeContentActivity::class.java).run {
+                            putExtra(Constant.CONTENT_TARGET_KEY, true)
+                            putExtra(Constant.CONTENT_TITLE_KEY, data.chapterName)
+                            putExtra(Constant.CONTENT_CID_KEY, data.chapterId)
                             startActivity(this)
                         }
-                        toast(getString(R.string.login_please_login))
-                        return@OnItemChildClickListener
                     }
-                    if (!isSearch) {
-                        // delete data
-                        searchAdapter.remove(position)
-                        searchPresenter.collectArticle(data.id, false)
-                    } else {
-                        val collect = data.collect
-                        data.collect = !collect
-                        searchAdapter.setData(position, data)
-                        searchPresenter.collectArticle(data.id, !collect)
+                    R.id.homeItemLike -> {
+                        if (!isLogin) {
+                            Intent(this, LoginActivity::class.java).run {
+                                startActivity(this)
+                            }
+                            toast(getString(R.string.login_please_login))
+                            return@OnItemChildClickListener
+                        }
+                        if (!isSearch) {
+                            // delete data
+                            searchAdapter.remove(position)
+                            searchPresenter.collectArticle(data.id, false)
+                        } else {
+                            val collect = data.collect
+                            data.collect = !collect
+                            searchAdapter.setData(position, data)
+                            searchPresenter.collectArticle(data.id, !collect)
+                        }
                     }
                 }
             }
-            }
-    }
+        }
+
     /**
      * init SearchView
      */
-    private fun SearchView.init(sMaxWidth: Int = 0, sIconified: Boolean = false, isClose: Boolean = false, onQueryTextListener: SearchView.OnQueryTextListener) = this.run {
+    private fun SearchView.init(
+        sMaxWidth: Int = 0,
+        sIconified: Boolean = false,
+        isClose: Boolean = false,
+        onQueryTextListener: SearchView.OnQueryTextListener
+    ) = this.run {
         if (sMaxWidth != 0) {
             maxWidth = sMaxWidth
         }

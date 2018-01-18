@@ -54,8 +54,10 @@ class TypeArticleFragment : BaseFragment(), TypeArticleFragmentView, CollectArti
      */
     private val isLogin: Boolean by Preference(Constant.LOGIN_KEY, false)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         mainView ?: let {
             mainView = inflater.inflate(R.layout.fragment_type_content, container, false)
         }
@@ -152,13 +154,18 @@ class TypeArticleFragment : BaseFragment(), TypeArticleFragmentView, CollectArti
         }
         tabSwipeRefreshLayout.isRefreshing = false
     }
+
     /**
      * add article success
      * @param result HomeListResponse
      * @param isAdd true add, false remove
      */
     override fun collectArticleSuccess(result: HomeListResponse, isAdd: Boolean) {
-        activity.toast(if (isAdd) activity.getString(R.string.bookmark_success) else activity.getString(R.string.bookmark_cancel_success))
+        activity.toast(
+            if (isAdd) activity.getString(R.string.bookmark_success) else activity.getString(
+                R.string.bookmark_cancel_success
+            )
+        )
     }
 
     /**
@@ -167,7 +174,12 @@ class TypeArticleFragment : BaseFragment(), TypeArticleFragmentView, CollectArti
      * @param isAdd true add, false remove
      */
     override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
-        activity.toast(if (isAdd) activity.getString(R.string.bookmark_failed, errorMessage) else activity.getString(R.string.bookmark_cancel_failed, errorMessage))
+        activity.toast(
+            if (isAdd) activity.getString(
+                R.string.bookmark_failed,
+                errorMessage
+            ) else activity.getString(R.string.bookmark_cancel_failed, errorMessage)
+        )
     }
 
     /**
@@ -181,8 +193,7 @@ class TypeArticleFragment : BaseFragment(), TypeArticleFragmentView, CollectArti
     /**
      * ItemClickListener
      */
-    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
-        _, _, position ->
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
         if (datas.size != 0) {
             Intent(activity, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
@@ -202,26 +213,27 @@ class TypeArticleFragment : BaseFragment(), TypeArticleFragmentView, CollectArti
     /**
      * ItemChildClickListener
      */
-    private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { _, view, position ->
-        if (datas.size != 0) {
-            val data = datas[position]
-            when (view.id) {
-                R.id.homeItemLike -> {
-                    if (isLogin) {
-                        val collect = data.collect
-                        data.collect = !collect
-                        typeArticleAdapter.setData(position, data)
-                        typeArticlePresenter.collectArticle(data.id, !collect)
-                    } else {
-                        Intent(activity, LoginActivity::class.java).run {
-                            startActivity(this)
+    private val onItemChildClickListener =
+        BaseQuickAdapter.OnItemChildClickListener { _, view, position ->
+            if (datas.size != 0) {
+                val data = datas[position]
+                when (view.id) {
+                    R.id.homeItemLike -> {
+                        if (isLogin) {
+                            val collect = data.collect
+                            data.collect = !collect
+                            typeArticleAdapter.setData(position, data)
+                            typeArticlePresenter.collectArticle(data.id, !collect)
+                        } else {
+                            Intent(activity, LoginActivity::class.java).run {
+                                startActivity(this)
+                            }
+                            activity.toast(getString(R.string.login_please_login))
                         }
-                        activity.toast(getString(R.string.login_please_login))
                     }
                 }
             }
         }
-    }
 
     companion object {
         fun newInstance(cid: Int): TypeArticleFragment {

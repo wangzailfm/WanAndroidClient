@@ -23,7 +23,11 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
      */
     private var collectArticleAsync: Deferred<Any>? = null
 
-    override fun getSearchList(onSearchListListener: SearchPresenter.OnSearchListListener, page: Int, k: String) {
+    override fun getSearchList(
+        onSearchListListener: SearchPresenter.OnSearchListListener,
+        page: Int,
+        k: String
+    ) {
         async(UI) {
             try {
                 searchListAsync?.cancelAndJoinByActive()
@@ -71,6 +75,7 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
             }
         }
     }
+
     /**
      * cancel HomeList Request
      */
@@ -81,7 +86,11 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
     /**
      * add or remove collect article
      */
-    override fun collectArticle(onCollectArticleListener: HomePresenter.OnCollectArticleListener, id: Int, isAdd: Boolean) {
+    override fun collectArticle(
+        onCollectArticleListener: HomePresenter.OnCollectArticleListener,
+        id: Int,
+        isAdd: Boolean
+    ) {
         async(UI) {
             try {
                 collectArticleAsync?.cancelAndJoinByActive()

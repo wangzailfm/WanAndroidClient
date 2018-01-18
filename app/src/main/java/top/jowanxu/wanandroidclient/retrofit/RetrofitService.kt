@@ -1,4 +1,3 @@
-
 import kotlinx.coroutines.experimental.Deferred
 import retrofit2.http.*
 import top.jowanxu.wanandroidclient.bean.*
@@ -16,7 +15,7 @@ interface RetrofitService {
 
     @GET("/article/list/{page}/json")
     fun getHomeList(
-            @Path("page") page: Int
+        @Path("page") page: Int
     ): Deferred<HomeListResponse>
 
     /**
@@ -34,8 +33,8 @@ interface RetrofitService {
      */
     @GET("/article/list/{page}/json")
     fun getArticleList(
-            @Path("page") page: Int,
-            @Query("cid") cid: Int
+        @Path("page") page: Int,
+        @Query("cid") cid: Int
     ): Deferred<ArticleListResponse>
 
     /**
@@ -61,8 +60,8 @@ interface RetrofitService {
     @POST("/article/query/{page}/json")
     @FormUrlEncoded
     fun getSearchList(
-            @Path("page") page: Int,
-            @Field("k") k: String
+        @Path("page") page: Int,
+        @Field("k") k: String
     ): Deferred<HomeListResponse>
 
     /**
@@ -74,8 +73,8 @@ interface RetrofitService {
     @POST("/user/login")
     @FormUrlEncoded
     fun loginWanAndroid(
-            @Field("username") username: String,
-            @Field("password") password: String
+        @Field("username") username: String,
+        @Field("password") password: String
     ): Deferred<LoginResponse>
 
     /**
@@ -88,9 +87,9 @@ interface RetrofitService {
     @POST("/user/register")
     @FormUrlEncoded
     fun registerWanAndroid(
-            @Field("username") username: String,
-            @Field("password") password: String,
-            @Field("repassword") repassowrd: String
+        @Field("username") username: String,
+        @Field("password") password: String,
+        @Field("repassword") repassowrd: String
     ): Deferred<LoginResponse>
 
     /**
@@ -100,7 +99,7 @@ interface RetrofitService {
      */
     @GET("/lg/collect/list/{page}/json")
     fun getLikeList(
-            @Path("page") page: Int
+        @Path("page") page: Int
     ): Deferred<HomeListResponse>
 
     /**
@@ -110,7 +109,7 @@ interface RetrofitService {
      */
     @POST("/lg/collect/{id}/json")
     fun addCollectArticle(
-            @Path("id") id: Int
+        @Path("id") id: Int
     ): Deferred<HomeListResponse>
 
     /**
@@ -123,9 +122,9 @@ interface RetrofitService {
     @POST("/lg/collect/add/json")
     @FormUrlEncoded
     fun addCollectOutsideArticle(
-            @Field("title") title: String,
-            @Field("author") author: String,
-            @Field("link") link: String
+        @Field("title") title: String,
+        @Field("author") author: String,
+        @Field("link") link: String
     ): Deferred<HomeListResponse>
 
     /**
@@ -137,8 +136,8 @@ interface RetrofitService {
     @POST("/lg/uncollect/{id}/json")
     @FormUrlEncoded
     fun removeCollectArticle(
-            @Path("id") id: Int,
-            @Field("originId") originId: Int = -1
+        @Path("id") id: Int,
+        @Field("originId") originId: Int = -1
     ): Deferred<HomeListResponse>
 
     /**

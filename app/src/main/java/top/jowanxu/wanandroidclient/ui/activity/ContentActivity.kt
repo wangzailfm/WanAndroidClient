@@ -57,7 +57,12 @@ class ContentActivity : BaseActivity(), CollectArticleView {
             shareId = it.getInt(Constant.CONTENT_ID_KEY, 0)
             shareUrl = it.getString(Constant.CONTENT_URL_KEY)
             shareTitle = it.getString(Constant.CONTENT_TITLE_KEY)
-            agentWeb = shareUrl.getAgentWeb(this, webContent, LinearLayout.LayoutParams(-1, -1), receivedTitleCallback)
+            agentWeb = shareUrl.getAgentWeb(
+                this,
+                webContent,
+                LinearLayout.LayoutParams(-1, -1),
+                receivedTitleCallback
+            )
         }
     }
 
@@ -75,7 +80,15 @@ class ContentActivity : BaseActivity(), CollectArticleView {
             R.id.menuShare -> {
                 Intent().run {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, getString(R.string.share_article_url, getString(R.string.app_name), shareTitle, shareUrl))
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        getString(
+                            R.string.share_article_url,
+                            getString(R.string.app_name),
+                            shareTitle,
+                            shareUrl
+                        )
+                    )
                     type = Constant.CONTENT_SHARE_TYPE
                     startActivity(Intent.createChooser(this, getString(R.string.share_title)))
                 }
@@ -92,7 +105,12 @@ class ContentActivity : BaseActivity(), CollectArticleView {
                 }
                 // Collection outside article
                 if (shareId == 0) {
-                    collectArticlePresenter.collectOutSideArticle(shareTitle, getString(R.string.outside_title), shareUrl, true)
+                    collectArticlePresenter.collectOutSideArticle(
+                        shareTitle,
+                        getString(R.string.outside_title),
+                        shareUrl,
+                        true
+                    )
                     return true
                 }
                 // Collection station article
@@ -140,7 +158,6 @@ class ContentActivity : BaseActivity(), CollectArticleView {
     }
 
 
-
     /**
      * add article success
      * @param result HomeListResponse
@@ -156,13 +173,18 @@ class ContentActivity : BaseActivity(), CollectArticleView {
      * @param isAdd true add, false remove
      */
     override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
-        toast(if (isAdd) getString(R.string.bookmark_failed, errorMessage) else getString(R.string.bookmark_cancel_failed, errorMessage))
+        toast(
+            if (isAdd) getString(
+                R.string.bookmark_failed,
+                errorMessage
+            ) else getString(R.string.bookmark_cancel_failed, errorMessage)
+        )
     }
 
-    private val receivedTitleCallback = ChromeClientCallbackManager.ReceivedTitleCallback {
-        _, title ->
-        title?.let {
-            toolbar.title = it
+    private val receivedTitleCallback =
+        ChromeClientCallbackManager.ReceivedTitleCallback { _, title ->
+            title?.let {
+                toolbar.title = it
+            }
         }
-    }
 }

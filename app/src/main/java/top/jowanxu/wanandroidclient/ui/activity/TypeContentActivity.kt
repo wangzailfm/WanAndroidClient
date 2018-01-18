@@ -54,8 +54,12 @@ class TypeContentActivity : BaseActivity() {
                 typeSecondToolbar.title = it
             }
             if (target) {
-                list.add(Children(extras.getInt(Constant.CONTENT_CID_KEY, 0),
-                        firstTitle, 0, 0, 0, 0, null))
+                list.add(
+                    Children(
+                        extras.getInt(Constant.CONTENT_CID_KEY, 0),
+                        firstTitle, 0, 0, 0, 0, null
+                    )
+                )
             } else {
                 extras.getSerializable(Constant.CONTENT_CHILDREN_DATA_KEY)?.let {
                     val data = it as TreeListResponse.Data
@@ -71,8 +75,16 @@ class TypeContentActivity : BaseActivity() {
         typeSecondTabs.run {
             setupWithViewPager(typeSecondViewPager)
         }
-        typeSecondViewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(typeSecondTabs))
-        typeSecondTabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(typeSecondViewPager))
+        typeSecondViewPager.addOnPageChangeListener(
+            TabLayout.TabLayoutOnPageChangeListener(
+                typeSecondTabs
+            )
+        )
+        typeSecondTabs.addOnTabSelectedListener(
+            TabLayout.ViewPagerOnTabSelectedListener(
+                typeSecondViewPager
+            )
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -95,7 +107,15 @@ class TypeContentActivity : BaseActivity() {
             R.id.menuShare -> {
                 Intent().run {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, getString(R.string.share_type_url, getString(R.string.app_name), list[typeSecondTabs.selectedTabPosition].name, list[typeSecondTabs.selectedTabPosition].id))
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        getString(
+                            R.string.share_type_url,
+                            getString(R.string.app_name),
+                            list[typeSecondTabs.selectedTabPosition].name,
+                            list[typeSecondTabs.selectedTabPosition].id
+                        )
+                    )
                     type = Constant.CONTENT_SHARE_TYPE
                     startActivity(Intent.createChooser(this, getString(R.string.share_title)))
                 }

@@ -1,4 +1,3 @@
-
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,12 +16,13 @@ object RetrofitHelper {
     private const val CONNECT_TIMEOUT = 60L
     private const val READ_TIMEOUT = 10L
 
-    val retrofitService: RetrofitService = RetrofitHelper.getService(Constant.REQUEST_BASE_URL, RetrofitService::class.java)
+    val retrofitService: RetrofitService =
+        RetrofitHelper.getService(Constant.REQUEST_BASE_URL, RetrofitService::class.java)
 
     /**
      * create Retrofit
      */
-    private fun create(url: String):Retrofit {
+    private fun create(url: String): Retrofit {
         // okHttpClientBuilder
         val okHttpClientBuilder = OkHttpClient().newBuilder().apply {
             connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
@@ -34,8 +34,10 @@ object RetrofitHelper {
                 val requestUrl = request.url().toString()
                 val domain = request.url().host()
                 // set-cookie maybe has multi, login to save cookie
-                if ((requestUrl.contains(SAVE_USER_LOGIN_KEY) || requestUrl.contains(SAVE_USER_REGISTER_KEY))
-                        && !response.headers(SET_COOKIE_KEY).isEmpty()) {
+                if ((requestUrl.contains(SAVE_USER_LOGIN_KEY) || requestUrl.contains(
+                        SAVE_USER_REGISTER_KEY
+                    ))
+                    && !response.headers(SET_COOKIE_KEY).isEmpty()) {
                     val cookies = response.headers(SET_COOKIE_KEY)
                     val cookie = encodeCookie(cookies)
                     saveCookie(requestUrl, domain, cookie)
@@ -60,7 +62,7 @@ object RetrofitHelper {
             if (Constant.INTERCEPTOR_ENABLE) {
                 // loggingInterceptor
                 addInterceptor(HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
-                    loge(TAG,  CONTENT_PRE + it)
+                    loge(TAG, CONTENT_PRE + it)
                 }).apply {
                     // log level
                     level = HttpLoggingInterceptor.Level.BODY
@@ -68,11 +70,13 @@ object RetrofitHelper {
             }
         }
 
-        return RetrofitBuild(url = url,
-                client = okHttpClientBuilder.build(),
-                gsonFactory = GsonConverterFactory.create(),
-                coroutineCallAdapterFactory = CoroutineCallAdapterFactory())
-                .retrofit
+        return RetrofitBuild(
+            url = url,
+            client = okHttpClientBuilder.build(),
+            gsonFactory = GsonConverterFactory.create(),
+            coroutineCallAdapterFactory = CoroutineCallAdapterFactory()
+        )
+            .retrofit
     }
 
     /**
@@ -99,9 +103,11 @@ object RetrofitHelper {
 /**
  * create retrofit build
  */
-class RetrofitBuild(url: String, client: OkHttpClient,
-                    gsonFactory: GsonConverterFactory,
-                    coroutineCallAdapterFactory: CoroutineCallAdapterFactory) {
+class RetrofitBuild(
+    url: String, client: OkHttpClient,
+    gsonFactory: GsonConverterFactory,
+    coroutineCallAdapterFactory: CoroutineCallAdapterFactory
+) {
     val retrofit: Retrofit = Retrofit.Builder().apply {
         baseUrl(url)
         client(client)

@@ -22,7 +22,8 @@ object Constant {
     /**
      * Toast
      */
-    @JvmField var showToast: Toast? = null
+    @JvmField
+    var showToast: Toast? = null
     /**
      * Debug
      */

@@ -32,7 +32,11 @@ class TypeFragment : BaseFragment(), TypeFragmentView {
         TypeAdapter(activity, datas)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         mainView ?: let {
             mainView = inflater.inflate(R.layout.fragment_type, container, false)
         }
@@ -66,6 +70,7 @@ class TypeFragment : BaseFragment(), TypeFragmentView {
      * scroll to top
      */
     fun smoothScrollToPosition() = typeRecyclerView.scrollToPosition(0)
+
     /**
      * get Type list Success
      */
@@ -79,6 +84,7 @@ class TypeFragment : BaseFragment(), TypeFragmentView {
         }
         typeSwipeRefreshLayout.isRefreshing = false
     }
+
     /**
      * get Type list Failed
      */
@@ -90,6 +96,7 @@ class TypeFragment : BaseFragment(), TypeFragmentView {
         }
         typeSwipeRefreshLayout.isRefreshing = false
     }
+
     /**
      * get Type list data size equal zero
      */
@@ -97,6 +104,7 @@ class TypeFragment : BaseFragment(), TypeFragmentView {
         activity.toast(getString(R.string.get_data_zero))
         typeSwipeRefreshLayout.isRefreshing = false
     }
+
     /**
      * refresh
      */
@@ -104,6 +112,7 @@ class TypeFragment : BaseFragment(), TypeFragmentView {
         typeSwipeRefreshLayout.isRefreshing = true
         typeFragmentPresenter.getTypeTreeList()
     }
+
     /**
      * RefreshListener
      */
@@ -113,8 +122,7 @@ class TypeFragment : BaseFragment(), TypeFragmentView {
     /**
      * ItemClickListener
      */
-    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
-        _, _, position ->
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
         if (datas.size != 0) {
             Intent(activity, TypeContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_TITLE_KEY, datas[position].name)

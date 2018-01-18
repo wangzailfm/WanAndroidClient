@@ -10,7 +10,11 @@ interface SearchModel {
     /**
      * 获取搜索结果列表
      */
-    fun getSearchList(onSearchListListener: SearchPresenter.OnSearchListListener, page: Int = 0, k: String)
+    fun getSearchList(
+        onSearchListListener: SearchPresenter.OnSearchListListener,
+        page: Int = 0,
+        k: String
+    )
 
     /**
      * 取消请求
@@ -23,6 +27,7 @@ interface SearchModel {
      * @param page page
      */
     fun getLikeList(onLikeListListener: SearchPresenter.OnLikeListListener, page: Int = 0)
+
     /**
      * cancel HomeList Request
      */

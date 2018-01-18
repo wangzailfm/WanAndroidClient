@@ -24,20 +24,26 @@ class CollectOutsideArticleModelImpl : CollectOutsideArticleModel {
      * @param link article link
      * @param isAdd true add, false remove
      */
-    override fun collectOutsideArticle(onCollectOutsideArticleListener: HomePresenter.OnCollectOutsideArticleListener,
-                                       title: String, author: String, link: String, isAdd: Boolean) {
+    override fun collectOutsideArticle(
+        onCollectOutsideArticleListener: HomePresenter.OnCollectOutsideArticleListener,
+        title: String, author: String, link: String, isAdd: Boolean
+    ) {
         async(UI) {
             try {
                 collectArticleAsync?.cancelAndJoinByActive()
                 // add article
-                collectArticleAsync = RetrofitHelper.retrofitService.addCollectOutsideArticle(title, author, link)
+                collectArticleAsync =
+                        RetrofitHelper.retrofitService.addCollectOutsideArticle(title, author, link)
                 // TODO if isAdd false, remove article
                 // collectArticleAsync = RetrofitHelper.retrofitService.removeCollectArticle(id)
                 val result = collectArticleAsync?.await()
                 if (result is HomeListResponse) {
                     onCollectOutsideArticleListener.collectOutsideArticleSuccess(result, isAdd)
                 } else {
-                    onCollectOutsideArticleListener.collectOutsideArticleFailed(Constant.RESULT_NULL, isAdd)
+                    onCollectOutsideArticleListener.collectOutsideArticleFailed(
+                        Constant.RESULT_NULL,
+                        isAdd
+                    )
                 }
             } catch (t: Throwable) {
                 t.printStackTrace()

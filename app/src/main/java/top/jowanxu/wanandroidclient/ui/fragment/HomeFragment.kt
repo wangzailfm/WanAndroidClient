@@ -38,6 +38,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CollectArticleView {
     companion object {
         private const val BANNER_TIME = 5000L
     }
+
     /**
      * mainView
      */
@@ -97,7 +98,11 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CollectArticleView {
      */
     private var currentIndex = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         mainView ?: let {
             mainView = inflater.inflate(R.layout.fragment_home, container, false)
             bannerRecyclerView = activity.inflater(R.layout.home_banner) as HorizontalRecyclerView
@@ -275,7 +280,11 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CollectArticleView {
      * @param isAdd true add, false remove
      */
     override fun collectArticleSuccess(result: HomeListResponse, isAdd: Boolean) {
-        activity.toast(if (isAdd) activity.getString(R.string.bookmark_success) else activity.getString(R.string.bookmark_cancel_success))
+        activity.toast(
+            if (isAdd) activity.getString(R.string.bookmark_success) else activity.getString(
+                R.string.bookmark_cancel_success
+            )
+        )
     }
 
     /**
@@ -284,7 +293,12 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CollectArticleView {
      * @param isAdd true add, false remove
      */
     override fun collectArticleFailed(errorMessage: String?, isAdd: Boolean) {
-        activity.toast(if (isAdd) activity.getString(R.string.bookmark_failed, errorMessage) else activity.getString(R.string.bookmark_cancel_failed, errorMessage))
+        activity.toast(
+            if (isAdd) activity.getString(
+                R.string.bookmark_failed,
+                errorMessage
+            ) else activity.getString(R.string.bookmark_cancel_failed, errorMessage)
+        )
     }
 
     /**
@@ -296,8 +310,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CollectArticleView {
     /**
      * ItemClickListener
      */
-    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener {
-        _, _, position ->
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
         if (datas.size != 0) {
             Intent(activity, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, datas[position].link)
@@ -307,8 +320,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CollectArticleView {
             }
         }
     }
-    private val onBannerItemClickListener = BaseQuickAdapter.OnItemClickListener {
-        _, _, position ->
+    private val onBannerItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
         if (bannerDatas.size != 0) {
             Intent(activity, ContentActivity::class.java).run {
                 putExtra(Constant.CONTENT_URL_KEY, bannerDatas[position].url)
@@ -320,38 +332,39 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CollectArticleView {
     /**
      * ItemChildClickListener
      */
-    private val onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { _, view, position ->
-        if (datas.size != 0) {
-            val data = datas[position]
-            when (view.id) {
-                R.id.homeItemType -> {
-                    data.chapterName ?: let {
-                        activity.toast(getString(R.string.type_null))
-                        return@OnItemChildClickListener
-                    }
-                    Intent(activity, TypeContentActivity::class.java).run {
-                        putExtra(Constant.CONTENT_TARGET_KEY, true)
-                        putExtra(Constant.CONTENT_TITLE_KEY, data.chapterName)
-                        putExtra(Constant.CONTENT_CID_KEY, data.chapterId)
-                        startActivity(this)
-                    }
-                }
-                R.id.homeItemLike -> {
-                    if (isLogin) {
-                        val collect = data.collect
-                        data.collect = !collect
-                        homeAdapter.setData(position, data)
-                        homeFragmentPresenter.collectArticle(data.id, !collect)
-                    } else {
-                        Intent(activity, LoginActivity::class.java).run {
-                            startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+    private val onItemChildClickListener =
+        BaseQuickAdapter.OnItemChildClickListener { _, view, position ->
+            if (datas.size != 0) {
+                val data = datas[position]
+                when (view.id) {
+                    R.id.homeItemType -> {
+                        data.chapterName ?: let {
+                            activity.toast(getString(R.string.type_null))
+                            return@OnItemChildClickListener
                         }
-                        activity.toast(getString(R.string.login_please_login))
+                        Intent(activity, TypeContentActivity::class.java).run {
+                            putExtra(Constant.CONTENT_TARGET_KEY, true)
+                            putExtra(Constant.CONTENT_TITLE_KEY, data.chapterName)
+                            putExtra(Constant.CONTENT_CID_KEY, data.chapterId)
+                            startActivity(this)
+                        }
+                    }
+                    R.id.homeItemLike -> {
+                        if (isLogin) {
+                            val collect = data.collect
+                            data.collect = !collect
+                            homeAdapter.setData(position, data)
+                            homeFragmentPresenter.collectArticle(data.id, !collect)
+                        } else {
+                            Intent(activity, LoginActivity::class.java).run {
+                                startActivityForResult(this, Constant.MAIN_REQUEST_CODE)
+                            }
+                            activity.toast(getString(R.string.login_please_login))
+                        }
                     }
                 }
             }
         }
-    }
     /**
      * LoadMoreListener
      */
@@ -383,8 +396,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CollectArticleView {
     /**
      * ACTION_MOVE to cancel job
      */
-    private val onTouchListener = View.OnTouchListener {
-        _, event ->
+    private val onTouchListener = View.OnTouchListener { _, event ->
         when (event.action) {
             MotionEvent.ACTION_MOVE -> {
                 cancelSwitchJob()

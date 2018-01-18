@@ -12,8 +12,8 @@ import top.jowanxu.wanandroidclient.R
 import top.jowanxu.wanandroidclient.bean.FriendListResponse
 
 
-class CommonUseTagAdapter(context: Context, datas: List<FriendListResponse.Data>)
-    : TagAdapter<FriendListResponse.Data>(datas) {
+class CommonUseTagAdapter(context: Context, datas: List<FriendListResponse.Data>) :
+    TagAdapter<FriendListResponse.Data>(datas) {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getView(parent: FlowLayout, position: Int, data: FriendListResponse.Data): View {
