@@ -138,7 +138,14 @@ class CommonUseFragment : BaseFragment(), CommonUseFragmentView {
             bindToRecyclerView(commonRecyclerView)
             addHeaderView(flowLayout)
         }
-        commonUseFragmentPresenter.getFriendList()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden && isFirst) {
+            commonUseFragmentPresenter.getFriendList()
+            isFirst = false
+        }
     }
 
     override fun cancelRequest() {

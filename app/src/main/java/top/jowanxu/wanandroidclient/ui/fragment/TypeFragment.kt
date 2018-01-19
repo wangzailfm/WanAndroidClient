@@ -58,7 +58,14 @@ class TypeFragment : BaseFragment(), TypeFragmentView {
             setEmptyView(R.layout.fragment_home_empty)
             onItemClickListener = this@TypeFragment.onItemClickListener
         }
-        typeFragmentPresenter.getTypeTreeList()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden && isFirst) {
+            typeFragmentPresenter.getTypeTreeList()
+            isFirst = false
+        }
     }
 
 

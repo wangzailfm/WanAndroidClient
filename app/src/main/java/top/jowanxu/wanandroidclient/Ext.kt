@@ -46,6 +46,7 @@ fun Context.toast(@StringRes id: Int) {
 
 fun Deferred<Any>?.cancelByActive() = this?.run {
     tryCatch {
+        loge("info", "----------$isActive")
         if (isActive) {
             cancel()
         }
