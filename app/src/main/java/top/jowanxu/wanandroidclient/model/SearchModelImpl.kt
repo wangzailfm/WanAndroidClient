@@ -13,6 +13,9 @@ import tryCatch
 
 class SearchModelImpl : SearchModel, CollectArticleModel {
 
+    /**
+     * Search list async
+     */
     private var searchListAsync: Deferred<HomeListResponse>? = null
     /**
      * Home list async
@@ -61,7 +64,6 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
             }) {
                 likeListAsync?.cancelByActive()
                 likeListAsync = RetrofitHelper.retrofitService.getLikeList(page)
-                // Get async result
                 val result = likeListAsync?.await()
                 result ?: let {
                     onLikeListListener.getLikeListFailed(Constant.RESULT_NULL)

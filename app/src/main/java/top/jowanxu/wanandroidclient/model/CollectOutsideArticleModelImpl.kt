@@ -11,6 +11,7 @@ import top.jowanxu.wanandroidclient.presenter.HomePresenter
 import tryCatch
 
 class CollectOutsideArticleModelImpl : CollectOutsideArticleModel {
+
     /**
      * Collect Article async
      */

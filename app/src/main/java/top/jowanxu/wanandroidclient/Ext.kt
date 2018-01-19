@@ -111,7 +111,7 @@ fun Context.inflater(@LayoutRes resource: Int): View =
     LayoutInflater.from(this).inflate(resource, null)
 
 /**
- * In disappear assist cheng (cancel) will be submitted to the Job Cancellation Exception Exception, then the Job Cancellation Exception superclass is not Exception, so to write separately;
+ * In disappear assist cheng (cancel) will be submitted to the Job Cancellation Exception Exception.
  */
 inline fun tryCatch(catchBlock: (Throwable) -> Unit = {}, tryBlock: () -> Unit) {
     try {

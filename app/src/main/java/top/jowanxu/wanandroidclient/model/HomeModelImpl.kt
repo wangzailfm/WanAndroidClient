@@ -58,7 +58,6 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
         async(UI) {
             tryCatch({
                 it.printStackTrace()
-                // Return Throwable toString
                 onHomeListListener.getHomeListFailed(it.toString())
             }) {
                 homeListAsync?.cancelByActive()
@@ -127,7 +126,6 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
             }) {
                 loginAsync?.cancelByActive()
                 loginAsync = RetrofitHelper.retrofitService.loginWanAndroid(username, password)
-                // Get async result
                 val result = loginAsync?.await()
                 result ?: let {
                     onLoginListener.loginFailed(Constant.RESULT_NULL)
@@ -167,7 +165,6 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
                     password,
                     repassword
                 )
-                // Get async result
                 val result = registerAsync?.await()
                 result ?: let {
                     onRegisterListener.registerFailed(Constant.RESULT_NULL)

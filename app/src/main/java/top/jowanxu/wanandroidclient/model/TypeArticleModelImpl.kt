@@ -11,6 +11,7 @@ import top.jowanxu.wanandroidclient.presenter.TypeArticlePresenter
 import tryCatch
 
 class TypeArticleModelImpl : TypeArticleModel {
+
     /**
      * Type Article list list async
      */
