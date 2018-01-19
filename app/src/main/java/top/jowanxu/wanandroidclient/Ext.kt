@@ -11,7 +11,7 @@ import android.widget.Toast
 import com.just.agentweb.AgentWeb
 import com.just.agentweb.ChromeClientCallbackManager
 import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.cancelAndJoin
+import kotlinx.coroutines.experimental.JobCancellationException
 
 /**
  * Log
@@ -44,18 +44,11 @@ fun Context.toast(@StringRes id: Int) {
     toast(getString(id))
 }
 
-/**
- * cancel coroutines
- */
-suspend fun Deferred<Any>?.cancelAndJoinByActive() = this?.run {
-    if (isActive) {
-        cancelAndJoin()
-    }
-}
-
 fun Deferred<Any>?.cancelByActive() = this?.run {
-    if (isActive) {
-        cancel()
+    tryCatch {
+        if (isActive) {
+            cancel()
+        }
     }
 }
 
@@ -117,9 +110,14 @@ fun String.getAgentWeb(
 fun Context.inflater(@LayoutRes resource: Int): View =
     LayoutInflater.from(this).inflate(resource, null)
 
+/**
+ * In disappear assist cheng (cancel) will be submitted to the Job Cancellation Exception Exception, then the Job Cancellation Exception superclass is not Exception, so to write separately;
+ */
 inline fun tryCatch(catchBlock: (Throwable) -> Unit = {}, tryBlock: () -> Unit) {
     try {
         tryBlock()
+    } catch (_: JobCancellationException) {
+
     } catch (t: Throwable) {
         catchBlock(t)
     }

@@ -2,19 +2,19 @@ package top.jowanxu.wanandroidclient.model
 
 import Constant
 import RetrofitHelper
-import cancelAndJoinByActive
 import cancelByActive
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import top.jowanxu.wanandroidclient.bean.ArticleListResponse
 import top.jowanxu.wanandroidclient.presenter.TypeArticlePresenter
+import tryCatch
 
 class TypeArticleModelImpl : TypeArticleModel {
     /**
      * Type Article list list async
      */
-    private var typeArticleListAsync: Deferred<Any>? = null
+    private var typeArticleListAsync: Deferred<ArticleListResponse>? = null
 
     /**
      * get Type Article list
@@ -28,19 +28,18 @@ class TypeArticleModelImpl : TypeArticleModel {
         cid: Int
     ) {
         async(UI) {
-            try {
-                typeArticleListAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                onTypeArticleListListener.getTypeArticleListFailed(it.toString())
+            }) {
+                typeArticleListAsync?.cancelByActive()
                 typeArticleListAsync = RetrofitHelper.retrofitService.getArticleList(page, cid)
                 val result = typeArticleListAsync?.await()
-                if (result is ArticleListResponse) {
-                    onTypeArticleListListener.getTypeArticleListSuccess(result)
-                } else {
+                result ?: let {
                     onTypeArticleListListener.getTypeArticleListFailed(Constant.RESULT_NULL)
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onTypeArticleListListener.getTypeArticleListFailed(t.toString())
-                return@async
+                onTypeArticleListListener.getTypeArticleListSuccess(result)
             }
         }
     }

@@ -2,7 +2,6 @@ package top.jowanxu.wanandroidclient.model
 
 import Constant
 import RetrofitHelper
-import cancelAndJoinByActive
 import cancelByActive
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
@@ -16,39 +15,39 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
     /**
      * Home list async
      */
-    private var homeListAsync: Deferred<Any>? = null
+    private var homeListAsync: Deferred<HomeListResponse>? = null
     /**
      * TypeTree async
      */
-    private var typeTreeListAsync: Deferred<Any>? = null
+    private var typeTreeListAsync: Deferred<TreeListResponse>? = null
     /**
      * Hot async
      */
-    private var hotListAsync: Deferred<Any>? = null
+    private var hotListAsync: Deferred<HotKeyResponse>? = null
     /**
      * Login async
      */
-    private var loginAsync: Deferred<Any>? = null
+    private var loginAsync: Deferred<LoginResponse>? = null
     /**
      * Register async
      */
-    private var registerAsync: Deferred<Any>? = null
+    private var registerAsync: Deferred<LoginResponse>? = null
     /**
      * Friend list async
      */
-    private var friendListAsync: Deferred<Any>? = null
+    private var friendListAsync: Deferred<FriendListResponse>? = null
     /**
      * Collect Article async
      */
-    private var collectArticleAsync: Deferred<Any>? = null
+    private var collectArticleAsync: Deferred<HomeListResponse>? = null
     /**
      * get banner async
      */
-    private var bannerAsync: Deferred<Any>? = null
+    private var bannerAsync: Deferred<BannerResponse>? = null
     /**
      * Bookmark list async
      */
-    private var bookmarkListAsync: Deferred<Any>? = null
+    private var bookmarkListAsync: Deferred<FriendListResponse>? = null
 
     /**
      * get Home List
@@ -57,21 +56,20 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      */
     override fun getHomeList(onHomeListListener: HomePresenter.OnHomeListListener, page: Int) {
         async(UI) {
-            try {
-                homeListAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                // Return Throwable toString
+                onHomeListListener.getHomeListFailed(it.toString())
+            }) {
+                homeListAsync?.cancelByActive()
                 homeListAsync = RetrofitHelper.retrofitService.getHomeList(page)
                 // Get async result
                 val result = homeListAsync?.await()
-                if (result is HomeListResponse) {
-                    onHomeListListener.getHomeListSuccess(result)
-                } else {
+                result ?: let {
                     onHomeListListener.getHomeListFailed(Constant.RESULT_NULL)
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                // Return Throwable toString
-                onHomeListListener.getHomeListFailed(t.toString())
-                return@async
+                onHomeListListener.getHomeListSuccess(result)
             }
         }
     }
@@ -89,19 +87,18 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      */
     override fun getTypeTreeList(onTypeTreeListListener: HomePresenter.OnTypeTreeListListener) {
         async(UI) {
-            try {
-                typeTreeListAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                onTypeTreeListListener.getTypeTreeListFailed(it.toString())
+            }) {
+                typeTreeListAsync?.cancelByActive()
                 typeTreeListAsync = RetrofitHelper.retrofitService.getTypeTreeList()
                 val result = typeTreeListAsync?.await()
-                if (result is TreeListResponse) {
-                    onTypeTreeListListener.getTypeTreeListSuccess(result)
-                } else {
+                result ?: let {
                     onTypeTreeListListener.getTypeTreeListFailed(Constant.RESULT_NULL)
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onTypeTreeListListener.getTypeTreeListFailed(t.toString())
-                return@async
+                onTypeTreeListListener.getTypeTreeListSuccess(result)
             }
         }
     }
@@ -124,20 +121,19 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
         username: String, password: String
     ) {
         async(UI) {
-            try {
-                loginAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                onLoginListener.loginFailed(it.toString())
+            }) {
+                loginAsync?.cancelByActive()
                 loginAsync = RetrofitHelper.retrofitService.loginWanAndroid(username, password)
                 // Get async result
                 val result = loginAsync?.await()
-                if (result is LoginResponse) {
-                    onLoginListener.loginSuccess(result)
-                } else {
+                result ?: let {
                     onLoginListener.loginFailed(Constant.RESULT_NULL)
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onLoginListener.loginFailed(t.toString())
-                return@async
+                onLoginListener.loginSuccess(result)
             }
         }
     }
@@ -161,8 +157,11 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
         username: String, password: String, repassword: String
     ) {
         async(UI) {
-            try {
-                registerAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                onRegisterListener.registerFailed(it.toString())
+            }) {
+                registerAsync?.cancelByActive()
                 registerAsync = RetrofitHelper.retrofitService.registerWanAndroid(
                     username,
                     password,
@@ -170,15 +169,11 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
                 )
                 // Get async result
                 val result = registerAsync?.await()
-                if (result is LoginResponse) {
-                    onRegisterListener.registerSuccess(result)
-                } else {
+                result ?: let {
                     onRegisterListener.registerFailed(Constant.RESULT_NULL)
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onRegisterListener.registerFailed(t.toString())
-                return@async
+                onRegisterListener.registerSuccess(result)
             }
         }
     }
@@ -203,33 +198,33 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
                 throwable = it
                 it.printStackTrace()
             }) {
-                bookmarkListAsync?.cancelAndJoinByActive()
+                bookmarkListAsync?.cancelByActive()
                 bookmarkListAsync = RetrofitHelper.retrofitService.getBookmarkList()
                 val result = bookmarkListAsync?.await()
-                if (result is FriendListResponse) {
-                    bookmarkResult = result
+                result?.let {
+                    bookmarkResult = it
                 }
             }
             tryCatch({
                 throwable = it
                 it.printStackTrace()
             }) {
-                hotListAsync?.cancelAndJoinByActive()
+                hotListAsync?.cancelByActive()
                 hotListAsync = RetrofitHelper.retrofitService.getHotKeyList()
                 val result = hotListAsync?.await()
-                if (result is HotKeyResponse) {
-                    hotResult = result
+                result?.let {
+                    hotResult = it
                 }
             }
             tryCatch({
                 throwable = it
                 it.printStackTrace()
             }) {
-                friendListAsync?.cancelAndJoinByActive()
+                friendListAsync?.cancelByActive()
                 friendListAsync = RetrofitHelper.retrofitService.getFriendList()
                 val result = friendListAsync?.await()
-                if (result is FriendListResponse) {
-                    commonResult = result
+                result?.let {
+                    commonResult = it
                 }
             }
             throwable?.let {
@@ -264,23 +259,22 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
         isAdd: Boolean
     ) {
         async(UI) {
-            try {
-                collectArticleAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                onCollectArticleListener.collectArticleFailed(it.toString(), isAdd)
+            }) {
+                collectArticleAsync?.cancelByActive()
                 collectArticleAsync = if (isAdd) {
                     RetrofitHelper.retrofitService.addCollectArticle(id)
                 } else {
                     RetrofitHelper.retrofitService.removeCollectArticle(id)
                 }
                 val result = collectArticleAsync?.await()
-                if (result is HomeListResponse) {
-                    onCollectArticleListener.collectArticleSuccess(result, isAdd)
-                } else {
+                result ?: let {
                     onCollectArticleListener.collectArticleFailed(Constant.RESULT_NULL, isAdd)
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onCollectArticleListener.collectArticleFailed(t.toString(), isAdd)
-                return@async
+                onCollectArticleListener.collectArticleSuccess(result, isAdd)
             }
         }
     }
@@ -298,19 +292,18 @@ class HomeModelImpl : HomeModel, CollectArticleModel {
      */
     override fun getBanner(onBannerListener: HomePresenter.OnBannerListener) {
         async(UI) {
-            try {
-                bannerAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                onBannerListener.getBannerFailed(it.toString())
+            }) {
+                bannerAsync?.cancelByActive()
                 bannerAsync = RetrofitHelper.retrofitService.getBanner()
                 val result = bannerAsync?.await()
-                if (result is BannerResponse) {
-                    onBannerListener.getBannerSuccess(result)
-                } else {
+                result ?: let {
                     onBannerListener.getBannerFailed(Constant.RESULT_NULL)
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onBannerListener.getBannerFailed(t.toString())
-                return@async
+                onBannerListener.getBannerSuccess(result)
             }
         }
     }

@@ -13,7 +13,7 @@ object RetrofitHelper {
     private const val SAVE_USER_REGISTER_KEY = "user/register"
     private const val SET_COOKIE_KEY = "set-cookie"
     private const val COOKIE_NAME = "Cookie"
-    private const val CONNECT_TIMEOUT = 60L
+    private const val CONNECT_TIMEOUT = 30L
     private const val READ_TIMEOUT = 10L
 
     val retrofitService: RetrofitService =

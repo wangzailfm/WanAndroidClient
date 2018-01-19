@@ -43,8 +43,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun finish() {
-        super.finish()
-        hideSoftKeyBoard()
+        if (!isFinishing) {
+            super.finish()
+            hideSoftKeyBoard()
+        }
     }
 
     private fun hideSoftKeyBoard() {

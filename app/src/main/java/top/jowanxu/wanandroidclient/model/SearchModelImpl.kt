@@ -2,7 +2,6 @@ package top.jowanxu.wanandroidclient.model
 
 import Constant
 import RetrofitHelper
-import cancelAndJoinByActive
 import cancelByActive
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
@@ -10,18 +9,19 @@ import kotlinx.coroutines.experimental.async
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomePresenter
 import top.jowanxu.wanandroidclient.presenter.SearchPresenter
+import tryCatch
 
 class SearchModelImpl : SearchModel, CollectArticleModel {
 
-    private var searchListAsync: Deferred<Any>? = null
+    private var searchListAsync: Deferred<HomeListResponse>? = null
     /**
      * Home list async
      */
-    private var likeListAsync: Deferred<Any>? = null
+    private var likeListAsync: Deferred<HomeListResponse>? = null
     /**
      * Collect Article async
      */
-    private var collectArticleAsync: Deferred<Any>? = null
+    private var collectArticleAsync: Deferred<HomeListResponse>? = null
 
     override fun getSearchList(
         onSearchListListener: SearchPresenter.OnSearchListListener,
@@ -29,19 +29,17 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
         k: String
     ) {
         async(UI) {
-            try {
-                searchListAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                onSearchListListener.getSearchListFailed(it.toString())
+            }) {
                 searchListAsync = RetrofitHelper.retrofitService.getSearchList(page, k)
                 val result = searchListAsync?.await()
-                if (result is HomeListResponse) {
-                    onSearchListListener.getSearchListSuccess(result)
-                } else {
+                result ?: let {
                     onSearchListListener.getSearchListFailed(Constant.RESULT_NULL)
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onSearchListListener.getSearchListFailed(t.toString())
-                return@async
+                onSearchListListener.getSearchListSuccess(result)
             }
         }
     }
@@ -57,21 +55,19 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
      */
     override fun getLikeList(onLikeListListener: SearchPresenter.OnLikeListListener, page: Int) {
         async(UI) {
-            try {
-                likeListAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                onLikeListListener.getLikeListFailed(it.toString())
+            }) {
+                likeListAsync?.cancelByActive()
                 likeListAsync = RetrofitHelper.retrofitService.getLikeList(page)
                 // Get async result
                 val result = likeListAsync?.await()
-                if (result is HomeListResponse) {
-                    onLikeListListener.getLikeListSuccess(result)
-                } else {
+                result ?: let {
                     onLikeListListener.getLikeListFailed(Constant.RESULT_NULL)
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                // Return Throwable toString
-                onLikeListListener.getLikeListFailed(t.toString())
-                return@async
+                onLikeListListener.getLikeListSuccess(result)
             }
         }
     }
@@ -92,23 +88,22 @@ class SearchModelImpl : SearchModel, CollectArticleModel {
         isAdd: Boolean
     ) {
         async(UI) {
-            try {
-                collectArticleAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                onCollectArticleListener.collectArticleFailed(it.toString(), isAdd)
+            }) {
+                collectArticleAsync?.cancelByActive()
                 collectArticleAsync = if (isAdd) {
                     RetrofitHelper.retrofitService.addCollectArticle(id)
                 } else {
                     RetrofitHelper.retrofitService.removeCollectArticle(id)
                 }
                 val result = collectArticleAsync?.await()
-                if (result is HomeListResponse) {
-                    onCollectArticleListener.collectArticleSuccess(result, isAdd)
-                } else {
+                result ?: let {
                     onCollectArticleListener.collectArticleFailed(Constant.RESULT_NULL, isAdd)
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onCollectArticleListener.collectArticleFailed(t.toString(), isAdd)
-                return@async
+                onCollectArticleListener.collectArticleSuccess(result, isAdd)
             }
         }
     }

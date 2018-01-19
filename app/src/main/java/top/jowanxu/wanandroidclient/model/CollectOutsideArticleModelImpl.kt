@@ -2,19 +2,19 @@ package top.jowanxu.wanandroidclient.model
 
 import Constant
 import RetrofitHelper
-import cancelAndJoinByActive
 import cancelByActive
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import top.jowanxu.wanandroidclient.bean.HomeListResponse
 import top.jowanxu.wanandroidclient.presenter.HomePresenter
+import tryCatch
 
 class CollectOutsideArticleModelImpl : CollectOutsideArticleModel {
     /**
      * Collect Article async
      */
-    private var collectArticleAsync: Deferred<Any>? = null
+    private var collectArticleAsync: Deferred<HomeListResponse>? = null
 
     /**
      * add or remove collect outside article
@@ -29,26 +29,25 @@ class CollectOutsideArticleModelImpl : CollectOutsideArticleModel {
         title: String, author: String, link: String, isAdd: Boolean
     ) {
         async(UI) {
-            try {
-                collectArticleAsync?.cancelAndJoinByActive()
+            tryCatch({
+                it.printStackTrace()
+                onCollectOutsideArticleListener.collectOutsideArticleFailed(it.toString(), isAdd)
+            }) {
+                collectArticleAsync?.cancelByActive()
                 // add article
                 collectArticleAsync =
                         RetrofitHelper.retrofitService.addCollectOutsideArticle(title, author, link)
                 // TODO if isAdd false, remove article
                 // collectArticleAsync = RetrofitHelper.retrofitService.removeCollectArticle(id)
                 val result = collectArticleAsync?.await()
-                if (result is HomeListResponse) {
-                    onCollectOutsideArticleListener.collectOutsideArticleSuccess(result, isAdd)
-                } else {
+                result ?: let {
                     onCollectOutsideArticleListener.collectOutsideArticleFailed(
                         Constant.RESULT_NULL,
                         isAdd
                     )
+                    return@async
                 }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                onCollectOutsideArticleListener.collectOutsideArticleFailed(t.toString(), isAdd)
-                return@async
+                onCollectOutsideArticleListener.collectOutsideArticleSuccess(result, isAdd)
             }
         }
     }
