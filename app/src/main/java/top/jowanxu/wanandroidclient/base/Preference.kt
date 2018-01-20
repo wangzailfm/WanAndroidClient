@@ -9,6 +9,8 @@ import kotlin.reflect.KProperty
 
 /**
  * SharedPreferences operation, you need application to invoke setContext
+ * @param name sp key name
+ * @param default default value
  */
 class Preference<T>(private val name: String, private val default: T) : ReadWriteProperty<Any?, T> {
 
@@ -32,9 +34,7 @@ class Preference<T>(private val name: String, private val default: T) : ReadWrit
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T = findPreference(name, default)
 
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        putPreference(name, value)
-    }
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = putPreference(name, value)
 
     @Suppress("UNCHECKED_CAST")
     private fun <U> findPreference(name: String, default: U): U = with(preferences) {
